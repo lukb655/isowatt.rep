@@ -784,7 +784,7 @@ window.GLTFLoader = GLTFLoader;
 </div>
 <div id="model-loading" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#F0A500;font-size:11px;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.2em;text-transform:uppercase;pointer-events:none;display:none;">Loading 3D Model...</div>
 <div class="model-info" id="model-info-label">Apache 4800 · IsoStation Enclosure</div>
-<div style="position:absolute;top:10px;right:12px;font-size:10px;color:#555;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.15em;text-transform:uppercase;pointer-events:none;">Drag to rotate</div>
+<div style="position:absolute;top:10px;right:12px;font-size:16px;color:#F0A500;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.15em;text-transform:uppercase;pointer-events:none;font-weight:700;">↻ Drag to rotate</div>
 </div>
 
 <!-- SPECS PANEL -->
@@ -1048,8 +1048,7 @@ let scene, camera, renderer, model;
 const orbit = {
 active: false,
 lastX: 0, lastY: 0,
-rotX: 0, rotY: 0, rotZ: 0,
-autoRotate: true
+rotX: 0, rotY: 0, rotZ: 0
 };
 
 function init3D() {
@@ -1084,29 +1083,20 @@ scene.add(ambLight);
 canvas.addEventListener('mousedown', (e) => {
 orbit.active = true;
 orbit.lastX = e.clientX;
-orbit.lastY = e.clientY;
-orbit.autoRotate = false;
 });
 canvas.addEventListener('mousemove', (e) => {
 if (!orbit.active) return;
 const dx = (e.clientX - orbit.lastX) * 0.01;
-const dy = (e.clientY - orbit.lastY) * 0.01;
-orbit.rotY += dx;
-orbit.rotX += dy;
+orbit.rotZ += dx;
 orbit.lastX = e.clientX;
-orbit.lastY = e.clientY;
 updateModelRotation();
 });
 canvas.addEventListener('mouseup', () => { orbit.active = false; });
 
-loadModel('iso-station');
+loadModel('iso-station-plus');
 
 function animate() {
 requestAnimationFrame(animate);
-if (orbit.autoRotate && model) {
-orbit.rotY += 0.003;
-updateModelRotation();
-}
 renderer.render(scene, camera);
 }
 animate();
@@ -1285,6 +1275,13 @@ document.getElementById('success-state').classList.add('show');
 // Init
 init3D();
 selectProduct('iso-station-plus');
+</script>
+
+<script async src="site.js"></script>
+<script>
+if (typeof initNav === 'function') {
+initNav('configurator');
+}
 </script>
 </body>
 </html>
