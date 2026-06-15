@@ -1074,7 +1074,7 @@ scene = new THREE.Scene();
 scene.background = new THREE.Color(0x161616);
 
 camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 1000);
-camera.position.set(3, 3, 3);
+camera.position.set(-3, 3, 3);
 camera.lookAt(0, 0, 0);
 
 renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
@@ -1147,7 +1147,7 @@ scene.add(model);
 // Set camera to isometric angle based on model size
 const camDist = config.camZ || 2.2;
 const scale = camDist / 6;
-camera.position.set(3 * scale, 3 * scale, 3 * scale);
+camera.position.set(-3 * scale, 3 * scale, 3 * scale);
 camera.lookAt(0, 0, 0);
 
 document.getElementById('model-info-label').textContent = config.label;
