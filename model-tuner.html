@@ -522,9 +522,13 @@ function updateOutput() {
   const sc = parseFloat(document.getElementById('sc').value).toFixed(6);
   const cz = parseFloat(document.getElementById('cz').value).toFixed(1);
 
+  const modelFile = document.getElementById('model-url').value;
+  const isIsoFortress = modelFile.includes('4800');
+  const key   = isIsoFortress ? 'if100' : (modelFile.includes('model.glb') ? 'ip12 / ip12p' : 'KEY');
+  const label = isIsoFortress ? 'Apache 4800 · IsoFortress Enclosure' : 'Apache 2800 · IsoPoint Enclosure';
   document.getElementById('output-box').textContent =
-`gn100: {
-  file: 'models/4800_Case_Open.glb',
+`${key}: {
+  file: '${modelFile}',
   scale: ${sc},
   px: ${px},
   py: ${py},
@@ -533,7 +537,7 @@ function updateOutput() {
   rotY: ${ry},
   rotZ: ${rz},
   camZ: ${cz},
-  label: 'Apache 4800 · IsoFortress'
+  label: '${label}'
 }`;
 }
 
