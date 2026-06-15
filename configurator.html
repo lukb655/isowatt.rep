@@ -157,6 +157,11 @@ padding: 1.5rem 1rem;
 background: var(--amber-bg);
 border-color: var(--amber-dim);
 }
+.product-btn.featured {
+padding: 1.3rem 1rem;
+background: var(--amber-bg);
+border-color: var(--amber-dim);
+}
 .product-btn:hover { border-color: var(--muted); }
 .product-btn.active {
 border-color: var(--amber);
@@ -171,8 +176,9 @@ color: var(--white);
 display: block;
 line-height: 1.2;
 }
-.product-btn.primary-btn .sku {
-font-size: 28px;
+.product-btn.primary-btn .sku,
+.product-btn.featured .sku {
+font-size: 24px;
 }
 .product-btn.active .sku { color: var(--amber); }
 .product-btn .sub {
@@ -180,6 +186,10 @@ font-size: 11px;
 color: var(--subtle);
 display: block;
 margin-top: 4px;
+}
+.product-btn.featured .sub {
+color: var(--amber);
+font-weight: 600;
 }
 .product-btn .badge {
 display: inline-block;
@@ -399,38 +409,33 @@ transition: filter 0.2s;
 }
 .calc-btn:hover { filter: brightness(1.1); }
 .device-picker {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 8px;
-margin-bottom: 1rem;
-}
-.device-option {
 background: var(--surface);
 border: 1px solid var(--border);
 border-radius: 5px;
+padding: 0;
+margin-bottom: 1rem;
+}
+.device-dropdown {
+width: 100%;
+background: var(--surface);
+border: none;
+border-radius: 0;
 padding: 10px;
+color: var(--text);
+font-family: inherit;
+font-size: 13px;
 cursor: pointer;
-text-align: center;
-font-size: 12px;
-transition: border-color 0.2s, background 0.2s;
+appearance: none;
+background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F0A500' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+background-repeat: no-repeat;
+background-position: right 8px center;
+background-size: 20px;
+padding-right: 32px;
 }
-.device-option:hover {
-border-color: var(--muted);
-}
-.device-option.selected {
-border-color: var(--amber);
-background: var(--amber-bg);
-}
-.device-name {
-display: block;
-font-weight: 600;
-color: var(--white);
-margin-bottom: 2px;
-}
-.device-watts {
-display: block;
-font-size: 11px;
-color: var(--subtle);
+.device-dropdown:hover { color: var(--amber); }
+.device-dropdown option {
+background: var(--card);
+color: var(--text);
 }
 .runtime-result {
 background: var(--surface);
@@ -748,24 +753,24 @@ window.GLTFLoader = GLTFLoader;
 <div class="left-col">
 <div class="section-label">Select your model</div>
 <div class="product-selector">
-<button class="product-btn primary-btn active" id="btn-iso-station" onclick="selectProduct('iso-station')">
-<span class="sku"><span class="iso">Iso</span>Station</span>
-<span class="sub">Premium · Flagship</span>
+<button class="product-btn featured" id="btn-iso-station-plus" onclick="selectProduct('iso-station-plus')">
+<span class="sku"><span class="iso">Iso</span>Station<span class="iso">+</span></span>
+<span class="sub">🌟 Flagship · 2000W AC</span>
 </button>
 
-<button class="product-btn" id="btn-iso-station-plus" onclick="selectProduct('iso-station-plus')">
-<span class="sku"><span class="iso">Iso</span>Station<span class="iso">+</span></span>
-<span class="sub">Premium Plus · 2000W AC</span>
+<button class="product-btn featured" id="btn-iso-point-plus" onclick="selectProduct('iso-point-plus')">
+<span class="sku"><span class="iso">Iso</span>Point<span class="iso">+</span></span>
+<span class="sub">⭐ Compact Plus · 400W AC</span>
+</button>
+
+<button class="product-btn" id="btn-iso-station" onclick="selectProduct('iso-station')">
+<span class="sku"><span class="iso">Iso</span>Station</span>
+<span class="sub">Premium · 1400W AC</span>
 </button>
 
 <button class="product-btn" id="btn-iso-point" onclick="selectProduct('iso-point')">
 <span class="sku"><span class="iso">Iso</span>Point</span>
 <span class="sub">Compact</span>
-</button>
-
-<button class="product-btn" id="btn-iso-point-plus" onclick="selectProduct('iso-point-plus')">
-<span class="sku"><span class="iso">Iso</span>Point<span class="iso">+</span></span>
-<span class="sub">Compact Plus · 400W AC</span>
 </button>
 </div>
 
@@ -818,7 +823,9 @@ window.GLTFLoader = GLTFLoader;
 <div class="runtime-calculator">
 <div class="calc-section">
 <label class="calc-label">Device quick select</label>
-<div class="device-picker" id="device-picker"></div>
+<select class="device-dropdown" id="device-picker" onchange="selectDeviceFromDropdown()">
+<option value="">-- Choose a device --</option>
+</select>
 </div>
 
 <div class="calc-section">
@@ -926,17 +933,13 @@ price: 1289,
 inverter: false,
 features: [
 '100Ah LiFePO4 battery',
-'Up to 2000W power inverter',
+'Up to 2000W AC power',
 'Dual 110V AC outlets',
 'Dual 96W USB-C ports',
-'12V lighter socket',
-'SAE charge input',
-'Battery monitor + temp',
-'LED cabin lighting',
-'100A master disconnect',
-'100A + 50A breakers',
-'ANL fuse protection',
-'12V 10A wall charger'
+'12V cigarette lighter socket',
+'LED work lighting',
+'12V 10A wall charger',
+'Built-in battery monitor'
 ],
 devices: [
 { name: 'Phone', watts: 15 },
@@ -944,7 +947,7 @@ devices: [
 { name: 'CPAP', watts: 50 },
 { name: 'Mini Fridge', watts: 40 },
 { name: 'LED Work Light', watts: 25 },
-{ name: 'Heater Fan', watts: 12 }
+{ name: 'Fan', watts: 12 }
 ]
 },
 'iso-station-plus': {
@@ -958,17 +961,13 @@ price: 1359,
 inverter: false,
 features: [
 '100Ah LiFePO4 battery',
-'2000W power inverter',
+'2000W AC power (upgraded)',
 'Dual 110V AC outlets',
 'Dual 96W USB-C ports',
-'12V lighter socket',
-'SAE charge input',
-'Battery monitor + temp',
-'LED cabin lighting',
-'100A master disconnect',
-'100A + 50A breakers',
-'ANL fuse protection',
-'12V 10A wall charger'
+'12V cigarette lighter socket',
+'LED work lighting',
+'12V 10A wall charger',
+'Built-in battery monitor'
 ],
 devices: [
 { name: 'Phone', watts: 15 },
@@ -976,7 +975,7 @@ devices: [
 { name: 'CPAP', watts: 50 },
 { name: 'Mini Fridge', watts: 40 },
 { name: 'LED Work Light', watts: 25 },
-{ name: 'Heater Fan', watts: 12 }
+{ name: 'Fan', watts: 12 }
 ]
 },
 'iso-point': {
@@ -991,20 +990,16 @@ inverter: false,
 features: [
 '12Ah LiFePO4 battery',
 'Dual 96W USB-C ports',
-'12V lighter socket',
-'SAE charge input',
-'Battery monitor + temp',
-'LED cabin lighting',
-'Master power switch',
-'Blade fuse protection',
-'Apache 2800 case',
-'12V 5A wall charger'
+'12V cigarette lighter socket',
+'LED work lighting',
+'12V 5A wall charger',
+'Built-in battery monitor'
 ],
 devices: [
 { name: 'Phone', watts: 15 },
 { name: 'Laptop 45W', watts: 45 },
 { name: 'LED Work Light', watts: 25 },
-{ name: 'Heater Fan', watts: 12 }
+{ name: 'Fan', watts: 12 }
 ]
 },
 'iso-point-plus': {
@@ -1018,26 +1013,24 @@ price: 429,
 inverter: true,
 features: [
 '12Ah LiFePO4 battery',
-'Dual 96W USB-C ports',
-'12V lighter socket',
+'400W AC power',
 '110V AC outlet',
-'SAE charge input',
-'Battery monitor + temp',
-'LED cabin lighting',
-'Master power switch',
-'Blade fuse protection',
-'12V 5A wall charger'
+'Dual 96W USB-C ports',
+'12V cigarette lighter socket',
+'LED work lighting',
+'12V 5A wall charger',
+'Built-in battery monitor'
 ],
 devices: [
 { name: 'Phone', watts: 15 },
 { name: 'Laptop 45W', watts: 45 },
 { name: 'LED Work Light', watts: 25 },
-{ name: 'Heater Fan', watts: 12 }
+{ name: 'Fan', watts: 12 }
 ]
 }
 };
 
-let currentKey = 'iso-station';
+let currentKey = 'iso-station-plus';
 let currentBatteryWh = 1.2;
 
 // ══════════════════════════════════════════════════════════════
@@ -1192,19 +1185,25 @@ updateQuote();
 
 function updateDevicePicker(devices) {
 const picker = document.getElementById('device-picker');
-picker.innerHTML = '';
+// Keep the first "Choose a device" option
+picker.innerHTML = '<option value="">-- Choose a device --</option>';
 devices.forEach((dev, idx) => {
-const btn = document.createElement('div');
-btn.className = 'device-option';
-btn.innerHTML = `<span class="device-name">${dev.name}</span><span class="device-watts">${dev.watts}W</span>`;
-btn.onclick = () => {
-document.querySelectorAll('.device-option').forEach(b => b.classList.remove('selected'));
-btn.classList.add('selected');
-document.getElementById('custom-watts').value = dev.watts;
-calculateRuntime();
-};
-picker.appendChild(btn);
+const option = document.createElement('option');
+option.value = dev.watts;
+option.textContent = `${dev.name} (${dev.watts}W)`;
+picker.appendChild(option);
 });
+}
+
+function selectDeviceFromDropdown() {
+const picker = document.getElementById('device-picker');
+const watts = parseFloat(picker.value);
+if (watts && watts > 0) {
+document.getElementById('custom-watts').value = watts;
+calculateRuntime();
+} else {
+document.getElementById('runtime-display').textContent = '—';
+}
 }
 
 function calculateRuntime() {
@@ -1285,7 +1284,7 @@ document.getElementById('success-state').classList.add('show');
 
 // Init
 init3D();
-selectProduct('iso-station');
+selectProduct('iso-station-plus');
 </script>
 </body>
 </html>
