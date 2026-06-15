@@ -207,8 +207,10 @@
     margin-bottom: 2rem;
   }
   #canvas-3d {
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    width: 100% !important;
+    height: 100% !important;
     display: block;
   }
   .preview-fallback {
@@ -673,13 +675,14 @@
 
         <!-- 3D PREVIEW -->
         <div class="section-label">Your enclosure</div>
-        <div class="preview-wrap">
+        <div class="preview-wrap" id="preview-wrap">
           <canvas id="canvas-3d"></canvas>
           <div class="preview-fallback" id="preview-fallback" style="display:none;">
             <div class="icon">📦</div>
             <div>Model loading...</div>
           </div>
-          <div class="model-info">Apache 2800 Compact Toolbox</div>
+          <div id="model-loading" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#F0A500;font-size:11px;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.2em;text-transform:uppercase;pointer-events:none;">Loading 3D Model...</div>
+          <div class="model-info" id="model-info-label">Apache 2800 · IsoPoint Enclosure</div>
         </div>
 
         <!-- SPECS PANEL -->
@@ -801,11 +804,7 @@
   <strong>Gridless Fabrication LLC</strong> · Lebanon, PA · Built to order · LiFePO4 Power Systems
 </footer>
 
-<!-- THREE.JS LIBRARY -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-<!-- GLTF LOADER -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/GLTFLoader.min.js"></script>
 
 <script>
 // ══════════════════════════════════════════════════════════════
@@ -920,107 +919,117 @@ let currentKey = 'gn100';
 
 // ══════════════════════════════════════════════════════════════
 // THREE.JS 3D VIEWER
+// Model: Apache 2800 Case Assembly
+// Bounds calculated from GLB: 345.6 x 327.77 x 269.89 mm
 // ══════════════════════════════════════════════════════════════
 
 let scene, camera, renderer, model;
 
-function init3D() {
-  const canvas = document.getElementById('canvas-3d');
-  if (!canvas) return;
+// Exact values pre-calculated from model bounds
+const MODEL_SCALE    = 0.005787;   // fits 345mm model into ~2 scene units
+const MODEL_OFFSET_Y = 0.0932;     // re-centers Y axis
+const MODEL_OFFSET_Z = -0.1447;    // re-centers Z axis
+const CAM_Z          = 5.0;        // camera distance
 
-  // Scene setup
+function init3D() {
+  // Retry until Three.js ESM module has loaded into window
+  if (!window.THREE || !window.GLTFLoader) {
+    setTimeout(init3D, 50);
+    return;
+  }
+
+  const wrap   = document.getElementById('preview-wrap');
+  const canvas = document.getElementById('canvas-3d');
+  if (!wrap || !canvas) return;
+
+  const W = wrap.clientWidth  || 600;
+  const H = wrap.clientHeight || 300;
+
+  // Scene
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x161616);
 
   // Camera
-  camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-  camera.position.set(0, 0, 400);
+  camera = new THREE.PerspectiveCamera(45, W / H, 0.001, 1000);
+  camera.position.set(0, 0.2, CAM_Z);
+  camera.lookAt(0, 0, 0);
 
   // Renderer
-  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setSize(W, H);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
 
-  // Lighting
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-  scene.add(ambientLight);
+  // Lighting — 3-point setup
+  scene.add(new THREE.AmbientLight(0xffffff, 0.7));
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  directionalLight.position.set(100, 200, 150);
-  directionalLight.castShadow = true;
-  directionalLight.shadow.mapSize.width = 2048;
-  directionalLight.shadow.mapSize.height = 2048;
-  scene.add(directionalLight);
+  const key = new THREE.DirectionalLight(0xffffff, 1.2);
+  key.position.set(3, 4, 5);
+  key.castShadow = true;
+  scene.add(key);
+
+  const fill = new THREE.DirectionalLight(0xfff4e0, 0.5);
+  fill.position.set(-4, 1, -2);
+  scene.add(fill);
+
+  const rim = new THREE.DirectionalLight(0xffffff, 0.3);
+  rim.position.set(0, -3, -5);
+  scene.add(rim);
 
   // Load model
-  loadModel('models/2800_case.glb');
+  const loader   = new window.GLTFLoader();
+  const loadingEl = document.getElementById('model-loading');
+  if (loadingEl) loadingEl.style.display = 'block';
 
-  // Handle window resize
-  window.addEventListener('resize', onWindowResize);
-
-  // Auto-rotate
-  animate();
-}
-
-function loadModel(path) {
-  const loader = new THREE.GLTFLoader();
-  
   loader.load(
-    path,
+    'models/model.glb',
     (gltf) => {
-      // Remove old model if it exists
-      if (model) scene.remove(model);
-
       model = gltf.scene;
-      model.scale.set(1.5, 1.5, 1.5);
-      model.position.set(0, -30, 0);
 
-      // Cast shadows
+      // Apply pre-calculated scale + centering
+      model.scale.setScalar(MODEL_SCALE);
+      model.position.set(0, MODEL_OFFSET_Y, MODEL_OFFSET_Z);
+
       model.traverse((child) => {
         if (child.isMesh) {
-          child.castShadow = true;
+          child.castShadow    = true;
           child.receiveShadow = true;
+          // Ensure materials render correctly
+          if (child.material) {
+            child.material.side = THREE.DoubleSide;
+          }
         }
       });
 
       scene.add(model);
-      document.getElementById('preview-fallback').style.display = 'none';
+      if (loadingEl) loadingEl.style.display = 'none';
     },
-    (progress) => {
-      console.log('Model loading:', progress.loaded / progress.total * 100 + '%');
-    },
-    (error) => {
-      console.warn('Model failed to load:', error);
-      document.getElementById('preview-fallback').style.display = 'flex';
+    undefined,
+    (err) => {
+      console.error('Model load failed:', err);
+      if (loadingEl) loadingEl.textContent = '⚠ Model unavailable';
     }
   );
+
+  // Resize handler
+  window.addEventListener('resize', () => {
+    const W2 = wrap.clientWidth  || 600;
+    const H2 = wrap.clientHeight || 300;
+    camera.aspect = W2 / H2;
+    camera.updateProjectionMatrix();
+    renderer.setSize(W2, H2);
+  });
+
+  // Render loop
+  (function animate() {
+    requestAnimationFrame(animate);
+    if (model) model.rotation.y += 0.006;
+    renderer.render(scene, camera);
+  })();
 }
 
-function animate() {
-  requestAnimationFrame(animate);
-
-  if (model) {
-    model.rotation.y += 0.005;
-  }
-
-  renderer.render(scene, camera);
-}
-
-function onWindowResize() {
-  const canvas = document.getElementById('canvas-3d');
-  if (!canvas) return;
-
-  const width = canvas.clientWidth;
-  const height = canvas.clientHeight;
-
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-  renderer.setSize(width, height);
-}
-
-// Initialize on load
-window.addEventListener('DOMContentLoaded', init3D);
+// Use window.load so canvas has real dimensions and ESM module is settled
+window.addEventListener('load', init3D);
 
 // ══════════════════════════════════════════════════════════════
 // CONFIGURATOR LOGIC
@@ -1119,6 +1128,23 @@ selectProduct('gn100');
 <script>
   initNav('configurator');
   initFooter();
+</script>
+
+<!-- THREE.JS ESM — must load before init3D runs -->
+<script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+  import * as THREE from 'three';
+  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+  window.THREE = THREE;
+  window.GLTFLoader = GLTFLoader;
 </script>
 </body>
 </html>
