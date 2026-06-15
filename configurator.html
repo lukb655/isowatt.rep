@@ -1055,7 +1055,7 @@ let scene, camera, renderer, model;
 const orbit = {
 active: false,
 lastX: 0, lastY: 0,
-rotX: 0, rotY: 0,
+rotX: 0, rotY: 0, rotZ: 0,
 autoRotate: true
 };
 
@@ -1110,7 +1110,7 @@ loadModel('iso-station');
 function animate() {
 requestAnimationFrame(animate);
 if (orbit.autoRotate && model) {
-orbit.rotY += 0.003;
+orbit.rotZ += 0.003;
 updateModelRotation();
 }
 renderer.render(scene, camera);
@@ -1120,7 +1120,8 @@ animate();
 
 function updateModelRotation() {
 if (!model) return;
-model.rotation.order = 'YXZ';
+model.rotation.order = 'ZYX';
+model.rotation.z = orbit.rotZ;
 model.rotation.y = orbit.rotY;
 model.rotation.x = orbit.rotX;
 }
