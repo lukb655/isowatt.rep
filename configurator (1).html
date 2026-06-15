@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configurator — IsoWatt Power Stations</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:    #0D0D0D;
+    --surface:  #161616;
+    --card:     #1E1E1E;
+    --border:   #2C2C2C;
+    --muted:    #555;
+    --text:     #E8E4DC;
+    --subtle:   #888;
+    --amber:    #F0A500;
+    --amber-dim:#7A5200;
+    --amber-bg: #1A1100;
+    --green:    #3DDB8A;
+    --red:      #E84040;
+    --white:    #FFFFFF;
+  }
+
+  html, body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--black);
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--white);
+    line-height: 1;
+  }
+  .logo span { color: var(--amber); }
+  .tagline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--subtle);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 4rem 2rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse at center, rgba(240,165,0,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(42px, 8vw, 80px);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 0.95;
+    color: var(--white);
+    margin-bottom: 1.25rem;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--amber);
+  }
+  .hero p {
+    font-size: 17px;
+    color: var(--subtle);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── LAYOUT ── */
+  .config-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
+  .config-grid {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 2rem;
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    .config-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--subtle);
+    margin-bottom: 0.75rem;
+  }
+
+  /* ── PRODUCT SELECTOR ── */
+  .product-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+  .product-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.1rem 0.75rem;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.15s, background 0.15s;
+    color: var(--text);
+    font-family: inherit;
+  }
+  .product-btn:hover { border-color: var(--muted); }
+  .product-btn.active {
+    border-color: var(--amber);
+    background: var(--amber-bg);
+  }
+  .product-btn .sku {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    display: block;
+    line-height: 1.2;
+  }
+  .product-btn.active .sku { color: var(--amber); }
+  .product-btn .sub {
+    font-size: 11px;
+    color: var(--subtle);
+    display: block;
+    margin-top: 4px;
+  }
+  .product-btn .badge {
+    display: inline-block;
+    background: var(--amber);
+    color: var(--black);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-top: 6px;
+  }
+
+  /* ── 3D BOX PREVIEW ── */
+  .preview-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .preview-wrap::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(transparent, var(--surface));
+    pointer-events: none;
+  }
+  .scene {
+    perspective: 700px;
+    width: 140px;
+    height: 220px;
+    position: relative;
+    transition: all 0.4s ease;
+  }
+  .box3d {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: rotatebox 12s infinite linear;
+    transition: width 0.4s ease, height 0.4s ease;
+  }
+  @keyframes rotatebox {
+    from { transform: rotateX(18deg) rotateY(0deg); }
+    to   { transform: rotateX(18deg) rotateY(360deg); }
+  }
+  .face {
+    position: absolute;
+    border: 1px solid var(--amber-dim);
+    background: rgba(240,165,0,0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .face.front  { width: 140px; height: 220px; transform: translateZ(50px); background: rgba(240,165,0,0.07); }
+  .face.back   { width: 140px; height: 220px; transform: translateZ(-50px) rotateY(180deg); }
+  .face.left   { width: 100px; height: 220px; left: 20px; transform: rotateY(-90deg) translateZ(70px); }
+  .face.right  { width: 100px; height: 220px; left: 20px; transform: rotateY(90deg) translateZ(70px); }
+  .face.top    { width: 140px; height: 100px; top: 60px; transform: rotateX(90deg) translateZ(110px); }
+  .face.bottom { width: 140px; height: 100px; top: 60px; transform: rotateX(-90deg) translateZ(110px); }
+  .face-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: var(--amber);
+    text-transform: uppercase;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .preview-sku {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--subtle);
+    text-transform: uppercase;
+    white-space: nowrap;
+    z-index: 2;
+  }
+  .preview-label {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    font-size: 10px;
+    color: var(--subtle);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+
+  /* ── SPECS GRID ── */
+  .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+  .spec-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.9rem 1rem;
+  }
+  .spec-card .label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--subtle);
+    font-family: 'Barlow Condensed', sans-serif;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .spec-card .value {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.1;
+    display: block;
+  }
+  .spec-card .unit {
+    font-size: 12px;
+    color: var(--subtle);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 400;
+  }
+
+  /* ── FEATURES LIST ── */
+  .features {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .features ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 16px;
+  }
+  .features ul li {
+    font-size: 13.5px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .features ul li::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--amber);
+    flex-shrink: 0;
+  }
+
+  /* ── RUNTIME ── */
+  .runtime-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .runtime-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 0.75rem;
+  }
+  .runtime-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--surface);
+    border-radius: 5px;
+    border: 1px solid var(--border);
+  }
+  .runtime-item .device { font-size: 13px; color: var(--subtle); }
+  .runtime-item .hours {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--green);
+  }
+  .runtime-item .hours span { font-size: 11px; font-weight: 400; color: var(--subtle); }
+
+  /* ── INVERTER OPTION ── */
+  .inverter-toggle {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    display: none;
+  }
+  .inverter-toggle.visible { display: block; }
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .toggle-info .t-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.03em;
+  }
+  .toggle-info .t-sub {
+    font-size: 13px;
+    color: var(--subtle);
+    margin-top: 2px;
+  }
+  .toggle-switch {
+    position: relative;
+    width: 52px; height: 28px;
+    flex-shrink: 0;
+  }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute;
+    inset: 0;
+    background: var(--border);
+    border-radius: 28px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .slider::before {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    left: 4px; top: 4px;
+    background: var(--white);
+    border-radius: 50%;
+    transition: transform 0.2s;
+  }
+  input:checked + .slider { background: var(--amber); }
+  input:checked + .slider::before { transform: translateX(24px); }
+
+  /* ── SIDEBAR QUOTE PANEL ── */
+  .quote-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    position: sticky;
+    top: 80px;
+  }
+  .quote-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 1.5rem;
+  }
+  .quote-header .q-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--subtle);
+    margin-bottom: 4px;
+  }
+  .quote-header .q-sku {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--white);
+    letter-spacing: 0.06em;
+  }
+  .quote-header .q-sku em { font-style: normal; color: var(--amber); }
+  .quote-body { padding: 1.5rem; }
+  .price-display {
+    text-align: center;
+    padding: 1.5rem 0 1.25rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+  }
+  .price-display .price-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--subtle);
+    margin-bottom: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+  .price-display .price-amount {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 56px;
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  .price-display .price-amount sup {
+    font-size: 24px;
+    font-weight: 600;
+    vertical-align: super;
+    color: var(--amber);
+  }
+  .price-display .deposit-note {
+    font-size: 13px;
+    color: var(--subtle);
+    margin-top: 8px;
+  }
+  .price-display .deposit-note strong {
+    color: var(--amber);
+    font-weight: 600;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13.5px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .summary-row:last-of-type { border-bottom: none; }
+  .summary-row .r-label { color: var(--subtle); }
+  .summary-row .r-val { font-weight: 500; color: var(--white); }
+  .summary-row .r-val.green { color: var(--green); }
+
+  .cta-btn {
+    display: block;
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--amber);
+    color: var(--black);
+    border: none;
+    border-radius: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .cta-btn:hover { background: #FFB800; }
+  .cta-btn:active { transform: scale(0.98); }
+
+  .cta-sub {
+    text-align: center;
+    font-size: 12px;
+    color: var(--subtle);
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  /* ── DEPOSIT MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    max-width: 480px;
+    width: 100%;
+    overflow: hidden;
+  }
+  .modal-top {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-top h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.05em;
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--subtle);
+    cursor: pointer;
+    font-size: 22px;
+    line-height: 1;
+    padding: 0;
+  }
+  .modal-close:hover { color: var(--white); }
+  .modal-body { padding: 1.5rem; }
+  .modal-summary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .modal-summary .ms-sku {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--amber);
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+  .modal-summary .ms-price {
+    font-size: 13px;
+    color: var(--subtle);
+  }
+  .modal-summary .ms-price strong { color: var(--white); font-weight: 600; }
+  .field { margin-bottom: 1rem; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--subtle);
+    margin-bottom: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+  .field input, .field textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 10px 14px;
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field input:focus, .field textarea:focus { border-color: var(--amber); }
+  .field textarea { resize: vertical; height: 80px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .modal-cta {
+    display: block;
+    width: 100%;
+    padding: 0.9rem;
+    background: var(--amber);
+    color: var(--black);
+    border: none;
+    border-radius: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background 0.15s;
+  }
+  .modal-cta:hover { background: #FFB800; }
+  .modal-legal {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  /* ── SUCCESS STATE ── */
+  .success-state {
+    display: none;
+    text-align: center;
+    padding: 2rem 1.5rem;
+  }
+  .success-state.show { display: block; }
+  .success-icon {
+    font-size: 40px;
+    margin-bottom: 1rem;
+    line-height: 1;
+  }
+  .success-state h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .success-state p { font-size: 14px; color: var(--subtle); }
+
+  /* ── FOOTER ── */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+  }
+  .footer strong { color: var(--subtle); }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="main-nav" style="position:fixed;top:0;left:0;right:0;height:68px;background:rgba(10,10,10,0.92);backdrop-filter:blur(12px);border-bottom:1px solid #272727;z-index:200;display:flex;align-items:center;padding:0 2rem;justify-content:space-between;"></nav>
+<div class="mobile-menu" id="mobile-menu"></div>
+
+<div style="padding-top:68px;">
+<section style="background:#111111;border-bottom:1px solid #272727;padding:3.5rem 2rem 2.5rem;">
+  <div style="max-width:1080px;margin:0 auto;">
+    <span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:#F0A500;display:block;margin-bottom:0.75rem;">Power Station Configurator</span>
+    <h1 style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(38px,7vw,68px);text-transform:uppercase;letter-spacing:0.04em;line-height:0.95;color:#FFFFFF;margin-bottom:0.75rem;">Build your <span style="color:#F0A500;">IsoWatt.</span></h1>
+    <p style="font-size:15px;color:#777;max-width:480px;line-height:1.65;">Select your tier, see real specs and runtime estimates, and reserve your build with a 50% deposit.</p>
+  </div>
+</section>
+
+<main class="config-wrap">
+  <div class="config-grid">
+
+    <!-- LEFT COLUMN -->
+    <div class="left-col">
+      <p class="section-label">Select your system</p>
+      <div class="product-selector">
+        <button class="product-btn" id="btn-gn12" onclick="selectProduct('gn12')">
+          <span class="sku">GRIDNODE 12</span>
+          <span class="sub">Compact Portable</span>
+        </button>
+        <button class="product-btn" id="btn-gn12p" onclick="selectProduct('gn12p')">
+          <span class="sku">GRIDNODE 12+</span>
+          <span class="sub">With AC Power</span>
+          <span class="badge">+ AC Option</span>
+        </button>
+        <button class="product-btn" id="btn-gn100" onclick="selectProduct('gn100')">
+          <span class="sku">GRIDNODE 100</span>
+          <span class="sub">Full Power</span>
+          <span class="badge">Most Capable</span>
+        </button>
+      </div>
+
+      <div class="preview-wrap">
+        <span class="preview-label">3D Preview · STL-ready</span>
+        <div class="scene" id="scene">
+          <div class="box3d" id="box3d">
+            <div class="face front"><span class="face-label" id="face-label">GRIDNODE<br>100</span></div>
+            <div class="face back"></div>
+            <div class="face left"></div>
+            <div class="face right"></div>
+            <div class="face top"></div>
+            <div class="face bottom"></div>
+          </div>
+        </div>
+        <span class="preview-sku" id="preview-sku">Apache 4800 Enclosure</span>
+      </div>
+
+      <p class="section-label">Specifications</p>
+      <div class="specs-grid">
+        <div class="spec-card">
+          <span class="label">Capacity</span>
+          <span class="value" id="spec-cap">100<span class="unit">Ah</span></span>
+        </div>
+        <div class="spec-card">
+          <span class="label">Energy</span>
+          <span class="value" id="spec-wh">1.2<span class="unit">kWh</span></span>
+        </div>
+        <div class="spec-card">
+          <span class="label">AC Output</span>
+          <span class="value" id="spec-ac">400<span class="unit">W</span></span>
+        </div>
+        <div class="spec-card">
+          <span class="label">Chemistry</span>
+          <span class="value">LiFePO<span class="unit">4</span></span>
+        </div>
+        <div class="spec-card">
+          <span class="label">USB Output</span>
+          <span class="value">96<span class="unit">W</span></span>
+        </div>
+        <div class="spec-card">
+          <span class="label">Enclosure</span>
+          <span class="value" id="spec-enc" style="font-size:14px; padding-top:3px;">Apache 4800</span>
+        </div>
+      </div>
+
+      <!-- INVERTER TOGGLE (12+ only) -->
+      <div class="inverter-toggle" id="inverter-toggle">
+        <p class="section-label">Optional add-on</p>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="t-title">AC Power Module</div>
+            <div class="t-sub">Adds 110V outlets — runs small power tools, chargers, fans</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="inverter-check" onchange="updateQuote()">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <p class="section-label">What's included</p>
+      <div class="features" id="features-box">
+        <ul id="features-list"></ul>
+      </div>
+
+      <p class="section-label">Estimated runtime</p>
+      <div class="runtime-section">
+        <p style="font-size:13px; color: var(--subtle); margin-bottom: 0.25rem;">How long your GRIDNODE powers common devices at full charge.</p>
+        <div class="runtime-grid" id="runtime-grid"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: QUOTE PANEL -->
+    <div class="right-col">
+      <div class="quote-panel">
+        <div class="quote-header">
+          <div class="q-label">Your configuration</div>
+          <div class="q-sku" id="q-sku">GRIDNODE <em>100</em></div>
+        </div>
+        <div class="quote-body">
+          <div class="price-display">
+            <div class="price-label">Retail Price</div>
+            <div class="price-amount"><sup>$</sup><span id="q-price">917</span></div>
+            <div class="deposit-note">Reserve with a <strong>50% deposit</strong> — balance due at delivery</div>
+          </div>
+          <div id="summary-rows"></div>
+          <button class="cta-btn" onclick="openModal()">Reserve My Unit ↗</button>
+          <p class="cta-sub">Build-to-order · Ships in 2–4 weeks<br>Deposit fully refundable within 72 hrs</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- DEPOSIT MODAL -->
+<div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal">
+    <div class="modal-top">
+      <h2 id="modal-title">Reserve Your Unit</h2>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body">
+      <div class="modal-summary">
+        <div class="ms-sku" id="m-sku">GRIDNODE 100</div>
+        <div class="ms-price">Retail: <strong id="m-price">$917</strong> · Deposit: <strong id="m-deposit" style="color: var(--amber);">$459</strong></div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="f-name">First name</label>
+          <input type="text" id="f-name" placeholder="Luke" autocomplete="given-name">
+        </div>
+        <div class="field">
+          <label for="f-last">Last name</label>
+          <input type="text" id="f-last" placeholder="Smith" autocomplete="family-name">
+        </div>
+      </div>
+      <div class="field">
+        <label for="f-email">Email address</label>
+        <input type="email" id="f-email" placeholder="luke@example.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="f-phone">Phone (optional)</label>
+        <input type="tel" id="f-phone" placeholder="(717) 555-0100" autocomplete="tel">
+      </div>
+      <div class="field">
+        <label for="f-notes">Notes or questions</label>
+        <textarea id="f-notes" placeholder="Any specific requirements, use case, or questions for us..."></textarea>
+      </div>
+      <button class="modal-cta" onclick="submitReservation()">Send Reservation Request</button>
+      <p class="modal-legal">Submitting this form does not charge you. We'll contact you within 24 hrs to confirm your build and collect the deposit. No payment info is stored here.</p>
+    </div>
+    <div class="success-state" id="success-state">
+      <div class="success-icon">⚡</div>
+      <h3>Reservation Received</h3>
+      <p>We'll reach out within 24 hours to confirm your <span id="s-sku">GRIDNODE 100</span> build and collect your deposit.<br><br>Built in Lebanon, PA — thank you for supporting local.</p>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <strong>Gridless Fabrication LLC</strong> · Lebanon, PA · Built to order · LiFePO4 Power Systems
+</footer>
+
+<script>
+const PRODUCTS = {
+  gn12: {
+    name: 'GRIDNODE 12',
+    nameHTML: 'GRIDNODE <em>12</em>',
+    enc: 'Apache 2800',
+    cap: '12Ah',
+    wh: '0.15kWh',
+    ac: 'None',
+    price: 365,
+    inverter: false,
+    features: [
+      '12Ah LiFePO4 battery',
+      'Dual 96W USB-C ports',
+      '12V lighter socket',
+      'SAE charge input',
+      'Battery monitor + temp',
+      'LED cabin lighting',
+      'Master power switch',
+      'Blade fuse protection',
+      'Apache 2800 case',
+      '12V 5A wall charger'
+    ],
+    runtime: [
+      { device: 'Phone (charge)', wh: 0.015 },
+      { device: 'Laptop 45W', wh: 0.045 },
+      { device: 'LED Work Light', wh: 0.025 },
+      { device: 'Diesel heater fan', wh: 0.012 }
+    ]
+  },
+  gn12p: {
+    name: 'GRIDNODE 12+',
+    nameHTML: 'GRIDNODE <em>12+</em>',
+    enc: 'Apache 2800',
+    cap: '12Ah',
+    wh: '0.15kWh',
+    ac: '400W (optional)',
+    price: 365,
+    priceAC: 429,
+    inverter: true,
+    features: [
+      '12Ah LiFePO4 battery',
+      'Dual 96W USB-C ports',
+      '12V lighter socket',
+      'SAE charge input',
+      'Battery monitor + temp',
+      'LED cabin lighting',
+      'Master power switch',
+      'Blade fuse protection',
+      'Apache 2800 case',
+      '12V 5A wall charger'
+    ],
+    featuresAC: [
+      '12Ah LiFePO4 battery',
+      'Dual 96W USB-C ports',
+      '12V lighter socket',
+      '110V AC outlet',
+      'SAE charge input',
+      'Battery monitor + temp',
+      'LED cabin lighting',
+      'Master power switch',
+      'Blade fuse protection',
+      '12V 5A wall charger'
+    ],
+    runtime: [
+      { device: 'Phone (charge)', wh: 0.015 },
+      { device: 'Laptop 45W', wh: 0.045 },
+      { device: 'LED Work Light', wh: 0.025 },
+      { device: 'Diesel heater fan', wh: 0.012 }
+    ]
+  },
+  gn100: {
+    name: 'GRIDNODE 100',
+    nameHTML: 'GRIDNODE <em>100</em>',
+    enc: 'Apache 4800',
+    cap: '100Ah',
+    wh: '1.2kWh',
+    ac: '400W',
+    price: 917,
+    inverter: false,
+    features: [
+      '100Ah LiFePO4 battery',
+      '400W power inverter',
+      'Dual 110V AC outlets',
+      'Dual 96W USB-C ports',
+      '12V lighter socket',
+      'SAE charge input',
+      'Battery monitor + temp',
+      'LED cabin lighting',
+      '100A master disconnect',
+      '100A + 50A breakers',
+      'ANL fuse protection',
+      '12V 10A wall charger'
+    ],
+    runtime: [
+      { device: 'Phone (charge)', wh: 0.015 },
+      { device: 'Laptop 65W', wh: 0.065 },
+      { device: 'CPAP machine', wh: 0.05 },
+      { device: 'Diesel heater fan', wh: 0.012 },
+      { device: 'LED Work Light', wh: 0.025 },
+      { device: 'Mini fridge', wh: 0.04 }
+    ]
+  }
+};
+
+let currentKey = 'gn100';
+
+function selectProduct(key) {
+  currentKey = key;
+  document.querySelectorAll('.product-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + key).classList.add('active');
+
+  const p = PRODUCTS[key];
+
+  document.getElementById('face-label').textContent = p.name.replace(' ', '\n');
+  document.getElementById('preview-sku').textContent = p.enc + ' Enclosure';
+  document.getElementById('q-sku').innerHTML = p.nameHTML;
+
+  document.getElementById('spec-cap').innerHTML = p.cap.replace('Ah','') + '<span class="unit">Ah</span>';
+  document.getElementById('spec-wh').innerHTML = p.wh.replace('kWh','') + '<span class="unit">kWh</span>';
+  document.getElementById('spec-ac').innerHTML = p.ac === 'None' ? '—' : p.ac.replace('W','') + '<span class="unit">W</span>';
+  document.getElementById('spec-enc').textContent = p.enc;
+
+  const invToggle = document.getElementById('inverter-toggle');
+  if (key === 'gn12p') {
+    invToggle.classList.add('visible');
+  } else {
+    invToggle.classList.remove('visible');
+    document.getElementById('inverter-check').checked = false;
+  }
+
+  updateQuote();
+}
+
+function updateQuote() {
+  const p = PRODUCTS[currentKey];
+  const invOn = currentKey === 'gn12p' && document.getElementById('inverter-check').checked;
+  const price = invOn ? (p.priceAC || p.price) : p.price;
+  const deposit = Math.round(price * 0.5);
+  const features = (currentKey === 'gn12p' && invOn) ? p.featuresAC : p.features;
+
+  document.getElementById('q-price').textContent = price.toLocaleString();
+
+  const rows = document.getElementById('summary-rows');
+  rows.innerHTML = `
+    <div class="summary-row"><span class="r-label">Model</span><span class="r-val">${p.name}${invOn ? ' + AC' : ''}</span></div>
+    <div class="summary-row"><span class="r-label">Battery</span><span class="r-val">${p.cap} LiFePO4</span></div>
+    <div class="summary-row"><span class="r-label">Enclosure</span><span class="r-val">${p.enc}</span></div>
+    <div class="summary-row"><span class="r-label">AC Power</span><span class="r-val">${invOn || p.ac === '400W' ? '400W included' : 'DC only'}</span></div>
+    <div class="summary-row"><span class="r-label">Deposit (50%)</span><span class="r-val green">$${deposit.toLocaleString()}</span></div>
+  `;
+
+  const fl = document.getElementById('features-list');
+  fl.innerHTML = features.map(f => `<li>${f}</li>`).join('');
+
+  const totalWh = parseFloat(p.wh) * 1000;
+  const rg = document.getElementById('runtime-grid');
+  rg.innerHTML = p.runtime.map(r => {
+    const hrs = (totalWh * 0.9 / (r.wh * 1000));
+    const display = hrs >= 10 ? Math.round(hrs) + 'h' : hrs.toFixed(1) + 'h';
+    return `<div class="runtime-item"><span class="device">${r.device}</span><span class="hours">${display}<span> est.</span></span></div>`;
+  }).join('');
+
+  document.getElementById('m-sku').textContent = p.name + (invOn ? ' + AC' : '');
+  document.getElementById('m-price').textContent = '$' + price.toLocaleString();
+  document.getElementById('m-deposit').textContent = '$' + deposit.toLocaleString();
+  document.getElementById('s-sku').textContent = p.name + (invOn ? ' + AC' : '');
+}
+
+function openModal() {
+  document.getElementById('modal').classList.add('open');
+  document.getElementById('success-state').classList.remove('show');
+  document.getElementById('modal-body').style.display = '';
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+function submitReservation() {
+  const name = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  if (!name || !email) {
+    alert('Please enter your name and email to continue.');
+    return;
+  }
+  document.getElementById('modal-body').style.display = 'none';
+  document.getElementById('success-state').classList.add('show');
+}
+
+selectProduct('gn100');
+</script>
+</div><!-- /padding-top wrapper -->
+<footer class="footer" id="main-footer" style="margin-top:4rem;"></footer>
+<script src="site.js"></script>
+<script>
+  initNav('configurator');
+  initFooter();
+</script>
+</body>
+</html>
