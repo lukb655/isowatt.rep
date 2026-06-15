@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="IsoWatt — Portable LiFePO4 power stations built by hand in Lebanon, PA. Consumer grade. Industrial power.">
+<title>IsoWatt — Consumer Grade. Industrial Power.</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 2rem 5rem;
+    background: var(--black);
+  }
+  .hero-glow {
+    position: absolute;
+    top: 30%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px; height: 500px;
+    background: radial-gradient(ellipse, rgba(240,165,0,0.06) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(240,165,0,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,165,0,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, black 30%, transparent 100%);
+  }
+  .hero-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px; height: 1px;
+    background: var(--amber);
+  }
+  .hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(60px, 11vw, 130px);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 0.9;
+    color: var(--white);
+    margin-bottom: 2rem;
+  }
+  .hero h1 .line-amber { color: var(--amber); }
+  .hero h1 .line-dim { color: var(--border-hi); }
+  .hero-sub {
+    font-size: 17px;
+    color: var(--subtle);
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .hero-scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    animation: bounce 2s infinite;
+    cursor: pointer;
+    border: none;
+    background: none;
+  }
+  .hero-scroll .arrow {
+    width: 1px; height: 40px;
+    background: linear-gradient(var(--amber), transparent);
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 1.75rem 2rem;
+  }
+  .stats-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    text-align: center;
+  }
+  .stat-item .stat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--amber);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-item .stat-label {
+    font-size: 12px;
+    color: var(--subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+  @media (max-width: 600px) {
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ── PRODUCTS ── */
+  .products-section { background: var(--black); }
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 3rem;
+  }
+  @media (max-width: 800px) {
+    .products-grid { grid-template-columns: 1fr; }
+  }
+  .product-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    transition: border-color 0.2s, transform 0.2s;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+  .product-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--border);
+    transition: background 0.2s;
+  }
+  .product-card:hover { border-color: var(--border-hi); transform: translateY(-3px); }
+  .product-card:hover::before { background: var(--amber); }
+  .product-card.featured {
+    border-color: var(--amber-dim);
+    background: linear-gradient(160deg, var(--amber-bg) 0%, var(--card) 60%);
+  }
+  .product-card.featured::before { background: var(--amber); }
+  .featured-badge {
+    position: absolute;
+    top: 1.25rem; right: 1.25rem;
+    background: var(--amber);
+    color: var(--black);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 3px;
+  }
+  .card-tier {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--subtle);
+  }
+  .card-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    line-height: 1;
+  }
+  .card-name .iso { color: var(--amber); }
+  .card-desc {
+    font-size: 14px;
+    color: var(--subtle);
+    line-height: 1.6;
+    flex: 1;
+  }
+  .card-specs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .card-spec {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 8px 10px;
+  }
+  .card-spec .cs-label {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .card-spec .cs-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .card-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  .card-price .price {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--white);
+  }
+  .card-price .price-note {
+    font-size: 12px;
+    color: var(--subtle);
+    text-align: right;
+    line-height: 1.4;
+  }
+  .card-cta {
+    display: block;
+    text-align: center;
+    background: transparent;
+    border: 1px solid var(--border-hi);
+    border-radius: 5px;
+    padding: 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text);
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .product-card.featured .card-cta {
+    background: var(--amber);
+    border-color: var(--amber);
+    color: var(--black);
+  }
+  .card-cta:hover { border-color: var(--amber); color: var(--amber); }
+  .product-card.featured .card-cta:hover { background: var(--amber-hi); }
+
+  /* ── WHY ── */
+  .why-section { background: var(--surface); }
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+  @media (max-width: 700px) {
+    .why-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+  }
+  .why-card {
+    padding: 1.75rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .why-icon {
+    font-size: 28px;
+    margin-bottom: 1rem;
+    display: block;
+    line-height: 1;
+  }
+  .why-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .why-body { font-size: 14px; color: var(--subtle); line-height: 1.7; }
+
+  /* ── CTA BAND ── */
+  .cta-band {
+    background: var(--amber-bg);
+    border-top: 1px solid var(--amber-dim);
+    border-bottom: 1px solid var(--amber-dim);
+    padding: 5rem 2rem;
+    text-align: center;
+  }
+  .cta-band h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+  .cta-band p { font-size: 16px; color: var(--subtle); margin-bottom: 2rem; }
+  .cta-band .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="main-nav"></nav>
+<div class="mobile-menu" id="mobile-menu"></div>
+
+<main class="page">
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-inner">
+      <p class="hero-eyebrow">Handbuilt in Lebanon, PA</p>
+      <h1>
+        <span class="line-dim">Power</span><br>
+        <span class="line-amber">without</span><br>
+        <span>the grid.</span>
+      </h1>
+      <p class="hero-sub">Portable LiFePO4 power stations engineered for the field. Built to order, tested before delivery, backed by the person who built it.</p>
+      <div class="hero-actions">
+        <a href="configurator.html" class="btn btn-primary">Configure Yours ↗</a>
+        <a href="about.html" class="btn btn-ghost">Our Story</a>
+      </div>
+    </div>
+    <button class="hero-scroll" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})" aria-label="Scroll to products">
+      <div class="arrow"></div>
+      Explore
+    </button>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item reveal">
+        <div class="stat-num">3+</div>
+        <div class="stat-label">Models Available</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-num">100Ah</div>
+        <div class="stat-label">Max Capacity</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-num">LiFePO4</div>
+        <div class="stat-label">Chemistry</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-num">2–4w</div>
+        <div class="stat-label">Build Time</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCTS -->
+  <section class="section products-section" id="products">
+    <div class="container">
+      <span class="eyebrow reveal">Power Station Lineup</span>
+      <h2 class="section-title reveal">Choose your <em>system.</em></h2>
+      <p class="section-body reveal">Three tiers. One platform. Every unit assembled by hand, tested under load, and shipped ready to work.</p>
+
+      <div class="products-grid">
+
+        <a href="configurator.html" class="product-card reveal">
+          <div class="card-tier">Entry Tier</div>
+          <div class="card-name"><span class="iso">Iso</span>Point</div>
+          <p class="card-desc">Compact, lightweight, and purpose-built for life away from outlets. Runs USB devices, 12V accessories, and lights for days.</p>
+          <div class="card-specs">
+            <div class="card-spec"><span class="cs-label">Battery</span><span class="cs-val">12Ah</span></div>
+            <div class="card-spec"><span class="cs-label">Energy</span><span class="cs-val">0.15kWh</span></div>
+            <div class="card-spec"><span class="cs-label">AC Power</span><span class="cs-val">DC Only</span></div>
+            <div class="card-spec"><span class="cs-label">Enclosure</span><span class="cs-val">Apache 2800</span></div>
+          </div>
+          <div class="card-price">
+            <span class="price">$365</span>
+            <span class="price-note">50% deposit<br>to reserve</span>
+          </div>
+          <span class="card-cta">Configure ↗</span>
+        </a>
+
+        <a href="configurator.html" class="product-card featured reveal">
+          <span class="featured-badge">Most Popular</span>
+          <div class="card-tier">Mid Tier</div>
+          <div class="card-name"><span class="iso">Iso</span>Point<span class="iso">+</span></div>
+          <p class="card-desc">Everything in IsoPoint plus an optional 400W AC module — runs small power tools, fans, and chargers right from the field.</p>
+          <div class="card-specs">
+            <div class="card-spec"><span class="cs-label">Battery</span><span class="cs-val">12Ah</span></div>
+            <div class="card-spec"><span class="cs-label">Energy</span><span class="cs-val">0.15kWh</span></div>
+            <div class="card-spec"><span class="cs-label">AC Power</span><span class="cs-val">400W</span></div>
+            <div class="card-spec"><span class="cs-label">Enclosure</span><span class="cs-val">Apache 2800</span></div>
+          </div>
+          <div class="card-price">
+            <span class="price">$429</span>
+            <span class="price-note">50% deposit<br>to reserve</span>
+          </div>
+          <span class="card-cta">Configure ↗</span>
+        </a>
+
+        <a href="configurator.html" class="product-card reveal">
+          <div class="card-tier">Full Power</div>
+          <div class="card-name"><span class="iso">Iso</span>Fortress</div>
+          <p class="card-desc">The workhorse. 100Ah LiFePO4, dual AC outlets, dual USB-C, full breaker protection. Built to power your whole setup.</p>
+          <div class="card-specs">
+            <div class="card-spec"><span class="cs-label">Battery</span><span class="cs-val">100Ah</span></div>
+            <div class="card-spec"><span class="cs-label">Energy</span><span class="cs-val">1.2kWh</span></div>
+            <div class="card-spec"><span class="cs-label">AC Power</span><span class="cs-val">400W</span></div>
+            <div class="card-spec"><span class="cs-label">Enclosure</span><span class="cs-val">Apache 4800</span></div>
+          </div>
+          <div class="card-price">
+            <span class="price">$917</span>
+            <span class="price-note">50% deposit<br>to reserve</span>
+          </div>
+          <span class="card-cta">Configure ↗</span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- WHY ISOWATT -->
+  <section class="section why-section">
+    <div class="container">
+      <span class="eyebrow reveal">Why IsoWatt</span>
+      <h2 class="section-title reveal">Built different.<br><em>On purpose.</em></h2>
+      <div class="why-grid">
+        <div class="why-card reveal">
+          <span class="why-icon">⚡</span>
+          <div class="why-title">LiFePO4 Chemistry</div>
+          <p class="why-body">Safer, longer-lasting, and more stable than lithium-ion. No thermal runaway. 2,000+ charge cycles. The chemistry that industrial systems trust.</p>
+        </div>
+        <div class="why-card reveal">
+          <span class="why-icon">🔧</span>
+          <div class="why-title">Built to Order</div>
+          <p class="why-body">No warehouse. No mass production. Every unit is assembled, wired, and load-tested by hand before it ships. You get what we'd build for ourselves.</p>
+        </div>
+        <div class="why-card reveal">
+          <span class="why-icon">📍</span>
+          <div class="why-title">Made in Lebanon, PA</div>
+          <p class="why-body">Local product. Local support. When something needs attention, you're not filing a ticket with a call center — you're talking to the builder.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <section class="cta-band">
+    <div class="container-sm">
+      <h2 class="reveal">Ready to <em style="font-style:normal;color:var(--amber);">go off-grid?</em></h2>
+      <p class="reveal">Configure your power station, get a real price, and reserve your build with a 50% deposit.</p>
+      <div class="actions reveal">
+        <a href="configurator.html" class="btn btn-primary">Start Configuring ↗</a>
+        <a href="contact.html" class="btn btn-ghost">Ask a Question</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer" id="main-footer"></footer>
+
+<script src="site.js"></script>
+<script>
+  initNav('home');
+  initFooter();
+</script>
+</body>
+</html>

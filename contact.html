@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Contact IsoWatt — get in touch about a build, ask a question, or request a custom quote.">
+<title>Contact — IsoWatt</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .page-hero {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 5rem 2rem 4rem;
+  }
+  .page-hero-inner { max-width: 1080px; margin: 0 auto; }
+  .breadcrumb {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .breadcrumb a { color: var(--subtle); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--text); }
+  .page-hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(44px, 8vw, 80px);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    line-height: 0.95;
+    margin-bottom: 1.25rem;
+  }
+  .page-hero h1 em { font-style: normal; color: var(--amber); }
+  .page-hero .lead { font-size: 17px; color: var(--subtle); max-width: 520px; line-height: 1.7; }
+
+  /* ── CONTACT GRID ── */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 3rem;
+    align-items: start;
+  }
+  @media (max-width: 820px) {
+    .contact-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── FORM ── */
+  .contact-form {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .form-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 1.75rem;
+  }
+  .form-header h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.05em;
+  }
+  .form-header p { font-size: 13px; color: var(--subtle); margin-top: 2px; }
+  .form-body { padding: 1.75rem; }
+  .field { margin-bottom: 1.25rem; }
+  .field label {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--subtle);
+    margin-bottom: 7px;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 11px 14px;
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s;
+    appearance: none;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus { border-color: var(--amber); }
+  .field textarea { resize: vertical; min-height: 120px; }
+  .field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23777' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+  .form-submit {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    background: var(--amber);
+    color: var(--black);
+    border: none;
+    border-radius: 5px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-top: 0.5rem;
+  }
+  .form-submit:hover { background: var(--amber-hi); }
+  .form-legal {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  /* ── SUCCESS ── */
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 3rem 1.75rem;
+  }
+  .form-success.show { display: block; }
+  .success-icon { font-size: 44px; margin-bottom: 1rem; }
+  .form-success h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .form-success p { font-size: 14px; color: var(--subtle); line-height: 1.6; }
+
+  /* ── SIDEBAR ── */
+  .contact-sidebar { display: flex; flex-direction: column; gap: 16px; }
+  .info-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+  .info-card .ic-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--subtle);
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+  .info-card .ic-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .info-card .ic-body { font-size: 13.5px; color: var(--subtle); line-height: 1.65; }
+  .info-card .ic-body a { color: var(--amber); text-decoration: none; }
+  .info-card .ic-body a:hover { text-decoration: underline; }
+  .response-bar {
+    background: var(--amber-bg);
+    border: 1px solid var(--amber-dim);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .response-bar .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--green);
+    flex-shrink: 0;
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .response-bar .rb-text {
+    font-size: 13px;
+    color: var(--subtle);
+    line-height: 1.5;
+  }
+  .response-bar .rb-text strong { color: var(--text); font-weight: 600; }
+
+  .faq-section { background: var(--surface); }
+  .faq-list { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 12px; }
+  .faq-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .faq-q {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 1.1rem 1.5rem;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.03em;
+    transition: color 0.15s;
+  }
+  .faq-q:hover { color: var(--amber); }
+  .faq-q .icon {
+    font-size: 18px;
+    color: var(--subtle);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .faq-item.open .faq-q .icon { transform: rotate(45deg); color: var(--amber); }
+  .faq-a {
+    display: none;
+    padding: 0 1.5rem 1.25rem;
+    font-size: 14px;
+    color: var(--subtle);
+    line-height: 1.7;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+  }
+  .faq-item.open .faq-a { display: block; }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="main-nav"></nav>
+<div class="mobile-menu" id="mobile-menu"></div>
+
+<main class="page">
+
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span>›</span>
+        <span>Contact</span>
+      </div>
+      <h1>Let's talk<br><em>power.</em></h1>
+      <p class="lead">Questions about a build, custom requirements, or not sure which tier is right for you — reach out and get a response from the builder directly.</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="contact-grid">
+
+        <!-- FORM -->
+        <div class="contact-form reveal">
+          <div class="form-header">
+            <h2>Send a Message</h2>
+            <p>Build inquiry, general question, or custom request — all welcome.</p>
+          </div>
+          <div class="form-body" id="form-body">
+            <div class="field-row">
+              <div class="field">
+                <label for="c-first">First Name</label>
+                <input type="text" id="c-first" placeholder="Luke" autocomplete="given-name">
+              </div>
+              <div class="field">
+                <label for="c-last">Last Name</label>
+                <input type="text" id="c-last" placeholder="Smith" autocomplete="family-name">
+              </div>
+            </div>
+            <div class="field">
+              <label for="c-email">Email Address</label>
+              <input type="email" id="c-email" placeholder="luke@example.com" autocomplete="email">
+            </div>
+            <div class="field">
+              <label for="c-phone">Phone (optional)</label>
+              <input type="tel" id="c-phone" placeholder="(717) 555-0100" autocomplete="tel">
+            </div>
+            <div class="field">
+              <label for="c-subject">What are you interested in?</label>
+              <select id="c-subject">
+                <option value="">Select a topic...</option>
+                <option>IsoPoint — 12Ah Power Station</option>
+                <option>IsoPoint+ — 12Ah + AC Power Station</option>
+                <option>IsoFortress — 100Ah Power Station</option>
+                <option>Custom / Large Format Build</option>
+                <option>General Question</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="c-message">Message</label>
+              <textarea id="c-message" placeholder="Tell us about your use case, what you're powering, or any questions you have..."></textarea>
+            </div>
+            <button class="form-submit" onclick="submitContact()">Send Message ↗</button>
+            <p class="form-legal">No spam. No list sign-ups. Just a direct reply from the builder within 24 hours.</p>
+          </div>
+          <div class="form-success" id="form-success">
+            <div class="success-icon">⚡</div>
+            <h3>Message Received</h3>
+            <p>Thanks for reaching out. You'll hear back within 24 hours — directly from the builder, not a support bot.</p>
+          </div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="contact-sidebar reveal">
+          <div class="response-bar">
+            <div class="dot"></div>
+            <div class="rb-text"><strong>Typically responds within 24 hours.</strong><br>Lebanon, PA business hours.</div>
+          </div>
+
+          <div class="info-card">
+            <span class="ic-label">Location</span>
+            <div class="ic-title">Lebanon, PA</div>
+            <p class="ic-body">Local pickup available. Serving central PA and surrounding areas — and shipping anywhere in the US.</p>
+          </div>
+
+          <div class="info-card">
+            <span class="ic-label">Build Time</span>
+            <div class="ic-title">2–4 Weeks</div>
+            <p class="ic-body">From deposit to delivery. Your unit is built after you reserve — no pre-built stock, no shortcuts.</p>
+          </div>
+
+          <div class="info-card">
+            <span class="ic-label">Deposit Policy</span>
+            <div class="ic-title">50% to Reserve</div>
+            <p class="ic-body">Balance collected at delivery or before shipping. Deposit fully refundable within 72 hours of reservation.</p>
+          </div>
+
+          <div class="info-card">
+            <span class="ic-label">Custom Builds</span>
+            <div class="ic-title">Available by Quote</div>
+            <p class="ic-body">Need a higher capacity, different enclosure, or specific output configuration? Reach out — custom builds are handled individually.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- FAQ -->
+  <section class="section faq-section">
+    <div class="container">
+      <span class="eyebrow reveal">FAQ</span>
+      <h2 class="section-title reveal">Common <em>questions.</em></h2>
+      <div class="faq-list reveal">
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            What's the difference between IsoPoint, IsoPoint+, and IsoFortress?
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-a">IsoPoint is 12Ah DC-only — great for USB charging, 12V accessories, and LED lighting. IsoPoint+ is the same battery with an optional 400W AC inverter module added. IsoFortress is the full 100Ah system with dual AC outlets, dual USB-C, full breaker protection, and enough capacity to run a diesel heater, fridge, or power tools for extended periods.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Why LiFePO4 instead of regular lithium?
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-a">LiFePO4 (lithium iron phosphate) is chemically stable — it doesn't thermally runaway the way lithium-ion can. It also has 2,000+ charge cycles vs ~500 for lithium-ion, tolerates being stored at partial charge, and operates safely across a wider temperature range. The tradeoff is lower energy density, but for portable power stations it's the right chemistry every time.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            How does the deposit and build process work?
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-a">You submit a reservation through the configurator or contact form. We confirm within 24 hours and collect a 50% deposit to lock in your build slot. Your unit is then assembled and load-tested — typically 2–4 weeks. Balance is collected at pickup or before shipping. The deposit is fully refundable within 72 hours of reservation.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Do you ship, or is it local pickup only?
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-a">Both. Local pickup is available in Lebanon, PA and is recommended for the IsoFortress due to size and weight. IsoPoint and IsoPoint+ can be shipped anywhere in the US — shipping cost is calculated based on destination and added to the final invoice.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Can I get a custom build — different capacity, enclosure, or outputs?
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-a">Yes. Custom builds are handled by quote. Use the contact form and describe what you need — capacity, preferred enclosure, specific outputs, use case. We'll put together a quote based on your actual requirements.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            What warranty do your units come with?
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-a">Every unit is load-tested before delivery. If something is wrong out of the box, we make it right — full stop. Longer-term warranty terms are being formalized. When you buy from IsoWatt, you're buying from the person who built it, and that person is reachable.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer" id="main-footer"></footer>
+
+<script src="site.js"></script>
+<script>
+  initNav('contact');
+  initFooter();
+
+  function submitContact() {
+    const first = document.getElementById('c-first').value.trim();
+    const email = document.getElementById('c-email').value.trim();
+    if (!first || !email) {
+      alert('Please enter your name and email to continue.');
+      return;
+    }
+    document.getElementById('form-body').style.display = 'none';
+    document.getElementById('form-success').classList.add('show');
+  }
+
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+</script>
+</body>
+</html>
