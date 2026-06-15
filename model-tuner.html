@@ -165,6 +165,9 @@
     white-space: pre-wrap; word-break: break-all; margin-top: 6px;
   }
   .divider { height: 1px; background: var(--border); margin: 0.75rem 0; }
+  .axis-btn { flex: 1; text-align: center; font-weight: 700; }
+  .axis-btn.active { border-color: var(--amber); color: var(--amber); background: rgba(240,165,0,0.08); }
+  #pause-btn.paused { border-color: var(--green); color: var(--green); }
 </style>
 </head>
 <body>
@@ -260,6 +263,21 @@
     </div>
   </div>
 
+  <div class="section">
+    <div class="sec-title">Auto-Spin</div>
+    <div style="display:flex;gap:5px;margin-bottom:6px;">
+      <button class="btn axis-btn active" id="axis-x" onclick="setAxis('x')">X</button>
+      <button class="btn axis-btn active" id="axis-y" onclick="setAxis('y')">Y</button>
+      <button class="btn axis-btn active" id="axis-z" onclick="setAxis('z')">Z</button>
+      <button class="btn" id="pause-btn" onclick="togglePause()" style="flex:2;text-align:center;">⏸ Pause</button>
+    </div>
+    <div class="ctrl">
+      <span class="ctrl-lbl">Speed</span>
+      <input type="range" id="spin-speed" min="0.001" max="0.04" step="0.001" value="0.006" oninput="updateSpeedLabel()">
+      <span class="ctrl-val" id="speed-v">0.006</span>
+    </div>
+  </div>
+
   <button class="btn-reset" onclick="resetSliders()">↺ Reset sliders</button>
 
   <div class="divider"></div>
@@ -298,8 +316,30 @@ const FOV      = 45;
 let scene, camera, renderer, model;
 let baseRotX = -1.413717, baseRotY = 0, baseRotZ = 0;
 
-// Orbit state — Y-only drag (same as configurator auto-rotate axis)
+// Orbit state
 const orbit = { active: false, lastX: 0, lastY: 0, dragY: 0, dragX: 0 };
+
+// Spin state
+const spin = { paused: false, axis: 'y', accum: { x: 0, y: 0, z: 0 } };
+
+function setAxis(a) {
+  spin.axis = a;
+  ['x','y','z'].forEach(id => {
+    document.getElementById('axis-' + id).classList.toggle('active', id === a);
+  });
+}
+
+function togglePause() {
+  spin.paused = !spin.paused;
+  const btn = document.getElementById('pause-btn');
+  btn.textContent = spin.paused ? '▶ Resume' : '⏸ Pause';
+  btn.classList.toggle('paused', spin.paused);
+}
+
+function updateSpeedLabel() {
+  document.getElementById('speed-v').textContent =
+    parseFloat(document.getElementById('spin-speed').value).toFixed(3);
+}
 
 function init3D() {
   if (!window.THREE || !window.GLTFLoader) { setTimeout(init3D, 50); return; }
@@ -371,13 +411,16 @@ function init3D() {
     update();
   }, { passive: true });
 
-  // Render loop — auto-rotate on Y (same as configurator)
-  let autoY = 0;
+  // Render loop — auto-rotate on selected axis
   (function animate() {
     requestAnimationFrame(animate);
-    if (model && !orbit.active) {
-      autoY      += 0.006;
-      orbit.dragY = autoY;
+    if (model && !orbit.active && !spin.paused) {
+      const speed = parseFloat(document.getElementById('spin-speed').value) || 0.006;
+      spin.accum[spin.axis] += speed;
+      // Map accumulator into orbit drag axes
+      if (spin.axis === 'y') orbit.dragY = spin.accum.y;
+      if (spin.axis === 'x') orbit.dragX = spin.accum.x;
+      if (spin.axis === 'z') orbit.dragY = 0; // Z handled in applyTransform
       applyTransform();
     }
     renderer.render(scene, camera);
@@ -407,7 +450,8 @@ function applyTransform() {
   model.rotation.order = 'XYZ';
   model.rotation.x = baseRotX + orbit.dragX;
   model.rotation.y = baseRotY + orbit.dragY;
-  model.rotation.z = baseRotZ;
+  // Z spin: accumulate directly when Z axis is selected
+  model.rotation.z = baseRotZ + (spin && spin.axis === 'z' ? spin.accum.z : 0);
 
   camera.position.set(0, cy, cz);
   camera.lookAt(0, 0, 0);
@@ -512,6 +556,7 @@ function resetSliders() {
   document.getElementById('cz').value = 5.0;
   document.getElementById('cy').value = 0.2;
   orbit.dragX = 0; orbit.dragY = 0;
+  spin.accum = { x: 0, y: 0, z: 0 };
   update();
 }
 
