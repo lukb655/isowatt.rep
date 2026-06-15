@@ -942,7 +942,7 @@ let currentKey = 'gn100';
 const MODEL_CONFIGS = {
   gn12:  { file: 'models/model.glb',                      scale: 0.005787, px: 0, py: 0.0932, pz: -0.1447, camZ: 5.0, label: 'Apache 2800 · IsoPoint Enclosure'   },
   gn12p: { file: 'models/model.glb',                      scale: 0.005787, px: 0, py: 0.0932, pz: -0.1447, camZ: 5.0, label: 'Apache 2800 · IsoPoint+ Enclosure'  },
-  gn100: { file: 'models/Unnamed-_800_Case_Open.gltf',    scale: 3.32755,  px: 0, py:  0.4885, pz: -0.44,   camZ: 5.0, label: 'Apache 4800 · IsoFortress Enclosure' }
+  gn100: { file: 'models/4800_Case_Open.glb', scale: 0.003328, px: 0, py: 0.4872, pz: -0.44, camZ: 5.0, rotX: Math.PI/2, label: 'Apache 4800 · IsoFortress Enclosure' }
 };
 
 let scene, camera, renderer, model;
@@ -1088,6 +1088,13 @@ function loadModelForProduct(key) {
       model = gltf.scene;
       model.scale.setScalar(cfg.scale);
       model.position.set(cfg.px, cfg.py, cfg.pz);
+      // Apply base rotation if model needs orientation fix (e.g. Z-up CAD export)
+      if (cfg.rotX) model.rotation.x = cfg.rotX;
+      if (cfg.rotY) model.rotation.y = cfg.rotY;
+      if (cfg.rotZ) model.rotation.z = cfg.rotZ;
+      // Sync orbit state to match baked rotation
+      orbit.rotX = cfg.rotX || 0;
+      orbit.rotY = cfg.rotY || 0;
       camera.position.set(0, 0.2, cfg.camZ);
       camera.lookAt(0, 0, 0);
       model.traverse((child) => {
