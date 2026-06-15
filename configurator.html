@@ -1066,7 +1066,7 @@ scene = new THREE.Scene();
 scene.background = new THREE.Color(0x161616);
 
 camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 1000);
-camera.position.set(0, 0.2, 6.0);
+camera.position.set(2, 2, 6.0);
 camera.lookAt(0, 0, 0);
 
 renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
@@ -1092,6 +1092,20 @@ orbit.lastX = e.clientX;
 updateModelRotation();
 });
 canvas.addEventListener('mouseup', () => { orbit.active = false; });
+
+// Touch events for mobile
+canvas.addEventListener('touchstart', (e) => {
+orbit.active = true;
+orbit.lastX = e.touches[0].clientX;
+}, { passive: true });
+canvas.addEventListener('touchmove', (e) => {
+if (!orbit.active) return;
+const dx = (e.touches[0].clientX - orbit.lastX) * 0.01;
+orbit.rotZ += dx;
+orbit.lastX = e.touches[0].clientX;
+updateModelRotation();
+}, { passive: true });
+canvas.addEventListener('touchend', () => { orbit.active = false; }, { passive: true });
 
 loadModel('iso-station-plus');
 
@@ -1127,8 +1141,8 @@ model.rotation.y = config.rotY;
 model.rotation.z = config.rotZ;
 scene.add(model);
 
-// Camera position matches tuner exactly
-camera.position.set(0, 0.2, config.camZ);
+// Camera position for isometric view
+camera.position.set(2, 2, config.camZ);
 camera.lookAt(0, 0, 0);
 
 document.getElementById('model-info-label').textContent = config.label;
@@ -1277,11 +1291,17 @@ init3D();
 selectProduct('iso-station-plus');
 </script>
 
-<script async src="site.js"></script>
+<script src="site.js"></script>
 <script>
+// Wait for site.js to load
+function initializeNav() {
 if (typeof initNav === 'function') {
 initNav('configurator');
+} else {
+setTimeout(initializeNav, 50);
 }
+}
+initializeNav();
 </script>
 </body>
 </html>
