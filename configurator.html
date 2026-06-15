@@ -6,1224 +6,1280 @@
 <title>Configurator — IsoWatt Power Stations</title>
 <link rel="stylesheet" href="style.css">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap');
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --black:    #0D0D0D;
-    --surface:  #161616;
-    --card:     #1E1E1E;
-    --border:   #2C2C2C;
-    --muted:    #555;
-    --text:     #E8E4DC;
-    --subtle:   #888;
-    --amber:    #F0A500;
-    --amber-dim:#7A5200;
-    --amber-bg: #1A1100;
-    --green:    #3DDB8A;
-    --red:      #E84040;
-    --white:    #FFFFFF;
-  }
-
-  html, body {
-    background: var(--black);
-    color: var(--text);
-    font-family: 'Barlow', sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    min-height: 100vh;
-  }
-
-  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
-
-  /* ── HEADER ── */
-  .header {
-    background: var(--black);
-    border-bottom: 1px solid var(--border);
-    padding: 1.25rem 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .logo {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 900;
-    font-size: 22px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--white);
-    line-height: 1;
-  }
-  .logo span { color: var(--amber); }
-  .tagline {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--subtle);
-  }
-
-  /* ── HERO ── */
-  .hero {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 4rem 2rem 3rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -80px; left: 50%; transform: translateX(-50%);
-    width: 600px; height: 300px;
-    background: radial-gradient(ellipse at center, rgba(240,165,0,0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .hero-eyebrow {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--amber);
-    margin-bottom: 1rem;
-  }
-  .hero h1 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(42px, 8vw, 80px);
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    line-height: 0.95;
-    color: var(--white);
-    margin-bottom: 1.25rem;
-  }
-  .hero h1 em {
-    font-style: normal;
-    color: var(--amber);
-  }
-  .hero p {
-    font-size: 17px;
-    color: var(--subtle);
-    max-width: 520px;
-    margin: 0 auto;
-    line-height: 1.6;
-  }
-
-  /* ── LAYOUT ── */
-  .config-wrap {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem;
-  }
-  .config-grid {
-    display: grid;
-    grid-template-columns: 1fr 420px;
-    gap: 2rem;
-    align-items: start;
-  }
-  @media (max-width: 860px) {
-    .config-grid { grid-template-columns: 1fr; }
-  }
-
-  /* ── SECTION LABEL ── */
-  .section-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--subtle);
-    margin-bottom: 0.75rem;
-  }
-
-  /* ── PRODUCT SELECTOR ── */
-  .product-selector {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 2rem;
-  }
-  .product-btn {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 1.1rem 0.75rem;
-    cursor: pointer;
-    text-align: center;
-    transition: border-color 0.15s, background 0.15s;
-    color: var(--text);
-    font-family: inherit;
-  }
-  .product-btn:hover { border-color: var(--muted); }
-  .product-btn.active {
-    border-color: var(--amber);
-    background: var(--amber-bg);
-  }
-  .product-btn .sku {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    color: var(--white);
-    display: block;
-    line-height: 1.2;
-  }
-  .product-btn.active .sku { color: var(--amber); }
-  .product-btn .sub {
-    font-size: 11px;
-    color: var(--subtle);
-    display: block;
-    margin-top: 4px;
-  }
-  .product-btn .badge {
-    display: inline-block;
-    background: var(--amber);
-    color: var(--black);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 2px 7px;
-    border-radius: 3px;
-    margin-top: 6px;
-  }
-
-  /* ── 3D VIEWER (THREE.JS) ── */
-  .preview-wrap {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    height: 300px;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 2rem;
-  }
-  #canvas-3d {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100% !important;
-    height: 100% !important;
-    display: block;
-  }
-  .preview-fallback {
-    text-align: center;
-    color: var(--subtle);
-    font-size: 13px;
-    padding: 2rem;
-  }
-  .preview-fallback .icon {
-    font-size: 32px;
-    margin-bottom: 0.5rem;
-    opacity: 0.6;
-  }
-  .model-info {
-    position: absolute;
-    bottom: 12px;
-    left: 12px;
-    right: 12px;
-    font-size: 11px;
-    color: var(--muted);
-    font-family: 'Barlow Condensed', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    pointer-events: none;
-  }
-
-  /* ── SPECS PANEL ── */
-  .specs-panel {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-  }
-  .spec-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 1rem;
-  }
-  .spec-row:last-child { margin-bottom: 0; }
-  .spec-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    padding: 10px;
-  }
-  .spec-label {
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-family: 'Barlow Condensed', sans-serif;
-    display: block;
-    margin-bottom: 4px;
-  }
-  .spec-val {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--white);
-  }
-  .spec-val .unit {
-    font-size: 12px;
-    margin-left: 2px;
-    opacity: 0.7;
-  }
-
-  /* ── QUOTE PANEL ── */
-  .quote-panel {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    position: sticky;
-    top: 100px;
-  }
-  .quote-header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 1.25rem;
-  }
-  .q-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--subtle);
-    margin-bottom: 0.5rem;
-  }
-  .q-sku {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 26px;
-    font-weight: 900;
-    color: var(--white);
-    line-height: 1;
-  }
-  .q-sku em { color: var(--amber); font-style: normal; }
-  .quote-body {
-    padding: 1.75rem 1.25rem;
-  }
-  .q-price {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 32px;
-    font-weight: 900;
-    color: var(--amber);
-    margin-bottom: 1.5rem;
-    line-height: 1;
-  }
-  .summary-rows {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .summary-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 13px;
-  }
-  .r-label { color: var(--subtle); }
-  .r-val {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 600;
-    color: var(--white);
-  }
-  .r-val.green { color: var(--green); }
-
-  /* ── TOGGLE SWITCH ── */
-  .toggle-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 13px;
-    margin-bottom: 1.25rem;
-    padding: 10px;
-    background: var(--surface);
-    border-radius: 5px;
-  }
-  .toggle-row.hidden { display: none; }
-  .toggle-label { flex: 1; }
-  .toggle-switch {
-    width: 44px;
-    height: 24px;
-    background: var(--border);
-    border-radius: 12px;
-    position: relative;
-    cursor: pointer;
-    transition: background 0.2s;
-    border: none;
-  }
-  .toggle-switch::after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: var(--white);
-    border-radius: 50%;
-    top: 2px;
-    left: 2px;
-    transition: left 0.2s;
-  }
-  .toggle-switch:checked {
-    background: var(--amber);
-  }
-  .toggle-switch:checked::after {
-    left: 22px;
-  }
-  input[type="checkbox"].toggle-switch {
-    appearance: none;
-  }
-
-  /* ── FEATURES & RUNTIME ── */
-  .features-section, .runtime-section {
-    margin-bottom: 2rem;
-  }
-  .features-list {
-    list-style: none;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-  @media (max-width: 700px) {
-    .features-list { grid-template-columns: 1fr; }
-  }
-  .features-list li {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    padding: 8px 10px;
-    font-size: 12px;
-    color: var(--text);
-  }
-  .features-list li::before {
-    content: '✓ ';
-    color: var(--amber);
-    font-weight: 600;
-    margin-right: 4px;
-  }
-  .runtime-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-  @media (max-width: 700px) {
-    .runtime-grid { grid-template-columns: 1fr; }
-  }
-  .runtime-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13px;
-  }
-  .device {
-    color: var(--text);
-  }
-  .hours {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    color: var(--amber);
-  }
-  .hours span {
-    font-size: 10px;
-    margin-left: 3px;
-    color: var(--subtle);
-  }
-
-  /* ── BUTTONS ── */
-  .btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background: transparent;
-    border: 1px solid var(--border-hi);
-    border-radius: 5px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text);
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .btn-primary {
-    background: var(--amber);
-    border-color: var(--amber);
-    color: var(--black);
-  }
-  .btn-primary:hover {
-    background: var(--amber);
-    filter: brightness(1.15);
-  }
-
-  /* ── MODAL ── */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-    z-index: 1000;
-  }
-  .modal-overlay.open {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  .modal {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    max-width: 420px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-  }
-  .modal-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .modal-top h2 {
-    font-size: 20px;
-    margin: 0;
-  }
-  .modal-close {
-    background: none;
-    border: none;
-    color: var(--text);
-    font-size: 20px;
-    cursor: pointer;
-  }
-  .modal-body {
-    padding: 1.5rem;
-  }
-  .modal-summary {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-  }
-  .ms-sku {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    color: var(--white);
-    margin-bottom: 0.5rem;
-  }
-  .ms-price {
-    font-size: 12px;
-    color: var(--subtle);
-  }
-  .field {
-    margin-bottom: 1.25rem;
-  }
-  .field-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin-bottom: 1.25rem;
-  }
-  .field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
-    margin-bottom: 0.4rem;
-    color: var(--text);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .field input,
-  .field textarea {
-    width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    padding: 8px 10px;
-    color: var(--text);
-    font-family: inherit;
-    font-size: 13px;
-  }
-  .field textarea {
-    resize: vertical;
-    min-height: 80px;
-  }
-  .modal-cta {
-    width: 100%;
-    padding: 12px;
-    background: var(--amber);
-    border: none;
-    border-radius: 5px;
-    color: var(--black);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: filter 0.2s;
-  }
-  .modal-cta:hover {
-    filter: brightness(1.1);
-  }
-  .modal-legal {
-    font-size: 11px;
-    color: var(--subtle);
-    margin-top: 1rem;
-    line-height: 1.6;
-  }
-  .success-state {
-    display: none;
-    text-align: center;
-    padding: 2rem 1.5rem;
-  }
-  .success-state.show {
-    display: block;
-  }
-  .success-icon {
-    font-size: 48px;
-    margin-bottom: 1rem;
-  }
-  .success-state h3 {
-    font-size: 20px;
-    margin-bottom: 1rem;
-  }
-  .success-state p {
-    font-size: 14px;
-    color: var(--subtle);
-    line-height: 1.7;
-  }
-
-  /* ── FOOTER ── */
-  .footer {
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    padding: 2rem;
-    text-align: center;
-    color: var(--subtle);
-    font-size: 13px;
-  }
-
-  @media (max-width: 600px) {
-    .product-selector { grid-template-columns: 1fr; }
-  }
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap');
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+--black: #0D0D0D;
+--surface: #161616;
+--card: #1E1E1E;
+--border: #2C2C2C;
+--muted: #555;
+--text: #E8E4DC;
+--subtle: #888;
+--amber: #F0A500;
+--amber-dim:#7A5200;
+--amber-bg: #1A1100;
+--green: #3DDB8A;
+--red: #E84040;
+--white: #FFFFFF;
+}
+html, body {
+background: var(--black);
+color: var(--text);
+font-family: 'Barlow', sans-serif;
+font-size: 16px;
+line-height: 1.6;
+min-height: 100vh;
+}
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+/* ── HEADER ── */
+.header {
+background: var(--black);
+border-bottom: 1px solid var(--border);
+padding: 1.25rem 2rem;
+display: flex;
+align-items: center;
+justify-content: space-between;
+position: sticky;
+top: 0;
+z-index: 100;
+}
+.logo {
+font-family: 'Barlow Condensed', sans-serif;
+font-weight: 900;
+font-size: 22px;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+color: var(--white);
+line-height: 1;
+}
+.logo span { color: var(--amber); }
+.tagline {
+font-family: 'Barlow Condensed', sans-serif;
+font-size: 12px;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(--subtle);
+}
+/* ── HERO ── */
+.hero {
+background: var(--surface);
+border-bottom: 1px solid var(--border);
+padding: 4rem 2rem 3rem;
+text-align: center;
+position: relative;
+overflow: hidden;
+}
+.hero::before {
+content: '';
+position: absolute;
+top: -80px; left: 50%; transform: translateX(-50%);
+width: 600px; height: 300px;
+background: radial-gradient(ellipse at center, rgba(240,165,0,0.08) 0%, transparent 70%);
+pointer-events: none;
+}
+.hero-eyebrow {
+font-family: 'Barlow Condensed', sans-serif;
+font-size: 12px;
+letter-spacing: 0.3em;
+text-transform: uppercase;
+color: var(--amber);
+margin-bottom: 1rem;
+}
+.hero h1 {
+font-family: 'Barlow Condensed', sans-serif;
+font-size: clamp(42px, 8vw, 80px);
+font-weight: 900;
+text-transform: uppercase;
+letter-spacing: 0.04em;
+line-height: 0.95;
+color: var(--white);
+margin-bottom: 1.25rem;
+}
+.hero h1 em {
+font-style: normal;
+color: var(--amber);
+}
+.hero p {
+font-size: 17px;
+color: var(--subtle);
+max-width: 520px;
+margin: 0 auto;
+line-height: 1.6;
+}
+/* ── LAYOUT ── */
+.config-wrap {
+max-width: 1100px;
+margin: 0 auto;
+padding: 3rem 1.5rem;
+}
+.config-grid {
+display: grid;
+grid-template-columns: 1fr 420px;
+gap: 2rem;
+align-items: start;
+}
+@media (max-width: 860px) {
+.config-grid { grid-template-columns: 1fr; }
+}
+/* ── SECTION LABEL ── */
+.section-label {
+font-family: 'Barlow Condensed', sans-serif;
+font-size: 11px;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+color: var(--subtle);
+margin-bottom: 0.75rem;
+}
+/* ── PRODUCT SELECTOR ── */
+.product-selector {
+display: grid;
+grid-template-columns: 1fr;
+gap: 12px;
+margin-bottom: 2rem;
+}
+.product-selector .primary-btn {
+grid-column: 1 / -1;
+}
+.product-btn {
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: 1.1rem 0.75rem;
+cursor: pointer;
+text-align: center;
+transition: border-color 0.15s, background 0.15s;
+color: var(--text);
+font-family: inherit;
+}
+.product-btn.primary-btn {
+padding: 1.5rem 1rem;
+background: var(--amber-bg);
+border-color: var(--amber-dim);
+}
+.product-btn:hover { border-color: var(--muted); }
+.product-btn.active {
+border-color: var(--amber);
+background: var(--amber-bg);
+}
+.product-btn .sku {
+font-family: 'Barlow Condensed', sans-serif;
+font-size: 18px;
+font-weight: 700;
+letter-spacing: 0.05em;
+color: var(--white);
+display: block;
+line-height: 1.2;
+}
+.product-btn.primary-btn .sku {
+font-size: 28px;
+}
+.product-btn.active .sku { color: var(--amber); }
+.product-btn .sub {
+font-size: 11px;
+color: var(--subtle);
+display: block;
+margin-top: 4px;
+}
+.product-btn .badge {
+display: inline-block;
+background: var(--amber);
+color: var(--black);
+font-family: 'Barlow Condensed', sans-serif;
+font-size: 10px;
+font-weight: 700;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+padding: 2px 7px;
+border-radius: 3px;
+margin-top: 6px;
+}
+/* ── 3D VIEWER (THREE.JS) ── */
+.preview-wrap {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 8px;
+height: 300px;
+position: relative;
+overflow: hidden;
+margin-bottom: 2rem;
+}
+#canvas-3d {
+position: absolute;
+top: 0; left: 0;
+width: 100% !important;
+height: 100% !important;
+display: block;
+}
+.preview-fallback {
+text-align: center;
+color: var(--subtle);
+font-size: 13px;
+padding: 2rem;
+}
+.preview-fallback .icon {
+font-size: 32px;
+margin-bottom: 0.5rem;
+opacity: 0.6;
+}
+.model-info {
+position: absolute;
+bottom: 12px;
+left: 12px;
+right: 12px;
+font-size: 11px;
+color: var(--muted);
+font-family: 'Barlow Condensed', sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+pointer-events: none;
+}
+/* ── SPECS PANEL ── */
+.specs-panel {
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 8px;
+padding: 1.5rem;
+margin-bottom: 2rem;
+}
+.spec-row {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 8px;
+margin-bottom: 1rem;
+}
+.spec-row:last-child { margin-bottom: 0; }
+.spec-item {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 5px;
+padding: 10px;
+}
+.spec-label {
+font-size: 9px;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(--muted);
+font-family: 'Barlow Condensed', sans-serif;
+display: block;
+margin-bottom: 4px;
+}
+.spec-val {
+font-family: 'Barlow Condensed', sans-serif;
+font-size: 18px;
+font-weight: 700;
+color: var(--white);
+}
+.spec-val .unit {
+font-size: 12px;
+margin-left: 2px;
+opacity: 0.7;
+}
+/* ── QUOTE PANEL ── */
+.quote-panel {
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 8px;
+overflow: hidden;
+position: sticky;
+top: 100px;
+}
+.quote-header {
+background: var(--surface);
+border-bottom: 1px solid var(--border);
+padding: 1.25rem;
+}
+.q-label {
+font-family: 'Barlow Condensed', sans-serif;
+font-size: 10px;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+color: var(--subtle);
+margin-bottom: 0.5rem;
+}
+.q-sku {
+font-family: 'Barlow Condensed', sans-serif;
+font-size: 26px;
+font-weight: 900;
+color: var(--white);
+line-height: 1;
+}
+.q-sku em { color: var(--amber); font-style: normal; }
+.quote-body {
+padding: 1.75rem 1.25rem;
+}
+.q-price {
+font-family: 'Barlow Condensed', sans-serif;
+font-size: 32px;
+font-weight: 900;
+color: var(--amber);
+margin-bottom: 1.5rem;
+line-height: 1;
+}
+.summary-rows {
+display: flex;
+flex-direction: column;
+gap: 10px;
+margin-bottom: 1.5rem;
+padding-bottom: 1.5rem;
+border-bottom: 1px solid var(--border);
+}
+.summary-row {
+display: flex;
+justify-content: space-between;
+font-size: 13px;
+}
+.r-label { color: var(--subtle); }
+.r-val {
+font-family: 'Barlow Condensed', sans-serif;
+font-weight: 600;
+color: var(--white);
+}
+.r-val.green { color: var(--green); }
+/* ── RUNTIME CALCULATOR ── */
+.runtime-calculator {
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 8px;
+padding: 1.5rem;
+margin-bottom: 2rem;
+}
+.calc-section {
+margin-bottom: 1.5rem;
+}
+.calc-section:last-child { margin-bottom: 0; }
+.calc-label {
+font-family: 'Barlow Condensed', sans-serif;
+font-size: 11px;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+color: var(--subtle);
+margin-bottom: 0.75rem;
+display: block;
+}
+.calc-input-group {
+display: flex;
+gap: 8px;
+margin-bottom: 1rem;
+}
+.calc-input {
+flex: 1;
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 5px;
+padding: 8px 10px;
+color: var(--text);
+font-family: inherit;
+font-size: 13px;
+}
+.calc-input-unit {
+display: flex;
+align-items: center;
+font-size: 12px;
+color: var(--subtle);
+font-family: 'Barlow Condensed', sans-serif;
+padding: 0 8px;
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 5px;
+}
+.calc-btn {
+padding: 8px 12px;
+background: var(--amber);
+border: none;
+border-radius: 5px;
+color: var(--black);
+font-family: 'Barlow Condensed', sans-serif;
+font-weight: 700;
+font-size: 11px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+cursor: pointer;
+transition: filter 0.2s;
+}
+.calc-btn:hover { filter: brightness(1.1); }
+.device-picker {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 8px;
+margin-bottom: 1rem;
+}
+.device-option {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 5px;
+padding: 10px;
+cursor: pointer;
+text-align: center;
+font-size: 12px;
+transition: border-color 0.2s, background 0.2s;
+}
+.device-option:hover {
+border-color: var(--muted);
+}
+.device-option.selected {
+border-color: var(--amber);
+background: var(--amber-bg);
+}
+.device-name {
+display: block;
+font-weight: 600;
+color: var(--white);
+margin-bottom: 2px;
+}
+.device-watts {
+display: block;
+font-size: 11px;
+color: var(--subtle);
+}
+.runtime-result {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 5px;
+padding: 12px;
+text-align: center;
+}
+.runtime-label {
+font-size: 11px;
+color: var(--subtle);
+text-transform: uppercase;
+letter-spacing: 0.1em;
+margin-bottom: 4px;
+}
+.runtime-value {
+font-family: 'Barlow Condensed', sans-serif;
+font-size: 28px;
+font-weight: 900;
+color: var(--amber);
+line-height: 1;
+}
+/* ── TOGGLE SWITCH ── */
+.toggle-row {
+display: flex;
+align-items: center;
+justify-content: space-between;
+font-size: 13px;
+margin-bottom: 1.25rem;
+padding: 10px;
+background: var(--surface);
+border-radius: 5px;
+}
+.toggle-row.hidden { display: none; }
+.toggle-label { flex: 1; }
+.toggle-switch {
+width: 44px;
+height: 24px;
+background: var(--border);
+border-radius: 12px;
+position: relative;
+cursor: pointer;
+transition: background 0.2s;
+border: none;
+}
+.toggle-switch::after {
+content: '';
+position: absolute;
+width: 20px;
+height: 20px;
+background: var(--white);
+border-radius: 50%;
+top: 2px;
+left: 2px;
+transition: left 0.2s;
+}
+.toggle-switch:checked {
+background: var(--amber);
+}
+.toggle-switch:checked::after {
+left: 22px;
+}
+input[type="checkbox"].toggle-switch {
+appearance: none;
+}
+/* ── FEATURES & RUNTIME ── */
+.features-section {
+margin-bottom: 2rem;
+}
+.features-list {
+list-style: none;
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 8px;
+}
+@media (max-width: 700px) {
+.features-list { grid-template-columns: 1fr; }
+}
+.features-list li {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 5px;
+padding: 8px 10px;
+font-size: 12px;
+color: var(--text);
+}
+.features-list li::before {
+content: '✓ ';
+color: var(--amber);
+font-weight: 600;
+margin-right: 4px;
+}
+/* ── BUTTONS ── */
+.btn {
+display: inline-block;
+padding: 10px 20px;
+background: transparent;
+border: 1px solid var(--border-hi);
+border-radius: 5px;
+font-family: 'Barlow Condensed', sans-serif;
+font-size: 14px;
+font-weight: 700;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: var(--text);
+cursor: pointer;
+transition: all 0.15s;
+}
+.btn-primary {
+background: var(--amber);
+border-color: var(--amber);
+color: var(--black);
+}
+.btn-primary:hover {
+background: var(--amber);
+filter: brightness(1.15);
+}
+/* ── MODAL ── */
+.modal-overlay {
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.7);
+display: flex;
+align-items: center;
+justify-content: center;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.2s;
+z-index: 1000;
+}
+.modal-overlay.open {
+opacity: 1;
+pointer-events: auto;
+}
+.modal {
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 10px;
+max-width: 420px;
+width: 90%;
+max-height: 80vh;
+overflow-y: auto;
+}
+.modal-top {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 1.5rem;
+border-bottom: 1px solid var(--border);
+}
+.modal-top h2 {
+font-size: 20px;
+margin: 0;
+}
+.modal-close {
+background: none;
+border: none;
+color: var(--text);
+font-size: 20px;
+cursor: pointer;
+}
+.modal-body {
+padding: 1.5rem;
+}
+.modal-summary {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: 1rem;
+margin-bottom: 1.5rem;
+}
+.ms-sku {
+font-family: 'Barlow Condensed', sans-serif;
+font-weight: 700;
+font-size: 16px;
+color: var(--white);
+margin-bottom: 0.5rem;
+}
+.ms-price {
+font-size: 12px;
+color: var(--subtle);
+}
+.field {
+margin-bottom: 1.25rem;
+}
+.field-row {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 1rem;
+margin-bottom: 1.25rem;
+}
+.field label {
+display: block;
+font-size: 12px;
+font-weight: 600;
+margin-bottom: 0.4rem;
+color: var(--text);
+text-transform: uppercase;
+letter-spacing: 0.05em;
+}
+.field input,
+.field textarea {
+width: 100%;
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 5px;
+padding: 8px 10px;
+color: var(--text);
+font-family: inherit;
+font-size: 13px;
+}
+.field textarea {
+resize: vertical;
+min-height: 80px;
+}
+.modal-cta {
+width: 100%;
+padding: 12px;
+background: var(--amber);
+border: none;
+border-radius: 5px;
+color: var(--black);
+font-family: 'Barlow Condensed', sans-serif;
+font-weight: 700;
+font-size: 14px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+cursor: pointer;
+transition: filter 0.2s;
+}
+.modal-cta:hover {
+filter: brightness(1.1);
+}
+.modal-legal {
+font-size: 11px;
+color: var(--subtle);
+margin-top: 1rem;
+line-height: 1.6;
+}
+.success-state {
+display: none;
+text-align: center;
+padding: 2rem 1.5rem;
+}
+.success-state.show {
+display: block;
+}
+.success-icon {
+font-size: 48px;
+margin-bottom: 1rem;
+}
+.success-state h3 {
+font-size: 20px;
+margin-bottom: 1rem;
+}
+.success-state p {
+font-size: 14px;
+color: var(--subtle);
+line-height: 1.7;
+}
+/* ── FOOTER ── */
+.footer {
+background: var(--surface);
+border-top: 1px solid var(--border);
+padding: 2rem;
+text-align: center;
+color: var(--subtle);
+font-size: 13px;
+}
+@media (max-width: 600px) {
+.product-selector { grid-template-columns: 1fr; }
+.device-picker { grid-template-columns: 1fr; }
+}
 </style>
-
-  <!-- THREE.JS + GLTFLoader — loaded early so init3D race is avoided -->
-  <script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
-      "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
-    }
-  }
-  </script>
-  <script type="module">
-    import * as THREE from 'three';
-    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-    window.THREE = THREE;
-    window.GLTFLoader = GLTFLoader;
-  </script>
+<script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
+<script type="importmap">
+{
+"imports": {
+"three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+"three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
+}
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+window.THREE = THREE;
+window.GLTFLoader = GLTFLoader;
+</script>
 </head>
 <body>
-
 <nav class="nav" id="main-nav"></nav>
 <div class="mobile-menu" id="mobile-menu"></div>
 
 <!-- HEADER -->
 <div class="header">
-  <div>
-    <div class="logo"><span class="iso">Iso</span><span class="watt">Watt</span></div>
-    <div class="tagline">Configure your power station</div>
-  </div>
+<div>
+<div class="logo"><span class="iso">Iso</span><span class="watt">Watt</span></div>
+<div class="tagline">Configure your power station</div>
+</div>
 </div>
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-eyebrow">Build Your System</div>
-  <h1>Build your <em>IsoWatt.</em></h1>
-  <p>Select a model, review your configuration, and reserve your build with a 50% deposit.</p>
+<div class="hero-eyebrow">Configurator</div>
+<h1>BUILD YOUR <em>ISO-SYSTEM.</em></h1>
+<p>Select a model, review your configuration, and reserve your build with a 50% deposit.</p>
 </div>
 
 <!-- CONFIG SECTION -->
 <div class="padding-top">
-  <div class="config-wrap">
-    <div class="config-grid">
+<div class="config-wrap">
+<div class="config-grid">
+<!-- LEFT COLUMN: CUSTOMIZATION -->
+<div class="left-col">
+<div class="section-label">Select your model</div>
+<div class="product-selector">
+<button class="product-btn primary-btn active" id="btn-iso-station" onclick="selectProduct('iso-station')">
+<span class="sku"><span class="iso">Iso</span>Station</span>
+<span class="sub">Premium · Flagship</span>
+</button>
 
-      <!-- LEFT COLUMN: CUSTOMIZATION -->
-      <div class="left-col">
+<button class="product-btn" id="btn-iso-station-plus" onclick="selectProduct('iso-station-plus')">
+<span class="sku"><span class="iso">Iso</span>Station<span class="iso">+</span></span>
+<span class="sub">Premium Plus · 2000W AC</span>
+</button>
 
-        <div class="section-label">Select your model</div>
-        <div class="product-selector">
-          <button class="product-btn" id="btn-ip12" onclick="selectProduct('ip12')">
-            <span class="sku">IsoPoint</span>
-            <span class="sub">Entry Tier</span>
-          </button>
-          <button class="product-btn" id="btn-ip12p" onclick="selectProduct('ip12p')">
-            <span class="sku">IsoPoint<span class="iso">+</span></span>
-            <span class="sub">Most Popular</span>
-          </button>
-          <button class="product-btn active" id="btn-if100" onclick="selectProduct('if100')">
-            <span class="sku">IsoFortress</span>
-            <span class="sub">Full Power</span>
-          </button>
-        </div>
+<button class="product-btn" id="btn-iso-point" onclick="selectProduct('iso-point')">
+<span class="sku"><span class="iso">Iso</span>Point</span>
+<span class="sub">Compact</span>
+</button>
 
-        <!-- 3D PREVIEW -->
-        <div class="section-label">Your enclosure</div>
-        <div class="preview-wrap" id="preview-wrap">
-          <canvas id="canvas-3d"></canvas>
-          <div class="preview-fallback" id="preview-fallback" style="display:none;">
-            <div class="icon">📦</div>
-            <div>Model loading...</div>
-          </div>
-          <div id="model-loading" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#F0A500;font-size:11px;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.2em;text-transform:uppercase;pointer-events:none;display:none;">Loading 3D Model...</div>
-          <div class="model-info" id="model-info-label">Apache 4800 · IsoFortress Enclosure</div>
-          <div style="position:absolute;top:10px;right:12px;font-size:10px;color:#555;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.15em;text-transform:uppercase;pointer-events:none;">Drag to rotate</div>
-        </div>
+<button class="product-btn" id="btn-iso-point-plus" onclick="selectProduct('iso-point-plus')">
+<span class="sku"><span class="iso">Iso</span>Point<span class="iso">+</span></span>
+<span class="sub">Compact Plus · 400W AC</span>
+</button>
+</div>
 
-        <!-- SPECS PANEL -->
-        <div class="section-label">Core specs</div>
-        <div class="specs-panel">
-          <div class="spec-row">
-            <div class="spec-item">
-              <span class="spec-label">Capacity</span>
-              <span class="spec-val"><span id="spec-cap">100</span><span class="unit">Ah</span></span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">Energy</span>
-              <span class="spec-val"><span id="spec-wh">1.2</span><span class="unit">kWh</span></span>
-            </div>
-          </div>
-          <div class="spec-row">
-            <div class="spec-item">
-              <span class="spec-label">AC Power</span>
-              <span class="spec-val"><span id="spec-ac">400</span><span class="unit">W</span></span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">Enclosure</span>
-              <span class="spec-val" id="spec-enc" style="font-size:14px;">Apache 4800</span>
-            </div>
-          </div>
-        </div>
+<!-- 3D PREVIEW -->
+<div class="section-label">Your enclosure</div>
+<div class="preview-wrap" id="preview-wrap">
+<canvas id="canvas-3d"></canvas>
+<div class="preview-fallback" id="preview-fallback" style="display:none;">
+<div class="icon">📦</div>
+<div>Model loading...</div>
+</div>
+<div id="model-loading" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#F0A500;font-size:11px;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.2em;text-transform:uppercase;pointer-events:none;display:none;">Loading 3D Model...</div>
+<div class="model-info" id="model-info-label">Apache 4800 · IsoStation Enclosure</div>
+<div style="position:absolute;top:10px;right:12px;font-size:10px;color:#555;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.15em;text-transform:uppercase;pointer-events:none;">Drag to rotate</div>
+</div>
 
-        <!-- AC INVERTER TOGGLE (ip12p only) -->
-        <div class="toggle-row hidden" id="inverter-toggle">
-          <div class="toggle-label">Add 400W AC Inverter Module?</div>
-          <input type="checkbox" class="toggle-switch" id="inverter-check" onchange="updateQuote()">
-        </div>
+<!-- SPECS PANEL -->
+<div class="section-label">Core specs</div>
+<div class="specs-panel">
+<div class="spec-row">
+<div class="spec-item">
+<span class="spec-label">Capacity</span>
+<span class="spec-val"><span id="spec-cap">100</span><span class="unit">Ah</span></span>
+</div>
+<div class="spec-item">
+<span class="spec-label">Energy</span>
+<span class="spec-val"><span id="spec-wh">1.2</span><span class="unit">kWh</span></span>
+</div>
+</div>
+<div class="spec-row">
+<div class="spec-item">
+<span class="spec-label">AC Power</span>
+<span class="spec-val"><span id="spec-ac">Up to 2000W</span><span class="unit"></span></span>
+</div>
+<div class="spec-item">
+<span class="spec-label">Enclosure</span>
+<span class="spec-val" id="spec-enc" style="font-size:14px;">Apache 4800</span>
+</div>
+</div>
+</div>
 
-        <!-- FEATURES -->
-        <div class="section-label">What's included</div>
-        <div class="features-section">
-          <ul class="features-list" id="features-list"></ul>
-        </div>
+<!-- FEATURES -->
+<div class="section-label">What's included</div>
+<div class="features-section">
+<ul class="features-list" id="features-list"></ul>
+</div>
 
-        <!-- RUNTIME -->
-        <div class="section-label">Estimated runtime</div>
-        <div class="runtime-section">
-          <p style="font-size:13px; color: var(--subtle); margin-bottom: 0.25rem;">How long your power station runs common devices at full charge.</p>
-          <div class="runtime-grid" id="runtime-grid"></div>
-        </div>
-      </div>
+<!-- RUNTIME CALCULATOR -->
+<div class="section-label">Runtime calculator</div>
+<div class="runtime-calculator">
+<div class="calc-section">
+<label class="calc-label">Device quick select</label>
+<div class="device-picker" id="device-picker"></div>
+</div>
 
-      <!-- RIGHT COLUMN: QUOTE PANEL -->
-      <div class="right-col">
-        <div class="quote-panel">
-          <div class="quote-header">
-            <div class="q-label">Your configuration</div>
-            <div class="q-sku" id="q-sku">IsoFortress <em>100</em></div>
-          </div>
-          <div class="quote-body">
-            <div class="q-price">$<span id="q-price">917</span></div>
-            <div class="summary-rows" id="summary-rows">
-              <div class="summary-row"><span class="r-label">Model</span><span class="r-val">IsoFortress</span></div>
-              <div class="summary-row"><span class="r-label">Battery</span><span class="r-val">100Ah LiFePO4</span></div>
-              <div class="summary-row"><span class="r-label">Enclosure</span><span class="r-val">Apache 4800</span></div>
-              <div class="summary-row"><span class="r-label">AC Power</span><span class="r-val">400W included</span></div>
-              <div class="summary-row"><span class="r-label">Deposit (50%)</span><span class="r-val green">$459</span></div>
-            </div>
-            <button class="btn btn-primary" onclick="openModal()" style="width:100%;">Reserve Your Unit ↗</button>
-          </div>
-        </div>
-      </div>
+<div class="calc-section">
+<label class="calc-label">Or enter custom draw</label>
+<div class="calc-input-group">
+<input type="number" class="calc-input" id="custom-watts" placeholder="500" min="0">
+<div class="calc-input-unit">Watts</div>
+<button class="calc-btn" onclick="calculateRuntime()">Calculate</button>
+</div>
+</div>
 
-    </div>
-  </div>
+<div class="runtime-result">
+<div class="runtime-label">Estimated Runtime</div>
+<div class="runtime-value" id="runtime-display">—</div>
+</div>
+</div>
+</div>
+
+<!-- RIGHT COLUMN: QUOTE PANEL -->
+<div class="right-col">
+<div class="quote-panel">
+<div class="quote-header">
+<div class="q-label">Your configuration</div>
+<div class="q-sku" id="q-sku"><span class="iso">Iso</span>Station</div>
+</div>
+<div class="quote-body">
+<div class="q-price">$<span id="q-price">1289</span></div>
+<div class="summary-rows" id="summary-rows">
+<div class="summary-row"><span class="r-label">Model</span><span class="r-val">IsoStation</span></div>
+<div class="summary-row"><span class="r-label">Battery</span><span class="r-val">100Ah LiFePO4</span></div>
+<div class="summary-row"><span class="r-label">Enclosure</span><span class="r-val">Apache 4800</span></div>
+<div class="summary-row"><span class="r-label">AC Power</span><span class="r-val">Up to 2000W</span></div>
+<div class="summary-row"><span class="r-label">Deposit (50%)</span><span class="r-val green">$645</span></div>
+</div>
+<button class="btn btn-primary" onclick="openModal()" style="width:100%;">Reserve Your Unit ↗</button>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 
 <!-- DEPOSIT MODAL -->
 <div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-  <div class="modal">
-    <div class="modal-top">
-      <h2 id="modal-title">Reserve Your Unit</h2>
-      <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
-    </div>
-    <div class="modal-body" id="modal-body">
-      <div class="modal-summary">
-        <div class="ms-sku" id="m-sku">IsoFortress 100</div>
-        <div class="ms-price">Retail: <strong id="m-price">$917</strong> · Deposit: <strong id="m-deposit" style="color: var(--amber);">$459</strong></div>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label for="f-name">First name</label>
-          <input type="text" id="f-name" placeholder="Luke" autocomplete="given-name">
-        </div>
-        <div class="field">
-          <label for="f-last">Last name</label>
-          <input type="text" id="f-last" placeholder="Smith" autocomplete="family-name">
-        </div>
-      </div>
-      <div class="field">
-        <label for="f-email">Email address</label>
-        <input type="email" id="f-email" placeholder="luke@example.com" autocomplete="email">
-      </div>
-      <div class="field">
-        <label for="f-phone">Phone (optional)</label>
-        <input type="tel" id="f-phone" placeholder="(717) 555-0100" autocomplete="tel">
-      </div>
-      <div class="field">
-        <label for="f-notes">Notes or questions</label>
-        <textarea id="f-notes" placeholder="Any specific requirements, use case, or questions for us..."></textarea>
-      </div>
-      <button class="modal-cta" onclick="submitReservation()">Send Reservation Request</button>
-      <p class="modal-legal">Submitting this form does not charge you. We'll contact you within 24 hrs to confirm your build and collect the deposit. No payment info is stored here.</p>
-    </div>
-    <div class="success-state" id="success-state">
-      <div class="success-icon">⚡</div>
-      <h3>Reservation Received</h3>
-      <p>We'll reach out within 24 hours to confirm your <span id="s-sku">IsoFortress 100</span> build and collect your deposit.<br><br>Built in Lebanon, PA — thank you for supporting local.</p>
-    </div>
-  </div>
+<div class="modal">
+<div class="modal-top">
+<h2 id="modal-title">Reserve Your Unit</h2>
+<button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+</div>
+<div class="modal-body" id="modal-body">
+<div class="modal-summary">
+<div class="ms-sku" id="m-sku">IsoStation</div>
+<div class="ms-price">Retail: <strong id="m-price">$1289</strong> · Deposit: <strong id="m-deposit" style="color: var(--amber);">$645</strong></div>
+</div>
+<div class="field-row">
+<div class="field">
+<label for="f-name">First name</label>
+<input type="text" id="f-name" placeholder="Luke" autocomplete="given-name">
+</div>
+<div class="field">
+<label for="f-last">Last name</label>
+<input type="text" id="f-last" placeholder="Smith" autocomplete="family-name">
+</div>
+</div>
+<div class="field">
+<label for="f-email">Email address</label>
+<input type="email" id="f-email" placeholder="luke@example.com" autocomplete="email">
+</div>
+<div class="field">
+<label for="f-phone">Phone (optional)</label>
+<input type="tel" id="f-phone" placeholder="(717) 555-0100" autocomplete="tel">
+</div>
+<div class="field">
+<label for="f-notes">Notes or questions</label>
+<textarea id="f-notes" placeholder="Any specific requirements, use case, or questions for us..."></textarea>
+</div>
+<button class="modal-cta" onclick="submitReservation()">Send Reservation Request</button>
+<p class="modal-legal">Submitting this form does not charge you. We'll contact you within 24 hrs to confirm your build and collect the deposit. No payment info is stored here.</p>
+</div>
+<div class="success-state" id="success-state">
+<div class="success-icon">⚡</div>
+<h3>Reservation Received</h3>
+<p>We'll reach out within 24 hours to confirm your <span id="s-sku">IsoStation</span> build and collect your deposit.<br><br>Built in Bellefonte, PA — thank you for supporting local.</p>
+</div>
+</div>
 </div>
 
 <footer class="footer">
-  <strong>Gridless Fabrication LLC</strong> · Lebanon, PA · Built to order · LiFePO4 Power Systems
+<strong>Gridless Fabrication LLC</strong> · Bellefonte, PA · Built to order · LiFePO4 Power Systems
 </footer>
-
-
 
 <script>
 // ══════════════════════════════════════════════════════════════
 // PRODUCT DATA
 // ══════════════════════════════════════════════════════════════
-
 const PRODUCTS = {
-  ip12: {
-    name: 'IsoPoint',
-    nameHTML: 'Iso<em>Point</em>',
-    enc: 'Apache 2800',
-    cap: '12Ah',
-    wh: '0.15kWh',
-    ac: 'None',
-    price: 365,
-    inverter: false,
-    features: [
-      '12Ah LiFePO4 battery',
-      'Dual 96W USB-C ports',
-      '12V lighter socket',
-      'SAE charge input',
-      'Battery monitor + temp',
-      'LED cabin lighting',
-      'Master power switch',
-      'Blade fuse protection',
-      'Apache 2800 case',
-      '12V 5A wall charger'
-    ],
-    runtime: [
-      { device: 'Phone (charge)', wh: 0.015 },
-      { device: 'Laptop 45W', wh: 0.045 },
-      { device: 'LED Work Light', wh: 0.025 },
-      { device: 'Diesel heater fan', wh: 0.012 }
-    ]
-  },
-  ip12p: {
-    name: 'IsoPoint+',
-    nameHTML: 'Iso<em>Point+</em>',
-    enc: 'Apache 2800',
-    cap: '12Ah',
-    wh: '0.15kWh',
-    ac: '400W (optional)',
-    price: 365,
-    priceAC: 429,
-    inverter: true,
-    features: [
-      '12Ah LiFePO4 battery',
-      'Dual 96W USB-C ports',
-      '12V lighter socket',
-      'SAE charge input',
-      'Battery monitor + temp',
-      'LED cabin lighting',
-      'Master power switch',
-      'Blade fuse protection',
-      'Apache 2800 case',
-      '12V 5A wall charger'
-    ],
-    featuresAC: [
-      '12Ah LiFePO4 battery',
-      'Dual 96W USB-C ports',
-      '12V lighter socket',
-      '110V AC outlet',
-      'SAE charge input',
-      'Battery monitor + temp',
-      'LED cabin lighting',
-      'Master power switch',
-      'Blade fuse protection',
-      '12V 5A wall charger'
-    ],
-    runtime: [
-      { device: 'Phone (charge)', wh: 0.015 },
-      { device: 'Laptop 45W', wh: 0.045 },
-      { device: 'LED Work Light', wh: 0.025 },
-      { device: 'Diesel heater fan', wh: 0.012 }
-    ]
-  },
-  if100: {
-    name: 'IsoFortress',
-    nameHTML: 'Iso<em>Fortress</em>',
-    enc: 'Apache 4800',
-    cap: '100Ah',
-    wh: '1.2kWh',
-    ac: '400W',
-    price: 917,
-    inverter: false,
-    features: [
-      '100Ah LiFePO4 battery',
-      '400W power inverter',
-      'Dual 110V AC outlets',
-      'Dual 96W USB-C ports',
-      '12V lighter socket',
-      'SAE charge input',
-      'Battery monitor + temp',
-      'LED cabin lighting',
-      '100A master disconnect',
-      '100A + 50A breakers',
-      'ANL fuse protection',
-      '12V 10A wall charger'
-    ],
-    runtime: [
-      { device: 'Phone (charge)', wh: 0.015 },
-      { device: 'Laptop 65W', wh: 0.065 },
-      { device: 'CPAP machine', wh: 0.05 },
-      { device: 'Diesel heater fan', wh: 0.012 },
-      { device: 'LED Work Light', wh: 0.025 },
-      { device: 'Mini fridge', wh: 0.04 }
-    ]
-  }
+'iso-station': {
+name: 'IsoStation',
+nameHTML: '<span class="iso">Iso</span>Station',
+enc: 'Apache 4800',
+cap: '100Ah',
+wh: '1.2kWh',
+ac: 'Up to 2000W',
+price: 1289,
+inverter: false,
+features: [
+'100Ah LiFePO4 battery',
+'Up to 2000W power inverter',
+'Dual 110V AC outlets',
+'Dual 96W USB-C ports',
+'12V lighter socket',
+'SAE charge input',
+'Battery monitor + temp',
+'LED cabin lighting',
+'100A master disconnect',
+'100A + 50A breakers',
+'ANL fuse protection',
+'12V 10A wall charger'
+],
+devices: [
+{ name: 'Phone', watts: 15 },
+{ name: 'Laptop 65W', watts: 65 },
+{ name: 'CPAP', watts: 50 },
+{ name: 'Mini Fridge', watts: 40 },
+{ name: 'LED Work Light', watts: 25 },
+{ name: 'Heater Fan', watts: 12 }
+]
+},
+'iso-station-plus': {
+name: 'IsoStation+',
+nameHTML: '<span class="iso">Iso</span>Station<span class="iso">+</span>',
+enc: 'Apache 4800',
+cap: '100Ah',
+wh: '1.2kWh',
+ac: '2000W',
+price: 1359,
+inverter: false,
+features: [
+'100Ah LiFePO4 battery',
+'2000W power inverter',
+'Dual 110V AC outlets',
+'Dual 96W USB-C ports',
+'12V lighter socket',
+'SAE charge input',
+'Battery monitor + temp',
+'LED cabin lighting',
+'100A master disconnect',
+'100A + 50A breakers',
+'ANL fuse protection',
+'12V 10A wall charger'
+],
+devices: [
+{ name: 'Phone', watts: 15 },
+{ name: 'Laptop 65W', watts: 65 },
+{ name: 'CPAP', watts: 50 },
+{ name: 'Mini Fridge', watts: 40 },
+{ name: 'LED Work Light', watts: 25 },
+{ name: 'Heater Fan', watts: 12 }
+]
+},
+'iso-point': {
+name: 'IsoPoint',
+nameHTML: '<span class="iso">Iso</span>Point',
+enc: 'Apache 2800',
+cap: '12Ah',
+wh: '0.15kWh',
+ac: 'None',
+price: 365,
+inverter: false,
+features: [
+'12Ah LiFePO4 battery',
+'Dual 96W USB-C ports',
+'12V lighter socket',
+'SAE charge input',
+'Battery monitor + temp',
+'LED cabin lighting',
+'Master power switch',
+'Blade fuse protection',
+'Apache 2800 case',
+'12V 5A wall charger'
+],
+devices: [
+{ name: 'Phone', watts: 15 },
+{ name: 'Laptop 45W', watts: 45 },
+{ name: 'LED Work Light', watts: 25 },
+{ name: 'Heater Fan', watts: 12 }
+]
+},
+'iso-point-plus': {
+name: 'IsoPoint+',
+nameHTML: '<span class="iso">Iso</span>Point<span class="iso">+</span>',
+enc: 'Apache 2800',
+cap: '12Ah',
+wh: '0.15kWh',
+ac: '400W',
+price: 429,
+inverter: true,
+features: [
+'12Ah LiFePO4 battery',
+'Dual 96W USB-C ports',
+'12V lighter socket',
+'110V AC outlet',
+'SAE charge input',
+'Battery monitor + temp',
+'LED cabin lighting',
+'Master power switch',
+'Blade fuse protection',
+'12V 5A wall charger'
+],
+devices: [
+{ name: 'Phone', watts: 15 },
+{ name: 'Laptop 45W', watts: 45 },
+{ name: 'LED Work Light', watts: 25 },
+{ name: 'Heater Fan', watts: 12 }
+]
+}
 };
 
-let currentKey = 'if100';
+let currentKey = 'iso-station';
+let currentBatteryWh = 1.2;
 
 // ══════════════════════════════════════════════════════════════
 // THREE.JS 3D VIEWER
-// Bounds pre-calculated from actual binary model data:
-//   2800 model.glb:  345.6mm → scale 0.005787, offset (0, 0.0932, -0.1447)
-//   4800 gltf:       0.6m    → scale 3.32755,  offset (0, -0.44,  -0.4885)
 // ══════════════════════════════════════════════════════════════
-
 const MODEL_CONFIGS = {
-  ip12:  { file: 'models/model.glb', scale: 0.009000, px: 0.0000, py: 1.3330, pz: 0.0000, rotX: -1.413717, rotY: 0.000000, rotZ: 0.000000, camZ: 2.2, label: 'Apache 2800 · IsoPoint Enclosure' },
-  ip12p: { file: 'models/model.glb', scale: 0.009000, px: 0.0000, py: 1.3330, pz: 0.0000, rotX: -1.413717, rotY: 0.000000, rotZ: 0.000000, camZ: 2.2, label: 'Apache 2800 · IsoPoint+ Enclosure' },
- if100: {
-  file: 'models/4800_Case_Open.glb',
-  scale: 0.004300,
-  px: 0.0000, py: 0.0000, pz: 0.0000,
-  rotX: -1.282817,
-  rotY: 0.000000,
-  rotZ: 0.000000,
-  camZ: 5.0,
-  label: 'Apache 4800 · IsoFortress Enclosure'
-}
-  
+'iso-station': { file: 'models/4800_Case_Open.glb', scale: 0.0066, px: 0.0, py: 1.333, pz: 0.0, rotX: -1.413717, rotY: 0.0, rotZ: 0.0, camZ: 6.0, label: 'Apache 4800 · IsoStation Enclosure' },
+'iso-station-plus': { file: 'models/4800_Case_Open.glb', scale: 0.0066, px: 0.0, py: 1.333, pz: 0.0, rotX: -1.413717, rotY: 0.0, rotZ: 0.0, camZ: 6.0, label: 'Apache 4800 · IsoStation+ Enclosure' },
+'iso-point': { file: 'models/model.glb', scale: 0.009, px: 0.0, py: 1.333, pz: 0.0, rotX: -1.413717, rotY: 0.0, rotZ: 0.0, camZ: 2.2, label: 'Apache 2800 · IsoPoint Enclosure' },
+'iso-point-plus': { file: 'models/model.glb', scale: 0.009, px: 0.0, py: 1.333, pz: 0.0, rotX: -1.413717, rotY: 0.0, rotZ: 0.0, camZ: 2.2, label: 'Apache 2800 · IsoPoint+ Enclosure' }
 };
 
 let scene, camera, renderer, model;
 
-// ── Orbit (drag to rotate) state ──
 const orbit = {
-  active: false,
-  lastX: 0, lastY: 0,
-  rotX: 0, rotY: 0,        // current rotation angles
-  autoRotate: true          // auto-rotate until user touches the model
+active: false,
+lastX: 0, lastY: 0,
+rotX: 0, rotY: 0,
+autoRotate: true
 };
 
 function init3D() {
-  if (!window.THREE || !window.GLTFLoader) { setTimeout(init3D, 50); return; }
+if (!window.THREE || !window.GLTFLoader) { setTimeout(init3D, 50); return; }
 
-  const wrap   = document.getElementById('preview-wrap');
-  const canvas = document.getElementById('canvas-3d');
-  if (!wrap || !canvas) return;
+const wrap = document.getElementById('preview-wrap');
+const canvas = document.getElementById('canvas-3d');
 
-  const W = wrap.clientWidth  || 600;
-  const H = wrap.clientHeight || 300;
+if (!wrap || !canvas) return;
 
-  // Scene
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x161616);
+const W = wrap.clientWidth || 600;
+const H = wrap.clientHeight || 300;
 
-  // Camera
-  camera = new THREE.PerspectiveCamera(45, W / H, 0.001, 1000);
-  camera.position.set(0, 0.2, 5.0);
-  camera.lookAt(0, 0, 0);
+scene = new THREE.Scene();
+scene.background = new THREE.Color(0x161616);
 
-  // Renderer
-  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-  renderer.setSize(W, H);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.shadowMap.enabled = true;
+camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 1000);
+camera.position.z = 2.2;
 
-  // 3-point lighting
-  scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-  const key = new THREE.DirectionalLight(0xffffff, 1.2);
-  key.position.set(3, 4, 5); key.castShadow = true; scene.add(key);
-  const fill = new THREE.DirectionalLight(0xfff4e0, 0.5);
-  fill.position.set(-4, 1, -2); scene.add(fill);
-  const rim = new THREE.DirectionalLight(0xffffff, 0.3);
-  rim.position.set(0, -3, -5); scene.add(rim);
+renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+renderer.setSize(W, H);
+renderer.setPixelRatio(window.devicePixelRatio || 1);
 
-  // ── Mouse drag to rotate ──
-  canvas.style.cursor = 'grab';
+const light = new THREE.DirectionalLight(0xffffff, 0.8);
+light.position.set(5, 10, 7);
+scene.add(light);
 
-  canvas.addEventListener('mousedown', (e) => {
-    orbit.active = true;
-    orbit.autoRotate = false;
-    orbit.lastX = e.clientX;
-    orbit.lastY = e.clientY;
-    canvas.style.cursor = 'grabbing';
-  });
-  window.addEventListener('mouseup', () => {
-    orbit.active = false;
-    canvas.style.cursor = 'grab';
-  });
-  window.addEventListener('mousemove', (e) => {
-    if (!orbit.active || !model) return;
-    const dx = e.clientX - orbit.lastX;
-    const dy = e.clientY - orbit.lastY;
-    orbit.lastX = e.clientX;
-    orbit.lastY = e.clientY;
-    orbit.rotY += dx * 0.01;
-    orbit.rotX += dy * 0.01;
-    // Clamp vertical rotation so model doesn't flip
-    orbit.rotX = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, orbit.rotX));
-    model.rotation.y = orbit.rotY;
-    model.rotation.x = orbit.rotX;
-  });
+const ambLight = new THREE.AmbientLight(0xffffff, 0.4);
+scene.add(ambLight);
 
-  // ── Touch drag to rotate (mobile) ──
-  canvas.addEventListener('touchstart', (e) => {
-    if (e.touches.length === 1) {
-      orbit.active = true;
-      orbit.autoRotate = false;
-      orbit.lastX = e.touches[0].clientX;
-      orbit.lastY = e.touches[0].clientY;
-    }
-  }, { passive: true });
-  canvas.addEventListener('touchend', () => { orbit.active = false; });
-  canvas.addEventListener('touchmove', (e) => {
-    if (!orbit.active || !model || e.touches.length !== 1) return;
-    const dx = e.touches[0].clientX - orbit.lastX;
-    const dy = e.touches[0].clientY - orbit.lastY;
-    orbit.lastX = e.touches[0].clientX;
-    orbit.lastY = e.touches[0].clientY;
-    orbit.rotY += dx * 0.01;
-    orbit.rotX += dy * 0.01;
-    orbit.rotX = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, orbit.rotX));
-    model.rotation.y = orbit.rotY;
-    model.rotation.x = orbit.rotX;
-  }, { passive: true });
+canvas.addEventListener('mousedown', (e) => {
+orbit.active = true;
+orbit.lastX = e.clientX;
+orbit.lastY = e.clientY;
+orbit.autoRotate = false;
+});
+canvas.addEventListener('mousemove', (e) => {
+if (!orbit.active) return;
+const dx = (e.clientX - orbit.lastX) * 0.01;
+const dy = (e.clientY - orbit.lastY) * 0.01;
+orbit.rotY += dx;
+orbit.rotX += dy;
+orbit.lastX = e.clientX;
+orbit.lastY = e.clientY;
+updateModelRotation();
+});
+canvas.addEventListener('mouseup', () => { orbit.active = false; });
 
-  // Resize handler
-  window.addEventListener('resize', () => {
-    const W2 = wrap.clientWidth || 600;
-    const H2 = wrap.clientHeight || 300;
-    camera.aspect = W2 / H2;
-    camera.updateProjectionMatrix();
-    renderer.setSize(W2, H2);
-  });
+loadModel('iso-station');
 
-  // Render loop
-  (function animate() {
-    requestAnimationFrame(animate);
-    if (model && orbit.autoRotate) {
-      orbit.rotY += 0.006;
-      model.rotation.y = orbit.rotY;
-    }
-    renderer.render(scene, camera);
-  })();
-
-  // Ready — load current product model
-  window._3dReady = true;
-  loadModelForProduct(currentKey);
+function animate() {
+requestAnimationFrame(animate);
+if (orbit.autoRotate && model) {
+orbit.rotY += 0.003;
+updateModelRotation();
+}
+renderer.render(scene, camera);
+}
+animate();
 }
 
-function loadModelForProduct(key) {
-  if (!scene) return; // Three.js not init yet — init3D will call us
-  const cfg       = MODEL_CONFIGS[key];
-  const labelEl   = document.getElementById('model-info-label');
-  const loadingEl = document.getElementById('model-loading');
-
-  if (labelEl)   labelEl.textContent       = cfg.label;
-  if (loadingEl) loadingEl.style.display   = 'block';
-
-  // Remove previous model
-  if (model) { scene.remove(model); model = null; }
-
-  // Reset orbit rotation for new model
-  orbit.rotX = 0;
-  orbit.rotY = 0;
-  orbit.autoRotate = true;
-
-  const loader = new window.GLTFLoader();
-  loader.load(
-    cfg.file,
-    (gltf) => {
-      model = gltf.scene;
-      model.scale.setScalar(cfg.scale);
-      model.position.set(cfg.px, cfg.py, cfg.pz);
-      // Apply base rotation if model needs orientation fix (e.g. Z-up CAD export)
-      if (cfg.rotX) model.rotation.x = cfg.rotX;
-      if (cfg.rotY) model.rotation.y = cfg.rotY;
-      if (cfg.rotZ) model.rotation.z = cfg.rotZ;
-      // Sync orbit state to match baked rotation
-      orbit.rotX = cfg.rotX || 0;
-      orbit.rotY = cfg.rotY || 0;
-      camera.position.set(0, 0.2, cfg.camZ);
-      camera.lookAt(0, 0, 0);
-      model.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow    = true;
-          child.receiveShadow = true;
-          if (child.material) child.material.side = THREE.DoubleSide;
-        }
-      });
-      scene.add(model);
-      if (loadingEl) loadingEl.style.display = 'none';
-    },
-    undefined,
-    (err) => {
-      console.error('Model load error:', cfg.file, err);
-      if (loadingEl) loadingEl.textContent = '⚠ Model unavailable';
-    }
-  );
+function updateModelRotation() {
+if (!model) return;
+model.rotation.order = 'YXZ';
+model.rotation.y = orbit.rotY;
+model.rotation.x = orbit.rotX;
 }
 
-// Init after full page load so canvas has real dimensions
-window.addEventListener('load', init3D);
+function loadModel(key) {
+const config = MODEL_CONFIGS[key];
+if (!config) return;
 
-// ══════════════════════════════════════════════════════════════
-// CONFIGURATOR LOGIC
-// ══════════════════════════════════════════════════════════════
+if (model) scene.remove(model);
+
+const loader = new window.GLTFLoader();
+loader.load(config.file, (gltf) => {
+model = gltf.scene;
+model.scale.set(config.scale, config.scale, config.scale);
+model.position.set(config.px, config.py, config.pz);
+model.rotation.order = 'YXZ';
+model.rotation.x = config.rotX;
+model.rotation.y = config.rotY;
+model.rotation.z = config.rotZ;
+scene.add(model);
+camera.position.z = config.camZ;
+
+document.getElementById('model-info-label').textContent = config.label;
+}, undefined, () => {
+console.error('Model load error');
+});
+}
 
 function selectProduct(key) {
-  currentKey = key;
-  document.querySelectorAll('.product-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('btn-' + key).classList.add('active');
+if (!PRODUCTS[key]) return;
 
-  const p = PRODUCTS[key];
-  document.getElementById('q-sku').innerHTML = p.nameHTML;
-  document.getElementById('spec-cap').innerHTML = p.cap.replace('Ah','');
-  document.getElementById('spec-wh').innerHTML = p.wh.replace('kWh','');
-  document.getElementById('spec-ac').innerHTML = p.ac === 'None' ? '—' : p.ac.replace('W','').replace('(optional)','').trim();
-  document.getElementById('spec-enc').textContent = p.enc;
+currentKey = key;
+const prod = PRODUCTS[key];
 
-  // Load correct 3D model — safe whether or not Three.js is ready yet
-  if (window._3dReady) {
-    loadModelForProduct(key);
-  }
-  // If not ready, init3D will call loadModelForProduct(currentKey) on load
+// Update buttons
+document.querySelectorAll('.product-btn').forEach(btn => btn.classList.remove('active'));
+document.getElementById(`btn-${key}`)?.classList.add('active');
 
-  const invToggle = document.getElementById('inverter-toggle');
-  if (key === 'ip12p') {
-    invToggle.classList.remove('hidden');
-  } else {
-    invToggle.classList.add('hidden');
-    document.getElementById('inverter-check').checked = false;
-  }
-  updateQuote();
+// Update specs
+document.getElementById('spec-cap').textContent = prod.cap.split('Ah')[0];
+document.getElementById('spec-wh').textContent = prod.wh.split('kWh')[0];
+document.getElementById('spec-ac').textContent = prod.ac;
+document.getElementById('spec-enc').textContent = prod.enc;
+
+// Update features
+const featuresList = document.getElementById('features-list');
+featuresList.innerHTML = '';
+prod.features.forEach(f => {
+const li = document.createElement('li');
+li.textContent = f;
+featuresList.appendChild(li);
+});
+
+// Update 3D model
+loadModel(key);
+
+// Update device picker
+updateDevicePicker(prod.devices);
+
+// Update quote
+currentBatteryWh = parseFloat(prod.wh);
+updateQuote();
+}
+
+function updateDevicePicker(devices) {
+const picker = document.getElementById('device-picker');
+picker.innerHTML = '';
+devices.forEach((dev, idx) => {
+const btn = document.createElement('div');
+btn.className = 'device-option';
+btn.innerHTML = `<span class="device-name">${dev.name}</span><span class="device-watts">${dev.watts}W</span>`;
+btn.onclick = () => {
+document.querySelectorAll('.device-option').forEach(b => b.classList.remove('selected'));
+btn.classList.add('selected');
+document.getElementById('custom-watts').value = dev.watts;
+calculateRuntime();
+};
+picker.appendChild(btn);
+});
+}
+
+function calculateRuntime() {
+const watts = parseFloat(document.getElementById('custom-watts').value);
+if (!watts || watts <= 0) {
+document.getElementById('runtime-display').textContent = '—';
+return;
+}
+
+const whUsable = currentBatteryWh * 0.9; // 90% usable
+const hours = whUsable / watts;
+
+let display;
+if (hours < 1) {
+const mins = Math.round(hours * 60);
+display = `${mins} min`;
+} else if (hours < 24) {
+const h = hours.toFixed(1);
+display = `${h} hrs`;
+} else {
+const d = (hours / 24).toFixed(1);
+display = `${d} days`;
+}
+
+document.getElementById('runtime-display').textContent = display;
 }
 
 function updateQuote() {
-  const p = PRODUCTS[currentKey];
-  const invOn = currentKey === 'ip12p' && document.getElementById('inverter-check').checked;
-  const price = invOn ? (p.priceAC || p.price) : p.price;
-  const deposit = Math.round(price * 0.5);
-  const features = (currentKey === 'ip12p' && invOn) ? p.featuresAC : p.features;
+const prod = PRODUCTS[currentKey];
+const price = prod.price;
+const deposit = Math.ceil(price / 2);
 
-  document.getElementById('q-price').textContent = price.toLocaleString();
+document.getElementById('q-sku').innerHTML = prod.nameHTML;
+document.getElementById('q-price').textContent = price.toLocaleString();
 
-  document.getElementById('summary-rows').innerHTML = `
-    <div class="summary-row"><span class="r-label">Model</span><span class="r-val">${p.name}${invOn ? ' + AC' : ''}</span></div>
-    <div class="summary-row"><span class="r-label">Battery</span><span class="r-val">${p.cap} LiFePO4</span></div>
-    <div class="summary-row"><span class="r-label">Enclosure</span><span class="r-val">${p.enc}</span></div>
-    <div class="summary-row"><span class="r-label">AC Power</span><span class="r-val">${invOn || p.ac === '400W' ? '400W included' : 'DC only'}</span></div>
-    <div class="summary-row"><span class="r-label">Deposit (50%)</span><span class="r-val green">$${deposit.toLocaleString()}</span></div>
-  `;
+const summaryHtml = `
+<div class="summary-row"><span class="r-label">Model</span><span class="r-val">${prod.name}</span></div>
+<div class="summary-row"><span class="r-label">Battery</span><span class="r-val">${prod.cap} LiFePO4</span></div>
+<div class="summary-row"><span class="r-label">Enclosure</span><span class="r-val">${prod.enc}</span></div>
+<div class="summary-row"><span class="r-label">AC Power</span><span class="r-val">${prod.ac}</span></div>
+<div class="summary-row"><span class="r-label">Deposit (50%)</span><span class="r-val green">$${deposit.toLocaleString()}</span></div>
+`;
+document.getElementById('summary-rows').innerHTML = summaryHtml;
 
-  document.getElementById('features-list').innerHTML = features.map(f => `<li>${f}</li>`).join('');
-
-  const totalWh = parseFloat(p.wh) * 1000;
-  document.getElementById('runtime-grid').innerHTML = p.runtime.map(r => {
-    const hrs = (totalWh * 0.9 / (r.wh * 1000));
-    const display = hrs >= 10 ? Math.round(hrs) + 'h' : hrs.toFixed(1) + 'h';
-    return `<div class="runtime-item"><span class="device">${r.device}</span><span class="hours">${display}<span> est.</span></span></div>`;
-  }).join('');
-
-  document.getElementById('m-sku').textContent = p.name + (invOn ? ' + AC' : '');
-  document.getElementById('m-price').textContent = '$' + price.toLocaleString();
-  document.getElementById('m-deposit').textContent = '$' + deposit.toLocaleString();
-  document.getElementById('s-sku').textContent = p.name + (invOn ? ' + AC' : '');
+document.getElementById('m-sku').textContent = prod.name;
+document.getElementById('m-price').textContent = price.toLocaleString();
+document.getElementById('m-deposit').textContent = deposit.toLocaleString();
+document.getElementById('s-sku').textContent = prod.name;
 }
 
 function openModal() {
-  document.getElementById('modal').classList.add('open');
-  document.getElementById('success-state').classList.remove('show');
-  document.getElementById('modal-body').style.display = '';
+document.getElementById('modal').classList.add('open');
 }
 
 function closeModal() {
-  document.getElementById('modal').classList.remove('open');
+document.getElementById('modal').classList.remove('open');
 }
-
-document.getElementById('modal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
 
 function submitReservation() {
-  const name = document.getElementById('f-name').value.trim();
-  const email = document.getElementById('f-email').value.trim();
-  if (!name || !email) { alert('Please enter your name and email to continue.'); return; }
-  document.getElementById('modal-body').style.display = 'none';
-  document.getElementById('success-state').classList.add('show');
+const name = document.getElementById('f-name').value.trim();
+const email = document.getElementById('f-email').value.trim();
+
+if (!name || !email) {
+alert('Please fill in at least name and email.');
+return;
 }
 
-// Default to IsoFortress on load
-selectProduct('if100');
-</script>
+// In production, send to backend
+const prod = PRODUCTS[currentKey];
+const subject = `New IsoWatt Reservation: ${prod.name}`;
+const body = `Name: ${name}\nEmail: ${email}\nModel: ${prod.name}\nPrice: $${prod.price}\nNotes: ${document.getElementById('f-notes').value}`;
 
-<footer class="footer" id="main-footer" style="margin-top:4rem;"></footer>
-<script src="site.js"></script>
-<script>
-  initNav('configurator');
-  initFooter();
-</script>
+// For now, show success
+document.getElementById('modal-body').style.display = 'none';
+document.getElementById('success-state').classList.add('show');
+}
 
+// Init
+init3D();
+selectProduct('iso-station');
+</script>
 </body>
 </html>
