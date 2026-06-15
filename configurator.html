@@ -625,6 +625,23 @@
     .product-selector { grid-template-columns: 1fr; }
   }
 </style>
+
+  <!-- THREE.JS + GLTFLoader — loaded early so init3D race is avoided -->
+  <script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    window.THREE = THREE;
+    window.GLTFLoader = GLTFLoader;
+  </script>
 </head>
 <body>
 
@@ -680,6 +697,7 @@
           </div>
           <div id="model-loading" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#F0A500;font-size:11px;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.2em;text-transform:uppercase;pointer-events:none;display:none;">Loading 3D Model...</div>
           <div class="model-info" id="model-info-label">Apache 4800 · IsoFortress Enclosure</div>
+          <div style="position:absolute;top:10px;right:12px;font-size:10px;color:#555;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.15em;text-transform:uppercase;pointer-events:none;">Drag to rotate</div>
         </div>
 
         <!-- SPECS PANEL -->
@@ -916,21 +934,28 @@ let currentKey = 'gn100';
 
 // ══════════════════════════════════════════════════════════════
 // THREE.JS 3D VIEWER
-// Pre-calculated bounds from actual GLB/GLTF binary data:
-//   2800 (model.glb):  345.6mm wide → scale 0.005787, pos (0, 0.0932, -0.1447)
-//   4800 (4800.glb):   0.6m wide    → scale 3.32755,  pos (0, -0.44,  -0.4885)
+// Bounds pre-calculated from actual binary model data:
+//   2800 model.glb:  345.6mm → scale 0.005787, offset (0, 0.0932, -0.1447)
+//   4800 gltf:       0.6m    → scale 3.32755,  offset (0, -0.44,  -0.4885)
 // ══════════════════════════════════════════════════════════════
 
 const MODEL_CONFIGS = {
-  gn12:  { file: 'models/model.glb', scale: 0.005787, px: 0,  py: 0.0932,  pz: -0.1447, camZ: 5.0, label: 'Apache 2800 · IsoPoint Enclosure' },
-  gn12p: { file: 'models/model.glb', scale: 0.005787, px: 0,  py: 0.0932,  pz: -0.1447, camZ: 5.0, label: 'Apache 2800 · IsoPoint+ Enclosure' },
-  gn100: { file: 'models/Unnamed-_800_Case_Open.gltf', scale: 3.32755, px: 0, py: -0.44, pz: -0.4885, camZ: 5.0, label: 'Apache 4800 · IsoFortress Enclosure' }
+  gn12:  { file: 'models/model.glb',                      scale: 0.005787, px: 0, py: 0.0932, pz: -0.1447, camZ: 5.0, label: 'Apache 2800 · IsoPoint Enclosure'   },
+  gn12p: { file: 'models/model.glb',                      scale: 0.005787, px: 0, py: 0.0932, pz: -0.1447, camZ: 5.0, label: 'Apache 2800 · IsoPoint+ Enclosure'  },
+  gn100: { file: 'models/Unnamed-_800_Case_Open.gltf',    scale: 3.32755,  px: 0, py: -0.44,  pz: -0.4885, camZ: 5.0, label: 'Apache 4800 · IsoFortress Enclosure' }
 };
 
 let scene, camera, renderer, model;
 
+// ── Orbit (drag to rotate) state ──
+const orbit = {
+  active: false,
+  lastX: 0, lastY: 0,
+  rotX: 0, rotY: 0,        // current rotation angles
+  autoRotate: true          // auto-rotate until user touches the model
+};
+
 function init3D() {
-  // Retry until Three.js ESM is ready
   if (!window.THREE || !window.GLTFLoader) { setTimeout(init3D, 50); return; }
 
   const wrap   = document.getElementById('preview-wrap');
@@ -958,15 +983,62 @@ function init3D() {
   // 3-point lighting
   scene.add(new THREE.AmbientLight(0xffffff, 0.7));
   const key = new THREE.DirectionalLight(0xffffff, 1.2);
-  key.position.set(3, 4, 5);
-  key.castShadow = true;
-  scene.add(key);
+  key.position.set(3, 4, 5); key.castShadow = true; scene.add(key);
   const fill = new THREE.DirectionalLight(0xfff4e0, 0.5);
-  fill.position.set(-4, 1, -2);
-  scene.add(fill);
+  fill.position.set(-4, 1, -2); scene.add(fill);
   const rim = new THREE.DirectionalLight(0xffffff, 0.3);
-  rim.position.set(0, -3, -5);
-  scene.add(rim);
+  rim.position.set(0, -3, -5); scene.add(rim);
+
+  // ── Mouse drag to rotate ──
+  canvas.style.cursor = 'grab';
+
+  canvas.addEventListener('mousedown', (e) => {
+    orbit.active = true;
+    orbit.autoRotate = false;
+    orbit.lastX = e.clientX;
+    orbit.lastY = e.clientY;
+    canvas.style.cursor = 'grabbing';
+  });
+  window.addEventListener('mouseup', () => {
+    orbit.active = false;
+    canvas.style.cursor = 'grab';
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!orbit.active || !model) return;
+    const dx = e.clientX - orbit.lastX;
+    const dy = e.clientY - orbit.lastY;
+    orbit.lastX = e.clientX;
+    orbit.lastY = e.clientY;
+    orbit.rotY += dx * 0.01;
+    orbit.rotX += dy * 0.01;
+    // Clamp vertical rotation so model doesn't flip
+    orbit.rotX = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, orbit.rotX));
+    model.rotation.y = orbit.rotY;
+    model.rotation.x = orbit.rotX;
+  });
+
+  // ── Touch drag to rotate (mobile) ──
+  canvas.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      orbit.active = true;
+      orbit.autoRotate = false;
+      orbit.lastX = e.touches[0].clientX;
+      orbit.lastY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+  canvas.addEventListener('touchend', () => { orbit.active = false; });
+  canvas.addEventListener('touchmove', (e) => {
+    if (!orbit.active || !model || e.touches.length !== 1) return;
+    const dx = e.touches[0].clientX - orbit.lastX;
+    const dy = e.touches[0].clientY - orbit.lastY;
+    orbit.lastX = e.touches[0].clientX;
+    orbit.lastY = e.touches[0].clientY;
+    orbit.rotY += dx * 0.01;
+    orbit.rotX += dy * 0.01;
+    orbit.rotX = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, orbit.rotX));
+    model.rotation.y = orbit.rotY;
+    model.rotation.x = orbit.rotX;
+  }, { passive: true });
 
   // Resize handler
   window.addEventListener('resize', () => {
@@ -980,26 +1052,34 @@ function init3D() {
   // Render loop
   (function animate() {
     requestAnimationFrame(animate);
-    if (model) model.rotation.y += 0.006;
+    if (model && orbit.autoRotate) {
+      orbit.rotY += 0.006;
+      model.rotation.y = orbit.rotY;
+    }
     renderer.render(scene, camera);
   })();
 
-  // Mark ready so future selectProduct calls go straight to loadModelForProduct
+  // Ready — load current product model
   window._3dReady = true;
-  // Load whichever product the user has selected (or default gn100)
-  loadModelForProduct(window._pendingModelKey || currentKey || 'gn100');
+  loadModelForProduct(currentKey);
 }
 
 function loadModelForProduct(key) {
-  const cfg      = MODEL_CONFIGS[key];
-  const labelEl  = document.getElementById('model-info-label');
+  if (!scene) return; // Three.js not init yet — init3D will call us
+  const cfg       = MODEL_CONFIGS[key];
+  const labelEl   = document.getElementById('model-info-label');
   const loadingEl = document.getElementById('model-loading');
 
-  if (labelEl) labelEl.textContent = cfg.label;
-  if (loadingEl) loadingEl.style.display = 'block';
+  if (labelEl)   labelEl.textContent       = cfg.label;
+  if (loadingEl) loadingEl.style.display   = 'block';
 
   // Remove previous model
   if (model) { scene.remove(model); model = null; }
+
+  // Reset orbit rotation for new model
+  orbit.rotX = 0;
+  orbit.rotY = 0;
+  orbit.autoRotate = true;
 
   const loader = new window.GLTFLoader();
   loader.load(
@@ -1008,11 +1088,8 @@ function loadModelForProduct(key) {
       model = gltf.scene;
       model.scale.setScalar(cfg.scale);
       model.position.set(cfg.px, cfg.py, cfg.pz);
-
-      // Update camera distance per model
       camera.position.set(0, 0.2, cfg.camZ);
       camera.lookAt(0, 0, 0);
-
       model.traverse((child) => {
         if (child.isMesh) {
           child.castShadow    = true;
@@ -1020,7 +1097,6 @@ function loadModelForProduct(key) {
           if (child.material) child.material.side = THREE.DoubleSide;
         }
       });
-
       scene.add(model);
       if (loadingEl) loadingEl.style.display = 'none';
     },
@@ -1032,6 +1108,7 @@ function loadModelForProduct(key) {
   );
 }
 
+// Init after full page load so canvas has real dimensions
 window.addEventListener('load', init3D);
 
 // ══════════════════════════════════════════════════════════════
@@ -1044,20 +1121,17 @@ function selectProduct(key) {
   document.getElementById('btn-' + key).classList.add('active');
 
   const p = PRODUCTS[key];
-
   document.getElementById('q-sku').innerHTML = p.nameHTML;
-
   document.getElementById('spec-cap').innerHTML = p.cap.replace('Ah','');
   document.getElementById('spec-wh').innerHTML = p.wh.replace('kWh','');
   document.getElementById('spec-ac').innerHTML = p.ac === 'None' ? '—' : p.ac.replace('W','').replace('(optional)','').trim();
   document.getElementById('spec-enc').textContent = p.enc;
 
-  // Swap 3D model — if Three.js not ready yet, store key for init3D to pick up
-  if (window.loadModelForProduct && window._3dReady) {
+  // Load correct 3D model — safe whether or not Three.js is ready yet
+  if (window._3dReady) {
     loadModelForProduct(key);
-  } else {
-    window._pendingModelKey = key;
   }
+  // If not ready, init3D will call loadModelForProduct(currentKey) on load
 
   const invToggle = document.getElementById('inverter-toggle');
   if (key === 'gn12p') {
@@ -1066,7 +1140,6 @@ function selectProduct(key) {
     invToggle.classList.add('hidden');
     document.getElementById('inverter-check').checked = false;
   }
-
   updateQuote();
 }
 
@@ -1079,8 +1152,7 @@ function updateQuote() {
 
   document.getElementById('q-price').textContent = price.toLocaleString();
 
-  const rows = document.getElementById('summary-rows');
-  rows.innerHTML = `
+  document.getElementById('summary-rows').innerHTML = `
     <div class="summary-row"><span class="r-label">Model</span><span class="r-val">${p.name}${invOn ? ' + AC' : ''}</span></div>
     <div class="summary-row"><span class="r-label">Battery</span><span class="r-val">${p.cap} LiFePO4</span></div>
     <div class="summary-row"><span class="r-label">Enclosure</span><span class="r-val">${p.enc}</span></div>
@@ -1088,12 +1160,10 @@ function updateQuote() {
     <div class="summary-row"><span class="r-label">Deposit (50%)</span><span class="r-val green">$${deposit.toLocaleString()}</span></div>
   `;
 
-  const fl = document.getElementById('features-list');
-  fl.innerHTML = features.map(f => `<li>${f}</li>`).join('');
+  document.getElementById('features-list').innerHTML = features.map(f => `<li>${f}</li>`).join('');
 
   const totalWh = parseFloat(p.wh) * 1000;
-  const rg = document.getElementById('runtime-grid');
-  rg.innerHTML = p.runtime.map(r => {
+  document.getElementById('runtime-grid').innerHTML = p.runtime.map(r => {
     const hrs = (totalWh * 0.9 / (r.wh * 1000));
     const display = hrs >= 10 ? Math.round(hrs) + 'h' : hrs.toFixed(1) + 'h';
     return `<div class="runtime-item"><span class="device">${r.device}</span><span class="hours">${display}<span> est.</span></span></div>`;
@@ -1122,14 +1192,12 @@ document.getElementById('modal').addEventListener('click', function(e) {
 function submitReservation() {
   const name = document.getElementById('f-name').value.trim();
   const email = document.getElementById('f-email').value.trim();
-  if (!name || !email) {
-    alert('Please enter your name and email to continue.');
-    return;
-  }
+  if (!name || !email) { alert('Please enter your name and email to continue.'); return; }
   document.getElementById('modal-body').style.display = 'none';
   document.getElementById('success-state').classList.add('show');
 }
 
+// Default to IsoFortress on load
 selectProduct('gn100');
 </script>
 
@@ -1140,21 +1208,5 @@ selectProduct('gn100');
   initFooter();
 </script>
 
-<!-- THREE.JS + GLTFLoader via ESM importmap -->
-<script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
-    "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
-  }
-}
-</script>
-<script type="module">
-  import * as THREE from 'three';
-  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-  window.THREE = THREE;
-  window.GLTFLoader = GLTFLoader;
-</script>
 </body>
 </html>
