@@ -1214,7 +1214,8 @@ document.getElementById('runtime-display').textContent = '—';
 return;
 }
 
-const whUsable = currentBatteryWh * 0.9; // 90% usable
+// Convert kWh to Wh and apply usable capacity
+const whUsable = currentBatteryWh * 1000 * 0.9; // Convert kWh to Wh, then apply 90% usable
 const hours = whUsable / watts;
 
 let display;
