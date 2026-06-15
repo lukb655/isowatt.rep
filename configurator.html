@@ -673,15 +673,15 @@
 
         <div class="section-label">Select your model</div>
         <div class="product-selector">
-          <button class="product-btn" id="btn-gn12" onclick="selectProduct('gn12')">
+          <button class="product-btn" id="btn-ip12" onclick="selectProduct('ip12')">
             <span class="sku">IsoPoint</span>
             <span class="sub">Entry Tier</span>
           </button>
-          <button class="product-btn" id="btn-gn12p" onclick="selectProduct('gn12p')">
+          <button class="product-btn" id="btn-ip12p" onclick="selectProduct('ip12p')">
             <span class="sku">IsoPoint<span class="iso">+</span></span>
             <span class="sub">Most Popular</span>
           </button>
-          <button class="product-btn active" id="btn-gn100" onclick="selectProduct('gn100')">
+          <button class="product-btn active" id="btn-if100" onclick="selectProduct('if100')">
             <span class="sku">IsoFortress</span>
             <span class="sub">Full Power</span>
           </button>
@@ -725,7 +725,7 @@
           </div>
         </div>
 
-        <!-- AC INVERTER TOGGLE (gn12p only) -->
+        <!-- AC INVERTER TOGGLE (ip12p only) -->
         <div class="toggle-row hidden" id="inverter-toggle">
           <div class="toggle-label">Add 400W AC Inverter Module?</div>
           <input type="checkbox" class="toggle-switch" id="inverter-check" onchange="updateQuote()">
@@ -827,7 +827,7 @@
 // ══════════════════════════════════════════════════════════════
 
 const PRODUCTS = {
-  gn12: {
+  ip12: {
     name: 'IsoPoint',
     nameHTML: 'Iso<em>Point</em>',
     enc: 'Apache 2800',
@@ -855,7 +855,7 @@ const PRODUCTS = {
       { device: 'Diesel heater fan', wh: 0.012 }
     ]
   },
-  gn12p: {
+  ip12p: {
     name: 'IsoPoint+',
     nameHTML: 'Iso<em>Point+</em>',
     enc: 'Apache 2800',
@@ -896,7 +896,7 @@ const PRODUCTS = {
       { device: 'Diesel heater fan', wh: 0.012 }
     ]
   },
-  gn100: {
+  if100: {
     name: 'IsoFortress',
     nameHTML: 'Iso<em>Fortress</em>',
     enc: 'Apache 4800',
@@ -930,7 +930,7 @@ const PRODUCTS = {
   }
 };
 
-let currentKey = 'gn100';
+let currentKey = 'if100';
 
 // ══════════════════════════════════════════════════════════════
 // THREE.JS 3D VIEWER
@@ -940,9 +940,9 @@ let currentKey = 'gn100';
 // ══════════════════════════════════════════════════════════════
 
 const MODEL_CONFIGS = {
-  gn12:  { file: 'models/model.glb',                      scale: 0.005787, px: 0, py: 0.0932, pz: -0.1447, camZ: 5.0, label: 'Apache 2800 · IsoPoint Enclosure'   },
-  gn12p: { file: 'models/model.glb',                      scale: 0.005787, px: 0, py: 0.0932, pz: -0.1447, camZ: 5.0, label: 'Apache 2800 · IsoPoint+ Enclosure'  },
-  gn100: { file: 'models/4800_Case_Open.glb', scale: 0.006600, px: 0.0000, py: 1.3330, pz: 0.0000, rotX: -1.413717, rotY: 0.000000, rotZ: 0.000000, camZ: 6.0, label: 'Apache 4800 · IsoFortress Enclosure' }
+  ip12:  { file: 'models/model.glb', scale: 0.009000, px: 0.0000, py: 1.3330, pz: 0.0000, rotX: -1.413717, rotY: 0.000000, rotZ: 0.000000, camZ: 2.2, label: 'Apache 2800 · IsoPoint Enclosure' },
+  ip12p: { file: 'models/model.glb', scale: 0.009000, px: 0.0000, py: 1.3330, pz: 0.0000, rotX: -1.413717, rotY: 0.000000, rotZ: 0.000000, camZ: 2.2, label: 'Apache 2800 · IsoPoint+ Enclosure' },
+  if100: { file: 'models/4800_Case_Open.glb', scale: 0.006600, px: 0.0000, py: 1.3330, pz: 0.0000, rotX: -1.413717, rotY: 0.000000, rotZ: 0.000000, camZ: 6.0, label: 'Apache 4800 · IsoFortress Enclosure' }
 };
 
 let scene, camera, renderer, model;
@@ -1141,7 +1141,7 @@ function selectProduct(key) {
   // If not ready, init3D will call loadModelForProduct(currentKey) on load
 
   const invToggle = document.getElementById('inverter-toggle');
-  if (key === 'gn12p') {
+  if (key === 'ip12p') {
     invToggle.classList.remove('hidden');
   } else {
     invToggle.classList.add('hidden');
@@ -1152,10 +1152,10 @@ function selectProduct(key) {
 
 function updateQuote() {
   const p = PRODUCTS[currentKey];
-  const invOn = currentKey === 'gn12p' && document.getElementById('inverter-check').checked;
+  const invOn = currentKey === 'ip12p' && document.getElementById('inverter-check').checked;
   const price = invOn ? (p.priceAC || p.price) : p.price;
   const deposit = Math.round(price * 0.5);
-  const features = (currentKey === 'gn12p' && invOn) ? p.featuresAC : p.features;
+  const features = (currentKey === 'ip12p' && invOn) ? p.featuresAC : p.features;
 
   document.getElementById('q-price').textContent = price.toLocaleString();
 
@@ -1205,7 +1205,7 @@ function submitReservation() {
 }
 
 // Default to IsoFortress on load
-selectProduct('gn100');
+selectProduct('if100');
 </script>
 
 <footer class="footer" id="main-footer" style="margin-top:4rem;"></footer>
