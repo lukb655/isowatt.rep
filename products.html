@@ -237,16 +237,11 @@
 </style>
 </head>
 <body>
-<nav class="nav">
-<div class="nav-left">
-<a href="index.html" class="nav-logo"><span class="iso">Iso</span>Watt</a>
-</div>
-<div class="nav-center">
-<a href="index.html" class="nav-link">Home</a>
-<a href="products.html" class="nav-link active">Products</a>
-</div>
-<div class="nav-right">
-<span class="nav-location">Bellefonte, PA</span>
+<nav class="nav" style="background:var(--black);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;sticky;top:0;z-index:100;">
+<a href="index.html" class="nav-logo" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;letter-spacing:0.1em;text-transform:uppercase;color:var(--white);text-decoration:none;"><span style="color:var(--amber);">Iso</span>Watt</a>
+<div style="display:flex;gap:2rem;">
+<a href="index.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Home</a>
+<a href="products.html" class="nav-link" style="color:var(--amber);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid var(--amber);">Products</a>
 </div>
 </nav>
 
@@ -453,41 +448,70 @@ Build to order · LiFePO4 Power Systems
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/loaders/GLTFLoader.js"></script>
 <script>
-// Placeholder 3D viewers - will work when models are available
+const MODEL_CONFIGS = {
+  'canvas-station': { file: 'models/4800_Case_Open.glb', camZ: 5.0 },
+  'canvas-point': { file: 'models/model.glb', camZ: 2.7 }
+};
+
 function setupViewer(canvasId) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
+  
   const W = canvas.clientWidth;
   const H = canvas.clientHeight;
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x161616);
+  
   const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 1000);
-  camera.position.set(2, 2, 5);
+  const config = MODEL_CONFIGS[canvasId];
+  camera.position.set(2, 2, config.camZ);
   camera.lookAt(0, 0, 0);
+  
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(W, H);
+  renderer.setPixelRatio(window.devicePixelRatio || 1);
+  
   const light = new THREE.DirectionalLight(0xffffff, 0.8);
   light.position.set(5, 10, 7);
   scene.add(light);
   scene.add(new THREE.AmbientLight(0xffffff, 0.4));
-  const geo = new THREE.BoxGeometry(1, 1, 1);
-  const mat = new THREE.MeshStandardMaterial({ color: 0x333 });
-  const mesh = new THREE.Mesh(geo, mat);
-  scene.add(mesh);
+  
+  let model = null;
   let angle = 0;
+  
+  // Load GLB model
+  const loader = new THREE.GLTFLoader();
+  loader.load(config.file, (gltf) => {
+    model = gltf.scene;
+    model.scale.set(0.0043, 0.0043, 0.0043);
+    model.rotation.x = -1.282817;
+    scene.add(model);
+  }, undefined, (err) => {
+    console.warn('3D model not found, showing placeholder:', config.file);
+    // Fallback: show placeholder if model doesn't load
+    const geo = new THREE.BoxGeometry(1, 1, 1);
+    const mat = new THREE.MeshStandardMaterial({ color: 0x333 });
+    model = new THREE.Mesh(geo, mat);
+    scene.add(model);
+  });
+  
   canvas.addEventListener('mousemove', (e) => {
+    if (!model) return;
     const rect = canvas.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width;
     angle = x * Math.PI * 2;
-    mesh.rotation.z = angle;
+    model.rotation.z = angle;
   });
+  
   function animate() {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
   }
   animate();
 }
+
 setupViewer('canvas-station');
 setupViewer('canvas-point');
 </script>
