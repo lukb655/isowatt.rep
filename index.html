@@ -341,6 +341,16 @@ margin-bottom: 1rem;
 }
 .cta-band p { font-size: 16px; color: var(--subtle); margin-bottom: 2rem; }
 .cta-band .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* Hero logo responsive */
+@media (max-width: 768px) {
+  .hero-logo-desktop { display: none !important; }
+  .hero-logo-mobile { display: block !important; }
+}
+@media (min-width: 769px) {
+  .hero-logo-desktop { display: block !important; }
+  .hero-logo-mobile { display: none !important; }
+}
 </style>
 </head>
 <body>
@@ -360,8 +370,9 @@ margin-bottom: 1rem;
 <div class="hero-glow"></div>
 <div class="hero-grid"></div>
 <div class="hero-inner">
-<div style="display:flex;align-items:center;gap:2.5rem;flex-wrap:wrap;">
-  <div>
+<div style="display:flex;align-items:center;gap:2.5rem;flex-direction:row;flex-wrap:wrap;">
+  <img src="./IW_LOGO.png" alt="IsoWatt" class="hero-logo-mobile" style="height:180px;width:auto;mix-blend-mode:screen;filter:drop-shadow(0 0 32px rgba(240,165,0,0.3));display:none;margin:0 auto;">
+  <div style="flex:1;min-width:240px;">
     <p class="hero-eyebrow">Handbuilt in Bellefonte, PA</p>
     <h1>
     <span class="line-dim">Power</span><br>
@@ -369,7 +380,7 @@ margin-bottom: 1rem;
     <span>the grid.</span>
     </h1>
   </div>
-  <img src="./IW_LOGO.png" alt="IsoWatt" style="height:300px;width:auto;flex-shrink:0;mix-blend-mode:screen;filter:drop-shadow(0 0 32px rgba(240,165,0,0.3));">
+  <img src="./IW_LOGO.png" alt="IsoWatt" class="hero-logo-desktop" style="height:220px;width:auto;flex-shrink:0;mix-blend-mode:screen;filter:drop-shadow(0 0 32px rgba(240,165,0,0.3));">
 </div>
 <p class="hero-sub">Portable LiFePO4 power stations engineered for the field. Built to order, tested before delivery, backed by the person who built it.</p>
 <div class="hero-actions">
