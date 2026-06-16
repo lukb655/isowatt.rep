@@ -345,7 +345,7 @@ margin-bottom: 1rem;
 </head>
 <body>
 <nav class="nav" style="background:var(--black);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;sticky;top:0;z-index:100;">
-<a href="index.html" class="nav-logo" style="display:flex;align-items:center;text-decoration:none;"><img src="./IW_LOGO_FAV.png" alt="IsoWatt" style="height:36px;width:auto;display:block;"></a>
+<a href="index.html" class="nav-logo" style="display:flex;align-items:center;text-decoration:none;"><img src="./IW_LOGO_FAV.png" alt="IsoWatt" style="height:36px;width:auto;display:block;mix-blend-mode:screen;"></a>
 <div style="display:flex;gap:2rem;">
 <a href="index.html" class="nav-link" style="color:var(--amber);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid var(--amber);">Home</a>
 <a href="products.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Products</a>
@@ -360,13 +360,17 @@ margin-bottom: 1rem;
 <div class="hero-glow"></div>
 <div class="hero-grid"></div>
 <div class="hero-inner">
-<img src="./IW_LOGO.png" alt="IsoWatt" style="height:200px;width:auto;margin:0 auto 1.5rem auto;display:block;filter:drop-shadow(0 0 24px rgba(240,165,0,0.25));">
-<p class="hero-eyebrow">Handbuilt in Bellefonte, PA</p>
-<h1>
-<span class="line-dim">Power</span><br>
-<span class="line-amber">without</span><br>
-<span>the grid.</span>
-</h1>
+<div style="display:flex;align-items:center;gap:2.5rem;flex-wrap:wrap;">
+  <img src="./IW_LOGO.png" alt="IsoWatt" style="height:220px;width:auto;flex-shrink:0;mix-blend-mode:screen;filter:drop-shadow(0 0 32px rgba(240,165,0,0.3));">
+  <div>
+    <p class="hero-eyebrow">Handbuilt in Bellefonte, PA</p>
+    <h1>
+    <span class="line-dim">Power</span><br>
+    <span class="line-amber">without</span><br>
+    <span>the grid.</span>
+    </h1>
+  </div>
+</div>
 <p class="hero-sub">Portable LiFePO4 power stations engineered for the field. Built to order, tested before delivery, backed by the person who built it.</p>
 <div class="hero-actions">
 <a href="products.html" class="btn btn-primary">SHOP PREBUILT ↗</a>
