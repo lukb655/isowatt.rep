@@ -235,16 +235,15 @@ Build to order · LiFePO4 Power Systems
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/loaders/GLTFLoader.js"></script>
 <script>
-// Load GLTFLoader manually
-const script = document.createElement('script');
-script.src = 'https://cdn.jsdelivr.net/npm/three@r128/examples/js/loaders/GLTFLoader.js';
-document.head.appendChild(script);
+console.log('🟢 Products page script started');
 
 // Carousel functionality
 let currentSlide = 0;
 const slides = document.querySelectorAll('.carousel-slide');
 const dots = document.querySelectorAll('.carousel-btn');
+console.log('Found slides:', slides.length, 'dots:', dots.length);
 
 function goToSlide(n) {
   slides.forEach(s => s.classList.remove('active'));
@@ -263,7 +262,7 @@ function prevProduct() {
   goToSlide((currentSlide - 1 + slides.length) % slides.length);
 }
 
-// 3D Viewer setup with proper positioning
+// 3D Viewer setup
 const MODEL_CONFIGS = {
   'canvas-station': { 
     file: './models/4800_Case_Open.glb', 
@@ -284,115 +283,95 @@ const MODEL_CONFIGS = {
 };
 
 function setupViewer(canvasId) {
+  console.log('Setting up viewer for:', canvasId);
   const canvas = document.getElementById(canvasId);
-  if (!canvas) return;
+  if (!canvas) {
+    console.error('❌ Canvas not found:', canvasId);
+    return;
+  }
+  
+  console.log('✓ Canvas found:', canvasId);
   
   const W = canvas.clientWidth;
   const H = canvas.clientHeight;
+  console.log('Canvas dimensions:', W, 'x', H);
   
-  // Scene setup
+  // Scene
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x161616);
+  console.log('✓ Scene created');
   
-  // Camera with proper aspect ratio
+  // Camera
   const camera = new THREE.PerspectiveCamera(50, W / H, 0.01, 1000);
   const config = MODEL_CONFIGS[canvasId];
-  
-  // Position camera looking at origin
   camera.position.set(config.camX, config.camY, config.camZ);
   camera.lookAt(0, 0, 0);
+  console.log('✓ Camera positioned at:', config.camX, config.camY, config.camZ);
   
   // Renderer
   const renderer = new THREE.WebGLRenderer({ 
     canvas, 
-    antialias: true, 
-    alpha: false,
-    precision: 'highp'
+    antialias: true,
+    alpha: false
   });
   renderer.setSize(W, H);
   renderer.setPixelRatio(window.devicePixelRatio || 1);
-  renderer.shadowMap.enabled = true;
-  renderer.outputEncoding = THREE.sRGBEncoding;
+  console.log('✓ Renderer created');
   
-  // Lighting
-  const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
-  dirLight.position.set(5, 10, 7);
-  dirLight.castShadow = true;
-  dirLight.shadow.mapSize.width = 2048;
-  dirLight.shadow.mapSize.height = 2048;
-  scene.add(dirLight);
+  // Lights
+  const light1 = new THREE.DirectionalLight(0xffffff, 1.2);
+  light1.position.set(5, 10, 7);
+  scene.add(light1);
   
-  const ambLight = new THREE.AmbientLight(0xffffff, 0.6);
-  scene.add(ambLight);
+  const light2 = new THREE.AmbientLight(0xffffff, 0.7);
+  scene.add(light2);
+  console.log('✓ Lights added');
   
   let model = null;
   let angle = 0;
   
-  // Model loading
-  function loadModel() {
-    if (typeof THREE.GLTFLoader === 'undefined') {
-      setTimeout(loadModel, 100);
-      return;
+  // Load model
+  console.log('Loading model from:', config.file);
+  const loader = new THREE.GLTFLoader();
+  
+  loader.load(
+    config.file,
+    (gltf) => {
+      console.log('✅ Model loaded successfully:', config.name);
+      
+      if (model) scene.remove(model);
+      model = gltf.scene;
+      
+      // Apply transform
+      model.scale.set(config.scale, config.scale, config.scale);
+      model.position.set(config.px, config.py, config.pz);
+      model.rotation.order = 'XYZ';
+      model.rotation.x = config.rotX;
+      model.rotation.y = config.rotY;
+      model.rotation.z = config.rotZ;
+      
+      scene.add(model);
+      console.log('✓ Model added to scene');
+    },
+    (progress) => {
+      const pct = Math.round((progress.loaded / progress.total) * 100);
+      console.log('Loading:', pct + '%');
+    },
+    (error) => {
+      console.error('❌ Error loading model:', config.name, error);
+      
+      // Fallback box
+      console.log('Creating fallback box...');
+      const geo = new THREE.BoxGeometry(1, 1, 1);
+      const mat = new THREE.MeshPhongMaterial({ color: 0x555555 });
+      model = new THREE.Mesh(geo, mat);
+      model.position.set(config.px, config.py, config.pz);
+      scene.add(model);
+      console.log('✓ Fallback box added');
     }
-    
-    const loader = new THREE.GLTFLoader();
-    loader.load(
-      config.file,
-      (gltf) => {
-        // Remove old model if exists
-        if (model) scene.remove(model);
-        
-        // Get the model
-        model = gltf.scene;
-        
-        // Apply scale
-        model.scale.set(config.scale, config.scale, config.scale);
-        
-        // Apply position
-        model.position.set(config.px, config.py, config.pz);
-        
-        // Apply rotation
-        model.rotation.order = 'XYZ';
-        model.rotation.x = config.rotX;
-        model.rotation.y = config.rotY;
-        model.rotation.z = config.rotZ;
-        
-        // Enable shadows
-        model.castShadow = true;
-        model.receiveShadow = true;
-        model.traverse((child) => {
-          if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-          }
-        });
-        
-        // Add to scene
-        scene.add(model);
-        console.log(`✓ Loaded ${config.name} model at:`, config.file);
-      },
-      (progress) => {
-        const percentComplete = (progress.loaded / progress.total) * 100;
-      },
-      (error) => {
-        console.warn(`✗ Error loading ${config.name}:`, error.message);
-        
-        // Fallback: show placeholder geometry
-        const geo = new THREE.BoxGeometry(2, 2, 2);
-        const mat = new THREE.MeshStandardMaterial({ color: 0x555, metalness: 0.3, roughness: 0.7 });
-        model = new THREE.Mesh(geo, mat);
-        model.position.set(config.px, config.py, config.pz);
-        model.castShadow = true;
-        model.receiveShadow = true;
-        scene.add(model);
-      }
-    );
-  }
+  );
   
-  // Start loading with delay to ensure GLTFLoader is ready
-  setTimeout(loadModel, 300);
-  
-  // Mouse interaction
+  // Interaction
   canvas.addEventListener('mousemove', (e) => {
     if (!model) return;
     const rect = canvas.getBoundingClientRect();
@@ -401,31 +380,28 @@ function setupViewer(canvasId) {
     model.rotation.z = config.rotZ + angle;
   });
   
-  canvas.addEventListener('mouseleave', () => {
-    if (model) model.rotation.z = config.rotZ;
-  });
-  
-  // Animation loop
+  // Render loop
   function animate() {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
   }
   animate();
+  console.log('✓ Animation loop started for:', canvasId);
 }
 
-// Initialize on page load
+// Run when DOM is ready
+console.log('Document ready state:', document.readyState);
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-      setupViewer('canvas-station');
-      setupViewer('canvas-point');
-    }, 500);
-  });
-} else {
-  setTimeout(() => {
+    console.log('DOMContentLoaded fired');
     setupViewer('canvas-station');
     setupViewer('canvas-point');
-  }, 500);
+  });
+} else {
+  console.log('DOM already loaded, setting up viewers immediately');
+  setupViewer('canvas-station');
+  setupViewer('canvas-point');
 }
 </script>
 </body>
