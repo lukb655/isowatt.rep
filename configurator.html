@@ -3,1341 +3,544 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Configurator — IsoWatt Power Stations</title>
+<meta name="description" content="Design your custom IsoWatt power station. Build your configuration with our interactive configurator.">
+<title>IsoWatt Configurator - Design Your System</title>
 <link rel="stylesheet" href="style.css">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap');
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
---black: #0D0D0D;
---surface: #161616;
---card: #1E1E1E;
---border: #2C2C2C;
---muted: #555;
---text: #E8E4DC;
---subtle: #888;
---amber: #F0A500;
---amber-dim:#7A5200;
---amber-bg: #1A1100;
---green: #3DDB8A;
---red: #E84040;
---white: #FFFFFF;
-}
-html, body {
-background: var(--black);
-color: var(--text);
-font-family: 'Barlow', sans-serif;
-font-size: 16px;
-line-height: 1.6;
-min-height: 100vh;
-}
-.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
-/* ── HEADER ── */
-.header {
-background: var(--black);
-border-bottom: 1px solid var(--border);
-padding: 1.25rem 2rem;
-display: flex;
-align-items: center;
-justify-content: space-between;
-position: sticky;
-top: 0;
-z-index: 100;
-}
-.logo {
-font-family: 'Barlow Condensed', sans-serif;
-font-weight: 900;
-font-size: 22px;
-letter-spacing: 0.12em;
-text-transform: uppercase;
-color: var(--white);
-line-height: 1;
-}
-.logo span { color: var(--amber); }
-.tagline {
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 12px;
-letter-spacing: 0.2em;
-text-transform: uppercase;
-color: var(--subtle);
-}
-/* ── HERO ── */
-.hero {
-background: var(--surface);
-border-bottom: 1px solid var(--border);
-padding: 4rem 2rem 3rem;
-text-align: center;
-position: relative;
-overflow: hidden;
-}
-.hero::before {
-content: '';
-position: absolute;
-top: -80px; left: 50%; transform: translateX(-50%);
-width: 600px; height: 300px;
-background: radial-gradient(ellipse at center, rgba(240,165,0,0.08) 0%, transparent 70%);
-pointer-events: none;
-}
-.hero-eyebrow {
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 12px;
-letter-spacing: 0.3em;
-text-transform: uppercase;
-color: var(--amber);
-margin-bottom: 1rem;
-}
-.hero h1 {
-font-family: 'Barlow Condensed', sans-serif;
-font-size: clamp(42px, 8vw, 80px);
-font-weight: 900;
-text-transform: uppercase;
-letter-spacing: 0.04em;
-line-height: 0.95;
-color: var(--white);
-margin-bottom: 1.25rem;
-}
-.hero h1 em {
-font-style: normal;
-color: var(--amber);
-}
-.hero p {
-font-size: 17px;
-color: var(--subtle);
-max-width: 520px;
-margin: 0 auto;
-line-height: 1.6;
-}
-/* ── LAYOUT ── */
-.config-wrap {
-max-width: 1100px;
-margin: 0 auto;
-padding: 3rem 1.5rem;
-}
-.config-grid {
-display: grid;
-grid-template-columns: 1fr 420px;
-gap: 2rem;
-align-items: start;
-}
-@media (max-width: 860px) {
-.config-grid { grid-template-columns: 1fr; }
-}
-/* ── SECTION LABEL ── */
-.section-label {
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 11px;
-letter-spacing: 0.25em;
-text-transform: uppercase;
-color: var(--subtle);
-margin-bottom: 0.75rem;
-}
-/* ── PRODUCT SELECTOR ── */
-.product-selector {
-display: grid;
-grid-template-columns: 1fr;
-gap: 12px;
-margin-bottom: 2rem;
-}
-.product-selector .primary-btn {
-grid-column: 1 / -1;
-}
-.product-btn {
-background: var(--card);
-border: 1px solid var(--border);
-border-radius: 6px;
-padding: 1.1rem 0.75rem;
-cursor: pointer;
-text-align: center;
-transition: border-color 0.15s, background 0.15s;
-color: var(--text);
-font-family: inherit;
-}
-.product-btn.primary-btn {
-padding: 1.5rem 1rem;
-background: var(--amber-bg);
-border-color: var(--amber-dim);
-}
-.product-btn.featured {
-padding: 1.3rem 1rem;
-background: var(--amber-bg);
-border-color: var(--amber-dim);
-}
-.product-btn:hover { border-color: var(--muted); }
-.product-btn.active {
-border-color: var(--amber);
-background: var(--amber-bg);
-}
-.product-btn .sku {
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 18px;
-font-weight: 700;
-letter-spacing: 0.05em;
-color: var(--white);
-display: block;
-line-height: 1.2;
-}
-.product-btn.primary-btn .sku,
-.product-btn.featured .sku {
-font-size: 24px;
-}
-.product-btn.active .sku { color: var(--amber); }
-.product-btn .sub {
-font-size: 11px;
-color: var(--subtle);
-display: block;
-margin-top: 4px;
-}
-.product-btn.featured .sub {
-color: var(--amber);
-font-weight: 600;
-}
-.product-btn .badge {
-display: inline-block;
-background: var(--amber);
-color: var(--black);
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 10px;
-font-weight: 700;
-letter-spacing: 0.1em;
-text-transform: uppercase;
-padding: 2px 7px;
-border-radius: 3px;
-margin-top: 6px;
-}
-/* ── 3D VIEWER (THREE.JS) ── */
-.preview-wrap {
-background: var(--surface);
-border: 1px solid var(--border);
-border-radius: 8px;
-height: 300px;
-position: relative;
-overflow: hidden;
-margin-bottom: 2rem;
-}
-#canvas-3d {
-position: absolute;
-top: 0; left: 0;
-width: 100% !important;
-height: 100% !important;
-display: block;
-}
-.preview-fallback {
-text-align: center;
-color: var(--subtle);
-font-size: 13px;
-padding: 2rem;
-}
-.preview-fallback .icon {
-font-size: 32px;
-margin-bottom: 0.5rem;
-opacity: 0.6;
-}
-.model-info {
-position: absolute;
-bottom: 12px;
-left: 12px;
-right: 12px;
-font-size: 11px;
-color: var(--muted);
-font-family: 'Barlow Condensed', sans-serif;
-text-transform: uppercase;
-letter-spacing: 0.1em;
-pointer-events: none;
-}
-/* ── SPECS PANEL ── */
-.specs-panel {
-background: var(--card);
-border: 1px solid var(--border);
-border-radius: 8px;
-padding: 1.5rem;
-margin-bottom: 2rem;
-}
-.spec-row {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 8px;
-margin-bottom: 1rem;
-}
-.spec-row:last-child { margin-bottom: 0; }
-.spec-item {
-background: var(--surface);
-border: 1px solid var(--border);
-border-radius: 5px;
-padding: 10px;
-}
-.spec-label {
-font-size: 9px;
-letter-spacing: 0.2em;
-text-transform: uppercase;
-color: var(--muted);
-font-family: 'Barlow Condensed', sans-serif;
-display: block;
-margin-bottom: 4px;
-}
-.spec-val {
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 18px;
-font-weight: 700;
-color: var(--white);
-}
-.spec-val .unit {
-font-size: 12px;
-margin-left: 2px;
-opacity: 0.7;
-}
-/* ── QUOTE PANEL ── */
-.quote-panel {
-background: var(--card);
-border: 1px solid var(--border);
-border-radius: 8px;
-overflow: hidden;
-position: sticky;
-top: 100px;
-}
-.quote-header {
-background: var(--surface);
-border-bottom: 1px solid var(--border);
-padding: 1.25rem;
-}
-.q-label {
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 10px;
-letter-spacing: 0.25em;
-text-transform: uppercase;
-color: var(--subtle);
-margin-bottom: 0.5rem;
-}
-.q-sku {
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 26px;
-font-weight: 900;
-color: var(--white);
-line-height: 1;
-}
-.q-sku em { color: var(--amber); font-style: normal; }
-.quote-body {
-padding: 1.75rem 1.25rem;
-}
-.q-price {
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 32px;
-font-weight: 900;
-color: var(--amber);
-margin-bottom: 1.5rem;
-line-height: 1;
-}
-.summary-rows {
-display: flex;
-flex-direction: column;
-gap: 10px;
-margin-bottom: 1.5rem;
-padding-bottom: 1.5rem;
-border-bottom: 1px solid var(--border);
-}
-.summary-row {
-display: flex;
-justify-content: space-between;
-font-size: 13px;
-}
-.r-label { color: var(--subtle); }
-.r-val {
-font-family: 'Barlow Condensed', sans-serif;
-font-weight: 600;
-color: var(--white);
-}
-.r-val.green { color: var(--green); }
-/* ── RUNTIME CALCULATOR ── */
-.runtime-calculator {
-background: var(--card);
-border: 1px solid var(--border);
-border-radius: 8px;
-padding: 1.5rem;
-margin-bottom: 2rem;
-}
-.calc-section {
-margin-bottom: 1.5rem;
-}
-.calc-section:last-child { margin-bottom: 0; }
-.calc-label {
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 11px;
-letter-spacing: 0.25em;
-text-transform: uppercase;
-color: var(--subtle);
-margin-bottom: 0.75rem;
-display: block;
-}
-.calc-input-group {
-display: flex;
-gap: 8px;
-margin-bottom: 1rem;
-}
-.calc-input {
-flex: 1;
-background: var(--surface);
-border: 1px solid var(--border);
-border-radius: 5px;
-padding: 8px 10px;
-color: var(--text);
-font-family: inherit;
-font-size: 13px;
-}
-.calc-input-unit {
-display: flex;
-align-items: center;
-font-size: 12px;
-color: var(--subtle);
-font-family: 'Barlow Condensed', sans-serif;
-padding: 0 8px;
-background: var(--surface);
-border: 1px solid var(--border);
-border-radius: 5px;
-}
-.calc-btn {
-padding: 8px 12px;
-background: var(--amber);
-border: none;
-border-radius: 5px;
-color: var(--black);
-font-family: 'Barlow Condensed', sans-serif;
-font-weight: 700;
-font-size: 11px;
-letter-spacing: 0.1em;
-text-transform: uppercase;
-cursor: pointer;
-transition: filter 0.2s;
-}
-.calc-btn:hover { filter: brightness(1.1); }
-.device-picker {
-background: var(--surface);
-border: 1px solid var(--border);
-border-radius: 5px;
-padding: 0;
-margin-bottom: 1rem;
-}
-.device-dropdown {
-width: 100%;
-background: var(--surface);
-border: none;
-border-radius: 0;
-padding: 10px;
-color: var(--text);
-font-family: inherit;
-font-size: 13px;
-cursor: pointer;
-appearance: none;
-background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F0A500' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-background-repeat: no-repeat;
-background-position: right 8px center;
-background-size: 20px;
-padding-right: 32px;
-}
-.device-dropdown:hover { color: var(--amber); }
-.device-dropdown option {
-background: var(--card);
-color: var(--text);
-}
-.runtime-result {
-background: var(--surface);
-border: 1px solid var(--border);
-border-radius: 5px;
-padding: 12px;
-text-align: center;
-}
-.runtime-label {
-font-size: 11px;
-color: var(--subtle);
-text-transform: uppercase;
-letter-spacing: 0.1em;
-margin-bottom: 4px;
-}
-.runtime-value {
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 28px;
-font-weight: 900;
-color: var(--amber);
-line-height: 1;
-}
-/* ── TOGGLE SWITCH ── */
-.toggle-row {
-display: flex;
-align-items: center;
-justify-content: space-between;
-font-size: 13px;
-margin-bottom: 1.25rem;
-padding: 10px;
-background: var(--surface);
-border-radius: 5px;
-}
-.toggle-row.hidden { display: none; }
-.toggle-label { flex: 1; }
-.toggle-switch {
-width: 44px;
-height: 24px;
-background: var(--border);
-border-radius: 12px;
-position: relative;
-cursor: pointer;
-transition: background 0.2s;
-border: none;
-}
-.toggle-switch::after {
-content: '';
-position: absolute;
-width: 20px;
-height: 20px;
-background: var(--white);
-border-radius: 50%;
-top: 2px;
-left: 2px;
-transition: left 0.2s;
-}
-.toggle-switch:checked {
-background: var(--amber);
-}
-.toggle-switch:checked::after {
-left: 22px;
-}
-input[type="checkbox"].toggle-switch {
-appearance: none;
-}
-/* ── FEATURES & RUNTIME ── */
-.features-section {
-margin-bottom: 2rem;
-}
-.features-list {
-list-style: none;
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 8px;
-}
-@media (max-width: 700px) {
-.features-list { grid-template-columns: 1fr; }
-}
-.features-list li {
-background: var(--surface);
-border: 1px solid var(--border);
-border-radius: 5px;
-padding: 8px 10px;
-font-size: 12px;
-color: var(--text);
-}
-.features-list li::before {
-content: '✓ ';
-color: var(--amber);
-font-weight: 600;
-margin-right: 4px;
-}
-/* ── BUTTONS ── */
-.btn {
-display: inline-block;
-padding: 10px 20px;
-background: transparent;
-border: 1px solid var(--border-hi);
-border-radius: 5px;
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 14px;
-font-weight: 700;
-letter-spacing: 0.1em;
-text-transform: uppercase;
-color: var(--text);
-cursor: pointer;
-transition: all 0.15s;
-}
-.btn-primary {
-background: var(--amber);
-border-color: var(--amber);
-color: var(--black);
-}
-.btn-primary:hover {
-background: var(--amber);
-filter: brightness(1.15);
-}
-/* ── MODAL ── */
-.modal-overlay {
-position: fixed;
-inset: 0;
-background: rgba(0,0,0,0.7);
-display: flex;
-align-items: center;
-justify-content: center;
-opacity: 0;
-pointer-events: none;
-transition: opacity 0.2s;
-z-index: 1000;
-}
-.modal-overlay.open {
-opacity: 1;
-pointer-events: auto;
-}
-.modal {
-background: var(--card);
-border: 1px solid var(--border);
-border-radius: 10px;
-max-width: 420px;
-width: 90%;
-max-height: 80vh;
-overflow-y: auto;
-}
-.modal-top {
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 1.5rem;
-border-bottom: 1px solid var(--border);
-}
-.modal-top h2 {
-font-size: 20px;
-margin: 0;
-}
-.modal-close {
-background: none;
-border: none;
-color: var(--text);
-font-size: 20px;
-cursor: pointer;
-}
-.modal-body {
-padding: 1.5rem;
-}
-.modal-summary {
-background: var(--surface);
-border: 1px solid var(--border);
-border-radius: 6px;
-padding: 1rem;
-margin-bottom: 1.5rem;
-}
-.ms-sku {
-font-family: 'Barlow Condensed', sans-serif;
-font-weight: 700;
-font-size: 16px;
-color: var(--white);
-margin-bottom: 0.5rem;
-}
-.ms-price {
-font-size: 12px;
-color: var(--subtle);
-}
-.field {
-margin-bottom: 1.25rem;
-}
-.field-row {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 1rem;
-margin-bottom: 1.25rem;
-}
-.field label {
-display: block;
-font-size: 12px;
-font-weight: 600;
-margin-bottom: 0.4rem;
-color: var(--text);
-text-transform: uppercase;
-letter-spacing: 0.05em;
-}
-.field input,
-.field textarea {
-width: 100%;
-background: var(--surface);
-border: 1px solid var(--border);
-border-radius: 5px;
-padding: 8px 10px;
-color: var(--text);
-font-family: inherit;
-font-size: 13px;
-}
-.field textarea {
-resize: vertical;
-min-height: 80px;
-}
-.modal-cta {
-width: 100%;
-padding: 12px;
-background: var(--amber);
-border: none;
-border-radius: 5px;
-color: var(--black);
-font-family: 'Barlow Condensed', sans-serif;
-font-weight: 700;
-font-size: 14px;
-letter-spacing: 0.1em;
-text-transform: uppercase;
-cursor: pointer;
-transition: filter 0.2s;
-}
-.modal-cta:hover {
-filter: brightness(1.1);
-}
-.modal-legal {
-font-size: 11px;
-color: var(--subtle);
-margin-top: 1rem;
-line-height: 1.6;
-}
-.success-state {
-display: none;
-text-align: center;
-padding: 2rem 1.5rem;
-}
-.success-state.show {
-display: block;
-}
-.success-icon {
-font-size: 48px;
-margin-bottom: 1rem;
-}
-.success-state h3 {
-font-size: 20px;
-margin-bottom: 1rem;
-}
-.success-state p {
-font-size: 14px;
-color: var(--subtle);
-line-height: 1.7;
-}
-/* ── FOOTER ── */
-.footer {
-background: var(--surface);
-border-top: 1px solid var(--border);
-padding: 2rem;
-text-align: center;
-color: var(--subtle);
-font-size: 13px;
-}
-@media (max-width: 600px) {
-.product-selector { grid-template-columns: 1fr; }
-.device-picker { grid-template-columns: 1fr; }
+.config-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.config-section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--amber);
+}
+
+.config-group {
+  margin-bottom: 1.5rem;
+}
+
+.config-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--subtle);
+  margin-bottom: 8px;
+}
+
+.config-description {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+select, input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+select:hover, input[type="number"]:hover {
+  border-color: var(--muted);
+}
+
+select:focus, input[type="number"]:focus {
+  outline: none;
+  border-color: var(--amber);
+}
+
+.price-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.price-item:last-child {
+  border-bottom: none;
+}
+
+.price-item .label {
+  color: var(--text);
+}
+
+.price-item .amount {
+  color: var(--amber);
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+}
+
+.price-item.total {
+  padding: 12px 0;
+  border-top: 2px solid var(--border);
+  border-bottom: none;
+  font-size: 18px;
+}
+
+.price-item.total .label {
+  color: var(--white);
+  font-weight: 700;
+}
+
+.base-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--surface);
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+}
+
+.info-item {
+  flex: 1;
+}
+
+.info-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--subtle);
+  margin-bottom: 4px;
+}
+
+.info-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.summary-item {
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.summary-item .label {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--subtle);
+  margin-bottom: 4px;
+}
+
+.summary-item .value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.cta-primary {
+  width: 100%;
+  padding: 16px;
+  background: var(--amber);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cta-primary:hover {
+  background: #f0b520;
+}
+
+.cta-secondary {
+  display: inline-block;
+  padding: 12px 24px;
+  background: transparent;
+  color: var(--amber);
+  border: 2px solid var(--amber);
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.cta-secondary:hover {
+  background: var(--amber-bg);
+}
+
+@media (max-width: 768px) {
+  .config-section {
+    padding: 1.5rem;
+  }
+  
+  .base-info, .summary-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
-<script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
-<script type="importmap">
-{
-"imports": {
-"three": "https://unpkg.com/three@0.158.0/build/three.module.js",
-"three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
-}
-}
-</script>
-<script type="module">
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-window.THREE = THREE;
-window.GLTFLoader = GLTFLoader;
-</script>
 </head>
 <body>
+
 <nav class="nav" id="main-nav"></nav>
-<div class="mobile-menu" id="mobile-menu"></div>
 
-<!-- HEADER -->
-<div class="header">
-<div>
-<div class="logo"><span class="iso">Iso</span><span class="watt">Watt</span></div>
-<div class="tagline">Configure your power station</div>
-</div>
-</div>
-
-<!-- HERO -->
 <div class="hero">
-<div class="hero-eyebrow">Configurator</div>
-<h1>BUILD YOUR <em>ISO-SYSTEM.</em></h1>
-<p>Select a model, review your configuration, and reserve your build with a 50% deposit.</p>
-</div>
-
-<!-- CONFIG SECTION -->
-<div class="padding-top">
-<div class="config-wrap">
-<div class="config-grid">
-<!-- LEFT COLUMN: CUSTOMIZATION -->
-<div class="left-col">
-<div class="section-label">Select your model</div>
-<div class="product-selector">
-<button class="product-btn featured" id="btn-iso-station-plus" onclick="selectProduct('iso-station-plus')">
-<span class="sku"><span class="iso">Iso</span>Station<span class="iso">+</span></span>
-<span class="sub">🌟 Flagship · 2000W AC</span>
-</button>
-
-<button class="product-btn featured" id="btn-iso-point-plus" onclick="selectProduct('iso-point-plus')">
-<span class="sku"><span class="iso">Iso</span>Point<span class="iso">+</span></span>
-<span class="sub">⭐ Compact Plus · 400W AC</span>
-</button>
-
-<button class="product-btn" id="btn-iso-station" onclick="selectProduct('iso-station')">
-<span class="sku"><span class="iso">Iso</span>Station</span>
-<span class="sub">Premium · 1400W AC</span>
-</button>
-
-<button class="product-btn" id="btn-iso-point" onclick="selectProduct('iso-point')">
-<span class="sku"><span class="iso">Iso</span>Point</span>
-<span class="sub">Compact</span>
-</button>
-</div>
-
-<!-- 3D PREVIEW -->
-<div class="section-label">Your enclosure</div>
-<div class="preview-wrap" id="preview-wrap">
-<canvas id="canvas-3d"></canvas>
-<div class="preview-fallback" id="preview-fallback" style="display:none;">
-<div class="icon">📦</div>
-<div>Model loading...</div>
-</div>
-<div id="model-loading" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#F0A500;font-size:11px;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.2em;text-transform:uppercase;pointer-events:none;display:none;">Loading 3D Model...</div>
-<div class="model-info" id="model-info-label">Apache 4800 · IsoStation Enclosure</div>
-<div style="position:absolute;top:10px;right:12px;font-size:16px;color:#F0A500;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.15em;text-transform:uppercase;pointer-events:none;font-weight:700;">↻ Drag to rotate</div>
-</div>
-
-<!-- SPECS PANEL -->
-<div class="section-label">Core specs</div>
-<div class="specs-panel">
-<div class="spec-row">
-<div class="spec-item">
-<span class="spec-label">Capacity</span>
-<span class="spec-val"><span id="spec-cap">100</span><span class="unit">Ah</span></span>
-</div>
-<div class="spec-item">
-<span class="spec-label">Energy</span>
-<span class="spec-val"><span id="spec-wh">1.2</span><span class="unit">kWh</span></span>
-</div>
-</div>
-<div class="spec-row">
-<div class="spec-item">
-<span class="spec-label">AC Power</span>
-<span class="spec-val"><span id="spec-ac">Up to 2000W</span><span class="unit"></span></span>
-</div>
-<div class="spec-item">
-<span class="spec-label">Enclosure</span>
-<span class="spec-val" id="spec-enc" style="font-size:14px;">Apache 4800</span>
-</div>
+<div class="hero-content">
+<p class="hero-eyebrow">Build Your Configuration</p>
+<h1>Design Your System.</h1>
+<p class="hero-desc">Start with a base model and customize every component to match your exact needs.</p>
 </div>
 </div>
 
-<!-- FEATURES -->
-<div class="section-label">What's included</div>
-<div class="features-section">
-<ul class="features-list" id="features-list"></ul>
+<div class="page-width config-container">
+
+<!-- Step 1: Base Model Selection -->
+<section class="config-section">
+<div class="section-title">Step 1: Choose Your Base Model</div>
+
+<div class="config-group">
+<label class="config-label">Base Model</label>
+<select id="baseModel" onchange="updateConfig()">
+<option value="iso-station">IsoStation - 100Ah LiFePO4 (1.2kWh)</option>
+<option value="iso-point">IsoPoint - 12Ah LiFePO4 (0.15kWh)</option>
+</select>
+<p class="config-description">Select the core battery and enclosure for your system.</p>
 </div>
 
-<!-- RUNTIME CALCULATOR -->
-<div class="section-label">Runtime calculator</div>
-<div class="runtime-calculator">
-<div class="calc-section">
-<label class="calc-label">Device quick select</label>
-<select class="device-dropdown" id="device-picker" onchange="selectDeviceFromDropdown()">
-<option value="">-- Choose a device --</option>
+<div class="base-info">
+<div class="info-item">
+<div class="info-label">Battery Capacity</div>
+<div class="info-value" id="info-capacity">1.2kWh</div>
+</div>
+<div class="info-item">
+<div class="info-label">Base Price</div>
+<div class="info-value" id="info-base">$1,200</div>
+</div>
+</div>
+</section>
+
+<!-- Step 2: Power & Charging -->
+<section class="config-section">
+<div class="section-title">Step 2: Power & Inverter</div>
+
+<div class="config-group">
+<label class="config-label">AC Inverter</label>
+<select id="inverter" onchange="updateConfig()">
+<option value="none">None (DC Only) - $0</option>
+<option value="400w">400W Inverter - $150</option>
+<option value="600w">600W Inverter - $200</option>
+<option value="1000w">1000W Inverter - $300</option>
+<option value="2000w">2000W Inverter - $400</option>
+</select>
+<p class="config-description">Choose AC power output or keep DC-only for longer battery life.</p>
+</div>
+
+<div class="config-group">
+<label class="config-label">Wall Charger</label>
+<select id="charger" onchange="updateConfig()">
+<option value="standard">Standard 10A - $50</option>
+<option value="fast">Fast 20A - $100</option>
+<option value="none">No Charger - $0</option>
+</select>
+<p class="config-description">Select your wall charging speed and options.</p>
+</div>
+</section>
+
+<!-- Step 3: Ports & Outputs -->
+<section class="config-section">
+<div class="section-title">Step 3: Ports & Connectivity</div>
+
+<div class="config-group">
+<label class="config-label">USB-C Ports (96W Fast Charge)</label>
+<select id="usbc" onchange="updateConfig()">
+<option value="1">1 Port - $30</option>
+<option value="2">2 Ports - $50</option>
+<option value="4">4 Ports - $90</option>
 </select>
 </div>
 
-<div class="calc-section">
-<label class="calc-label">Or enter custom draw</label>
-<div class="calc-input-group">
-<input type="number" class="calc-input" id="custom-watts" placeholder="500" min="0">
-<div class="calc-input-unit">Watts</div>
-<button class="calc-btn" onclick="calculateRuntime()">Calculate</button>
+<div class="config-group">
+<label class="config-label">12V Outputs</label>
+<select id="12v" onchange="updateConfig()">
+<option value="lighter">Cigarette Lighter Socket - $20</option>
+<option value="anderson">Anderson SB50 - $40</option>
+<option value="both">Both - $60</option>
+</select>
+</div>
+
+<div class="config-group">
+<label class="config-label">Battery Monitor</label>
+<select id="monitor" onchange="updateConfig()">
+<option value="bluetooth">Bluetooth Display - $60</option>
+<option value="led">LED Indicator Only - $20</option>
+<option value="none">None - $0</option>
+</select>
+<p class="config-description">Real-time state of charge and battery health monitoring.</p>
+</div>
+</section>
+
+<!-- Step 4: Accessories -->
+<section class="config-section">
+<div class="section-title">Step 4: Add-Ons & Accessories</div>
+
+<div class="config-group">
+<label class="config-label">LED Work Light</label>
+<select id="light" onchange="updateConfig()">
+<option value="none">None - $0</option>
+<option value="integrated">Integrated (Built-in) - $35</option>
+<option value="external">External Dimmable - $60</option>
+</select>
+</div>
+
+<div class="config-group">
+<label class="config-label">Protection Package</label>
+<select id="protection" onchange="updateConfig()">
+<option value="standard">Standard (BMS Only) - $0</option>
+<option value="upgraded">Upgraded (Fuses + Breakers) - $75</option>
+</select>
+</div>
+
+<div class="config-group">
+<label class="config-label">Carrying & Transport</label>
+<select id="transport" onchange="updateConfig()">
+<option value="none">None - $0</option>
+<option value="handle">Heavy-Duty Handle Kit - $40</option>
+<option value="cart">Wheeled Transport Cart - $120</option>
+</select>
+</div>
+</section>
+
+<!-- Summary & Pricing -->
+<section class="config-section">
+<div class="section-title">Order Summary</div>
+
+<div class="summary-grid">
+<div class="summary-item">
+<div class="label">Configuration</div>
+<div class="value" id="summary-config">IsoStation Custom</div>
+</div>
+<div class="summary-item">
+<div class="label">Total Capacity</div>
+<div class="value" id="summary-capacity">1.2kWh</div>
+</div>
+<div class="summary-item">
+<div class="label">Lead Time</div>
+<div class="value" id="summary-lead">2-3 weeks</div>
+</div>
+<div class="summary-item">
+<div class="label">Deposit Required</div>
+<div class="value" id="summary-deposit">$0</div>
 </div>
 </div>
 
-<div class="runtime-result">
-<div class="runtime-label">Estimated Runtime</div>
-<div class="runtime-value" id="runtime-display">—</div>
+<div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+<div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
+<strong style="font-size: 14px;">Pricing Breakdown</strong>
+</div>
+
+<div id="pricing-breakdown">
+<div class="price-item">
+<span class="label">Base Model</span>
+<span class="amount" id="price-base">$1,200</span>
+</div>
+<div class="price-item">
+<span class="label">Inverter</span>
+<span class="amount" id="price-inverter">$0</span>
+</div>
+<div class="price-item">
+<span class="label">Charger</span>
+<span class="amount" id="price-charger">$50</span>
+</div>
+<div class="price-item">
+<span class="label">Ports & Connectivity</span>
+<span class="amount" id="price-ports">$130</span>
+</div>
+<div class="price-item">
+<span class="label">Accessories</span>
+<span class="amount" id="price-accessories">$95</span>
+</div>
+<div class="price-item total">
+<span class="label">Total Price</span>
+<span class="amount" id="price-total">$1,475</span>
 </div>
 </div>
 </div>
 
-<!-- RIGHT COLUMN: QUOTE PANEL -->
-<div class="right-col">
-<div class="quote-panel">
-<div class="quote-header">
-<div class="q-label">Your configuration</div>
-<div class="q-sku" id="q-sku"><span class="iso">Iso</span>Station</div>
-</div>
-<div class="quote-body">
-<div class="q-price">$<span id="q-price">1289</span></div>
-<div class="summary-rows" id="summary-rows">
-<div class="summary-row"><span class="r-label">Model</span><span class="r-val">IsoStation</span></div>
-<div class="summary-row"><span class="r-label">Battery</span><span class="r-val">100Ah LiFePO4</span></div>
-<div class="summary-row"><span class="r-label">Enclosure</span><span class="r-val">Apache 4800</span></div>
-<div class="summary-row"><span class="r-label">AC Power</span><span class="r-val">Up to 2000W</span></div>
-<div class="summary-row"><span class="r-label">Deposit (50%)</span><span class="r-val green">$645</span></div>
-</div>
-<button class="btn btn-primary" onclick="openModal()" style="width:100%;">Reserve Your Unit ↗</button>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+<p style="font-size: 12px; color: var(--muted); margin-bottom: 1.5rem;">50% deposit required to reserve. Final payment due before shipping.</p>
 
-<!-- DEPOSIT MODAL -->
-<div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-<div class="modal">
-<div class="modal-top">
-<h2 id="modal-title">Reserve Your Unit</h2>
-<button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+<button class="cta-primary" onclick="submitOrder()">Reserve This Build</button>
+
+<div style="margin-top: 1rem; text-align: center;">
+<a href="products.html" class="cta-secondary">← View Prebuilt Options</a>
 </div>
-<div class="modal-body" id="modal-body">
-<div class="modal-summary">
-<div class="ms-sku" id="m-sku">IsoStation</div>
-<div class="ms-price">Retail: <strong id="m-price">$1289</strong> · Deposit: <strong id="m-deposit" style="color: var(--amber);">$645</strong></div>
-</div>
-<div class="field-row">
-<div class="field">
-<label for="f-name">First name</label>
-<input type="text" id="f-name" placeholder="Luke" autocomplete="given-name">
-</div>
-<div class="field">
-<label for="f-last">Last name</label>
-<input type="text" id="f-last" placeholder="Smith" autocomplete="family-name">
-</div>
-</div>
-<div class="field">
-<label for="f-email">Email address</label>
-<input type="email" id="f-email" placeholder="luke@example.com" autocomplete="email">
-</div>
-<div class="field">
-<label for="f-phone">Phone (optional)</label>
-<input type="tel" id="f-phone" placeholder="(717) 555-0100" autocomplete="tel">
-</div>
-<div class="field">
-<label for="f-notes">Notes or questions</label>
-<textarea id="f-notes" placeholder="Any specific requirements, use case, or questions for us..."></textarea>
-</div>
-<button class="modal-cta" onclick="submitReservation()">Send Reservation Request</button>
-<p class="modal-legal">Submitting this form does not charge you. We'll contact you within 24 hrs to confirm your build and collect the deposit. No payment info is stored here.</p>
-</div>
-<div class="success-state" id="success-state">
-<div class="success-icon">⚡</div>
-<h3>Reservation Received</h3>
-<p>We'll reach out within 24 hours to confirm your <span id="s-sku">IsoStation</span> build and collect your deposit.<br><br>Built in Bellefonte, PA — thank you for supporting local.</p>
-</div>
-</div>
+</section>
+
 </div>
 
 <footer class="footer">
-<strong>Gridless Fabrication LLC</strong> · Bellefonte, PA · Built to order · LiFePO4 Power Systems
+<div class="footer-content">
+<div class="footer-section">
+<h4>IsoWatt</h4>
+<p>Portable LiFePO4 power systems.<br>Built in Bellefonte, PA.</p>
+</div>
+<div class="footer-section">
+<a href="index.html">Home</a>
+<a href="products.html">Products</a>
+<a href="configurator.html">Configurator</a>
+</div>
+<div class="footer-section">
+<p style="font-size:11px;color:#666;">
+<strong>Gridless Fabrication LLC</strong><br>
+Bellefonte, PA<br>
+Build to order · LiFePO4 Power Systems
+</p>
+</div>
+</div>
 </footer>
-
-<script>
-// ══════════════════════════════════════════════════════════════
-// PRODUCT DATA
-// ══════════════════════════════════════════════════════════════
-const PRODUCTS = {
-'iso-station': {
-name: 'IsoStation',
-nameHTML: '<span class="iso">Iso</span>Station',
-enc: 'Apache 4800',
-cap: '100Ah',
-wh: '1.2kWh',
-ac: 'Up to 2000W',
-price: 1289,
-inverter: false,
-features: [
-'100Ah LiFePO4 battery',
-'Up to 2000W AC power',
-'Dual 110V AC outlets',
-'Dual 96W USB-C ports',
-'12V cigarette lighter socket',
-'LED work lighting',
-'12V 10A wall charger',
-'Built-in battery monitor'
-],
-devices: [
-{ name: 'Phone', watts: 15 },
-{ name: 'Laptop 65W', watts: 65 },
-{ name: 'CPAP', watts: 50 },
-{ name: 'Mini Fridge', watts: 40 },
-{ name: 'LED Work Light', watts: 25 },
-{ name: 'Fan', watts: 12 }
-]
-},
-'iso-station-plus': {
-name: 'IsoStation+',
-nameHTML: '<span class="iso">Iso</span>Station<span class="iso">+</span>',
-enc: 'Apache 4800',
-cap: '100Ah',
-wh: '1.2kWh',
-ac: '2000W',
-price: 1359,
-inverter: false,
-features: [
-'100Ah LiFePO4 battery',
-'2000W AC power (upgraded)',
-'Dual 110V AC outlets',
-'Dual 96W USB-C ports',
-'12V cigarette lighter socket',
-'LED work lighting',
-'12V 10A wall charger',
-'Built-in battery monitor'
-],
-devices: [
-{ name: 'Phone', watts: 15 },
-{ name: 'Laptop 65W', watts: 65 },
-{ name: 'CPAP', watts: 50 },
-{ name: 'Mini Fridge', watts: 40 },
-{ name: 'LED Work Light', watts: 25 },
-{ name: 'Fan', watts: 12 }
-]
-},
-'iso-point': {
-name: 'IsoPoint',
-nameHTML: '<span class="iso">Iso</span>Point',
-enc: 'Apache 2800',
-cap: '12Ah',
-wh: '0.15kWh',
-ac: 'None',
-price: 365,
-inverter: false,
-features: [
-'12Ah LiFePO4 battery',
-'Dual 96W USB-C ports',
-'12V cigarette lighter socket',
-'LED work lighting',
-'12V 5A wall charger',
-'Built-in battery monitor'
-],
-devices: [
-{ name: 'Phone', watts: 15 },
-{ name: 'Laptop 45W', watts: 45 },
-{ name: 'LED Work Light', watts: 25 },
-{ name: 'Fan', watts: 12 }
-]
-},
-'iso-point-plus': {
-name: 'IsoPoint+',
-nameHTML: '<span class="iso">Iso</span>Point<span class="iso">+</span>',
-enc: 'Apache 2800',
-cap: '12Ah',
-wh: '0.15kWh',
-ac: '400W',
-price: 429,
-inverter: true,
-features: [
-'12Ah LiFePO4 battery',
-'400W AC power',
-'110V AC outlet',
-'Dual 96W USB-C ports',
-'12V cigarette lighter socket',
-'LED work lighting',
-'12V 5A wall charger',
-'Built-in battery monitor'
-],
-devices: [
-{ name: 'Phone', watts: 15 },
-{ name: 'Laptop 45W', watts: 45 },
-{ name: 'LED Work Light', watts: 25 },
-{ name: 'Fan', watts: 12 }
-]
-}
-};
-
-let currentKey = 'iso-station-plus';
-let currentBatteryWh = 1.2;
-
-// ══════════════════════════════════════════════════════════════
-// THREE.JS 3D VIEWER
-// ══════════════════════════════════════════════════════════════
-const MODEL_CONFIGS = {
-'iso-station': { file: 'models/4800_Case_Open.glb', scale: 0.004700, px: 0.0, py: 0.0, pz: 0.0, rotX: -1.282817, rotY: 0.0, rotZ: 0.0, camZ: 5.0, label: 'Apache 4800 · IsoStation Enclosure' },
-'iso-station-plus': { file: 'models/4800_Case_Open.glb', scale: 0.004700, px: 0.0, py: 0.0, pz: 0.0, rotX: -1.282817, rotY: 0.0, rotZ: 0.0, camZ: 5.0, label: 'Apache 4800 · IsoStation+ Enclosure' },
-'iso-point': { file: 'models/model.glb', scale: 0.004300, px: 0.0, py: 0.0, pz: 0.0, rotX: -1.282817, rotY: 0.0, rotZ: 0.0, camZ: 2.7, label: 'Apache 2800 · IsoPoint Enclosure' },
-'iso-point-plus': { file: 'models/model.glb', scale: 0.004300, px: 0.0, py: 0.0, pz: 0.0, rotX: -1.282817, rotY: 0.0, rotZ: 0.0, camZ: 2.7, label: 'Apache 2800 · IsoPoint+ Enclosure' }
-};
-
-let scene, camera, renderer, model;
-
-const orbit = {
-active: false,
-lastX: 0, lastY: 0,
-angle: 0,
-verticalAngle: 0,
-camZ: 5.0
-};
-
-function init3D() {
-if (!window.THREE || !window.GLTFLoader) { setTimeout(init3D, 50); return; }
-
-const wrap = document.getElementById('preview-wrap');
-const canvas = document.getElementById('canvas-3d');
-
-if (!wrap || !canvas) return;
-
-const W = wrap.clientWidth || 600;
-const H = wrap.clientHeight || 300;
-
-scene = new THREE.Scene();
-scene.background = new THREE.Color(0x161616);
-
-camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 1000);
-orbit.angle = 0;
-updateCameraPosition();
-
-renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
-renderer.setSize(W, H);
-renderer.setPixelRatio(window.devicePixelRatio || 1);
-
-const light = new THREE.DirectionalLight(0xffffff, 0.8);
-light.position.set(5, 10, 7);
-scene.add(light);
-
-const ambLight = new THREE.AmbientLight(0xffffff, 0.4);
-scene.add(ambLight);
-
-canvas.addEventListener('mousedown', (e) => {
-orbit.active = true;
-orbit.lastX = e.clientX;
-orbit.lastY = e.clientY;
-});
-canvas.addEventListener('mousemove', (e) => {
-if (!orbit.active) return;
-const dx = (e.clientX - orbit.lastX) * 0.01;
-const dy = (e.clientY - orbit.lastY) * 0.01;
-orbit.angle += dx;
-orbit.verticalAngle += dy;
-orbit.verticalAngle = Math.max(-0.1745, Math.min(0.1745, orbit.verticalAngle));
-orbit.lastX = e.clientX;
-orbit.lastY = e.clientY;
-updateCameraPosition();
-});
-canvas.addEventListener('mouseup', () => { orbit.active = false; });
-
-// Prevent scroll zoom
-canvas.addEventListener('wheel', (e) => {
-e.preventDefault();
-}, { passive: false });
-
-// Touch events for mobile
-canvas.addEventListener('touchstart', (e) => {
-orbit.active = true;
-orbit.lastX = e.touches[0].clientX;
-orbit.lastY = e.touches[0].clientY;
-}, { passive: true });
-canvas.addEventListener('touchmove', (e) => {
-if (!orbit.active) return;
-const dx = (e.touches[0].clientX - orbit.lastX) * 0.01;
-const dy = (e.touches[0].clientY - orbit.lastY) * 0.01;
-orbit.angle += dx;
-orbit.verticalAngle += dy;
-orbit.verticalAngle = Math.max(-0.1745, Math.min(0.1745, orbit.verticalAngle));
-orbit.lastX = e.touches[0].clientX;
-orbit.lastY = e.touches[0].clientY;
-updateCameraPosition();
-}, { passive: true });
-canvas.addEventListener('touchend', () => { orbit.active = false; }, { passive: true });
-
-loadModel('iso-station-plus');
-
-function animate() {
-requestAnimationFrame(animate);
-renderer.render(scene, camera);
-}
-animate();
-}
-
-function updateCameraPosition() {
-if (!camera) return;
-// Orbit around center point while maintaining original isometric view
-const originalX = 2;
-const originalZ = orbit.camZ;
-const radius = Math.sqrt(originalX * originalX + originalZ * originalZ);
-const baseAngle = Math.atan2(originalX, originalZ);
-const angle = orbit.angle + baseAngle;
-
-// Horizontal orbit
-const x = Math.sin(angle) * radius;
-const z = Math.cos(angle) * radius;
-
-// Vertical rotation (tilting up/down, clamped to ±10 degrees)
-const y = 2 + Math.sin(orbit.verticalAngle) * 2;
-
-camera.position.set(x, y, z);
-camera.lookAt(0, 0, 0);
-}
-
-function updateModelRotation() {
-if (!model) return;
-// Model stays in fixed position - no rotation needed
-}
-
-function loadModel(key) {
-const config = MODEL_CONFIGS[key];
-if (!config) return;
-
-if (model) scene.remove(model);
-
-const loader = new window.GLTFLoader();
-loader.load(config.file, (gltf) => {
-model = gltf.scene;
-model.scale.set(config.scale, config.scale, config.scale);
-model.position.set(config.px, config.py, config.pz);
-model.rotation.order = 'XYZ';
-model.rotation.x = config.rotX;
-model.rotation.y = config.rotY;
-model.rotation.z = config.rotZ;
-scene.add(model);
-
-// Reset camera to initial view
-orbit.angle = 0;
-orbit.verticalAngle = 0;
-orbit.camZ = config.camZ;
-updateCameraPosition();
-
-document.getElementById('model-info-label').textContent = config.label;
-}, undefined, () => {
-console.error('Model load error');
-});
-}
-
-function selectProduct(key) {
-if (!PRODUCTS[key]) return;
-
-currentKey = key;
-const prod = PRODUCTS[key];
-
-// Update buttons
-document.querySelectorAll('.product-btn').forEach(btn => btn.classList.remove('active'));
-document.getElementById(`btn-${key}`)?.classList.add('active');
-
-// Update specs
-document.getElementById('spec-cap').textContent = prod.cap.split('Ah')[0];
-document.getElementById('spec-wh').textContent = prod.wh.split('kWh')[0];
-document.getElementById('spec-ac').textContent = prod.ac;
-document.getElementById('spec-enc').textContent = prod.enc;
-
-// Update features
-const featuresList = document.getElementById('features-list');
-featuresList.innerHTML = '';
-prod.features.forEach(f => {
-const li = document.createElement('li');
-li.textContent = f;
-featuresList.appendChild(li);
-});
-
-// Update 3D model
-loadModel(key);
-
-// Update device picker
-updateDevicePicker(prod.devices);
-
-// Update quote
-currentBatteryWh = parseFloat(prod.wh);
-updateQuote();
-}
-
-function updateDevicePicker(devices) {
-const picker = document.getElementById('device-picker');
-// Keep the first "Choose a device" option
-picker.innerHTML = '<option value="">-- Choose a device --</option>';
-devices.forEach((dev, idx) => {
-const option = document.createElement('option');
-option.value = dev.watts;
-option.textContent = `${dev.name} (${dev.watts}W)`;
-picker.appendChild(option);
-});
-}
-
-function selectDeviceFromDropdown() {
-const picker = document.getElementById('device-picker');
-const watts = parseFloat(picker.value);
-if (watts && watts > 0) {
-document.getElementById('custom-watts').value = watts;
-calculateRuntime();
-} else {
-document.getElementById('runtime-display').textContent = '—';
-}
-}
-
-function calculateRuntime() {
-const watts = parseFloat(document.getElementById('custom-watts').value);
-if (!watts || watts <= 0) {
-document.getElementById('runtime-display').textContent = '—';
-return;
-}
-
-// Convert kWh to Wh and apply usable capacity
-const whUsable = currentBatteryWh * 1000 * 0.9; // Convert kWh to Wh, then apply 90% usable
-const hours = whUsable / watts;
-
-let display;
-if (hours < 1) {
-const mins = Math.round(hours * 60);
-display = `${mins} min`;
-} else if (hours < 24) {
-const h = hours.toFixed(1);
-display = `${h} hrs`;
-} else {
-const d = (hours / 24).toFixed(1);
-display = `${d} days`;
-}
-
-document.getElementById('runtime-display').textContent = display;
-}
-
-function updateQuote() {
-const prod = PRODUCTS[currentKey];
-const price = prod.price;
-const deposit = Math.ceil(price / 2);
-
-document.getElementById('q-sku').innerHTML = prod.nameHTML;
-document.getElementById('q-price').textContent = price.toLocaleString();
-
-const summaryHtml = `
-<div class="summary-row"><span class="r-label">Model</span><span class="r-val">${prod.name}</span></div>
-<div class="summary-row"><span class="r-label">Battery</span><span class="r-val">${prod.cap} LiFePO4</span></div>
-<div class="summary-row"><span class="r-label">Enclosure</span><span class="r-val">${prod.enc}</span></div>
-<div class="summary-row"><span class="r-label">AC Power</span><span class="r-val">${prod.ac}</span></div>
-<div class="summary-row"><span class="r-label">Deposit (50%)</span><span class="r-val green">$${deposit.toLocaleString()}</span></div>
-`;
-document.getElementById('summary-rows').innerHTML = summaryHtml;
-
-document.getElementById('m-sku').textContent = prod.name;
-document.getElementById('m-price').textContent = price.toLocaleString();
-document.getElementById('m-deposit').textContent = deposit.toLocaleString();
-document.getElementById('s-sku').textContent = prod.name;
-}
-
-function openModal() {
-document.getElementById('modal').classList.add('open');
-}
-
-function closeModal() {
-document.getElementById('modal').classList.remove('open');
-}
-
-function submitReservation() {
-const name = document.getElementById('f-name').value.trim();
-const email = document.getElementById('f-email').value.trim();
-
-if (!name || !email) {
-alert('Please fill in at least name and email.');
-return;
-}
-
-// In production, send to backend
-const prod = PRODUCTS[currentKey];
-const subject = `New IsoWatt Reservation: ${prod.name}`;
-const body = `Name: ${name}\nEmail: ${email}\nModel: ${prod.name}\nPrice: $${prod.price}\nNotes: ${document.getElementById('f-notes').value}`;
-
-// For now, show success
-document.getElementById('modal-body').style.display = 'none';
-document.getElementById('success-state').classList.add('show');
-}
-
-// Init
-init3D();
-selectProduct('iso-station-plus');
-</script>
 
 <script src="site.js"></script>
 <script>
-// Wait for site.js to load
-function initializeNav() {
+const BASE_MODELS = {
+  'iso-station': {
+    name: 'IsoStation',
+    capacity: '1.2kWh',
+    battery: '100Ah',
+    basePrice: 1200,
+    leadTime: '2-3 weeks'
+  },
+  'iso-point': {
+    name: 'IsoPoint',
+    capacity: '0.15kWh',
+    battery: '12Ah',
+    basePrice: 600,
+    leadTime: '1-2 weeks'
+  }
+};
+
+const COMPONENT_PRICES = {
+  inverter: {
+    'none': 0,
+    '400w': 150,
+    '600w': 200,
+    '1000w': 300,
+    '2000w': 400
+  },
+  charger: {
+    'standard': 50,
+    'fast': 100,
+    'none': 0
+  },
+  usbc: {
+    '1': 30,
+    '2': 50,
+    '4': 90
+  },
+  '12v': {
+    'lighter': 20,
+    'anderson': 40,
+    'both': 60
+  },
+  monitor: {
+    'bluetooth': 60,
+    'led': 20,
+    'none': 0
+  },
+  light: {
+    'none': 0,
+    'integrated': 35,
+    'external': 60
+  },
+  protection: {
+    'standard': 0,
+    'upgraded': 75
+  },
+  transport: {
+    'none': 0,
+    'handle': 40,
+    'cart': 120
+  }
+};
+
+function updateConfig() {
+  const baseModel = document.getElementById('baseModel').value;
+  const model = BASE_MODELS[baseModel];
+  
+  // Update base info
+  document.getElementById('info-capacity').textContent = model.capacity;
+  document.getElementById('info-base').textContent = '$' + model.basePrice.toLocaleString();
+  
+  // Calculate total
+  const total = model.basePrice +
+    COMPONENT_PRICES.inverter[document.getElementById('inverter').value] +
+    COMPONENT_PRICES.charger[document.getElementById('charger').value] +
+    COMPONENT_PRICES.usbc[document.getElementById('usbc').value] +
+    COMPONENT_PRICES['12v'][document.getElementById('12v').value] +
+    COMPONENT_PRICES.monitor[document.getElementById('monitor').value] +
+    COMPONENT_PRICES.light[document.getElementById('light').value] +
+    COMPONENT_PRICES.protection[document.getElementById('protection').value] +
+    COMPONENT_PRICES.transport[document.getElementById('transport').value];
+  
+  // Update pricing breakdown
+  document.getElementById('price-base').textContent = '$' + model.basePrice;
+  document.getElementById('price-inverter').textContent = '$' + COMPONENT_PRICES.inverter[document.getElementById('inverter').value];
+  document.getElementById('price-charger').textContent = '$' + COMPONENT_PRICES.charger[document.getElementById('charger').value];
+  document.getElementById('price-ports').textContent = '$' + (
+    COMPONENT_PRICES.usbc[document.getElementById('usbc').value] +
+    COMPONENT_PRICES['12v'][document.getElementById('12v').value] +
+    COMPONENT_PRICES.monitor[document.getElementById('monitor').value]
+  );
+  document.getElementById('price-accessories').textContent = '$' + (
+    COMPONENT_PRICES.light[document.getElementById('light').value] +
+    COMPONENT_PRICES.protection[document.getElementById('protection').value] +
+    COMPONENT_PRICES.transport[document.getElementById('transport').value]
+  );
+  document.getElementById('price-total').textContent = '$' + total.toLocaleString();
+  
+  // Update summary
+  document.getElementById('summary-config').textContent = model.name + ' - Custom';
+  document.getElementById('summary-capacity').textContent = model.capacity;
+  document.getElementById('summary-lead').textContent = model.leadTime;
+  document.getElementById('summary-deposit').textContent = '$' + Math.floor(total / 2).toLocaleString();
+}
+
+function submitOrder() {
+  const baseModel = document.getElementById('baseModel').value;
+  const model = BASE_MODELS[baseModel];
+  alert('Your configuration has been saved. Next: Contact form for deposit.');
+}
+
+// Initialize on load
+updateConfig();
+
 if (typeof initNav === 'function') {
-initNav('configurator');
-} else {
-setTimeout(initializeNav, 50);
+  initNav('configurator');
 }
-}
-initializeNav();
 </script>
 </body>
 </html>
