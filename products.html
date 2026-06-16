@@ -234,29 +234,41 @@ Build to order · LiFePO4 Power Systems
 </div>
 </footer>
 
-<script async src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script async src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/loaders/GLTFLoader.js"></script>
 <script>
 console.log('🟢 Products page script started');
+console.log('THREE available:', typeof THREE !== 'undefined');
+console.log('THREE.GLTFLoader available:', typeof THREE !== 'undefined' && typeof THREE.GLTFLoader !== 'undefined');
 
-// Wait for THREE and GLTFLoader to be available
+// Check if loaders are ready immediately, or wait briefly
 let loadersReady = false;
-const checkLoaders = setInterval(() => {
-  if (typeof THREE !== 'undefined' && typeof window.GLTFLoader !== 'undefined') {
-    loadersReady = true;
-    clearInterval(checkLoaders);
-    console.log('✓ THREE.js and GLTFLoader ready');
-    initializeViewers();
-  }
-}, 50);
 
-// Timeout after 5 seconds
-setTimeout(() => {
-  if (!loadersReady) {
-    console.error('❌ Loaders did not load in time');
-    clearInterval(checkLoaders);
-  }
-}, 5000);
+if (typeof THREE !== 'undefined' && typeof THREE.GLTFLoader !== 'undefined') {
+  loadersReady = true;
+  console.log('✓ THREE.js and GLTFLoader ready immediately');
+  initializeViewers();
+} else {
+  // Fallback: wait up to 10 seconds with polling
+  console.log('⏳ Waiting for loaders...');
+  const checkLoaders = setInterval(() => {
+    if (typeof THREE !== 'undefined' && typeof THREE.GLTFLoader !== 'undefined') {
+      loadersReady = true;
+      clearInterval(checkLoaders);
+      console.log('✓ THREE.js and GLTFLoader ready (after polling)');
+      initializeViewers();
+    }
+  }, 100);
+
+  setTimeout(() => {
+    if (!loadersReady) {
+      console.error('❌ Loaders did not load in time');
+      console.log('THREE available:', typeof THREE !== 'undefined');
+      console.log('THREE.GLTFLoader available:', typeof THREE !== 'undefined' && typeof THREE.GLTFLoader !== 'undefined');
+      clearInterval(checkLoaders);
+    }
+  }, 10000);
+}
 
 function initializeViewers() {
   // Carousel functionality
@@ -349,10 +361,9 @@ function initializeViewers() {
     let model = null;
     let angle = 0;
     
-    // Load model using window.GLTFLoader
+    // Load model using THREE.GLTFLoader
     console.log('Loading model from:', config.file);
-    const GLTFLoader = window.GLTFLoader;
-    const loader = new GLTFLoader();
+    const loader = new THREE.GLTFLoader();
     
     loader.load(
       config.file,
