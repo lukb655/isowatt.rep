@@ -234,172 +234,179 @@ Build to order · LiFePO4 Power Systems
 </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/loaders/GLTFLoader.js"></script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script async src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/loaders/GLTFLoader.js"></script>
 <script>
 console.log('🟢 Products page script started');
 
-// Carousel functionality
-let currentSlide = 0;
-const slides = document.querySelectorAll('.carousel-slide');
-const dots = document.querySelectorAll('.carousel-btn');
-console.log('Found slides:', slides.length, 'dots:', dots.length);
-
-function goToSlide(n) {
-  slides.forEach(s => s.classList.remove('active'));
-  dots.forEach(d => d.classList.remove('active'));
-  slides[n].classList.add('active');
-  dots[n].classList.add('active');
-  document.getElementById('current-slide').textContent = n + 1;
-  currentSlide = n;
-}
-
-function nextProduct() {
-  goToSlide((currentSlide + 1) % slides.length);
-}
-
-function prevProduct() {
-  goToSlide((currentSlide - 1 + slides.length) % slides.length);
-}
-
-// 3D Viewer setup
-const MODEL_CONFIGS = {
-  'canvas-station': { 
-    file: './models/4800_Case_Open.glb', 
-    scale: 0.0043,
-    px: 0, py: 0, pz: 0,
-    rotX: -1.282817, rotY: 0, rotZ: 0,
-    camX: 2, camY: 2, camZ: 5.0,
-    name: 'IsoStation+' 
-  },
-  'canvas-point': { 
-    file: './models/model.glb', 
-    scale: 0.0043,
-    px: 0, py: 0, pz: 0,
-    rotX: -1.282817, rotY: 0, rotZ: 0,
-    camX: 2, camY: 2, camZ: 2.7,
-    name: 'IsoPoint+' 
+// Wait for THREE and GLTFLoader to be available
+let loadersReady = false;
+const checkLoaders = setInterval(() => {
+  if (typeof THREE !== 'undefined' && typeof window.GLTFLoader !== 'undefined') {
+    loadersReady = true;
+    clearInterval(checkLoaders);
+    console.log('✓ THREE.js and GLTFLoader ready');
+    initializeViewers();
   }
-};
+}, 50);
 
-function setupViewer(canvasId) {
-  console.log('Setting up viewer for:', canvasId);
-  const canvas = document.getElementById(canvasId);
-  if (!canvas) {
-    console.error('❌ Canvas not found:', canvasId);
-    return;
+// Timeout after 5 seconds
+setTimeout(() => {
+  if (!loadersReady) {
+    console.error('❌ Loaders did not load in time');
+    clearInterval(checkLoaders);
   }
-  
-  console.log('✓ Canvas found:', canvasId);
-  
-  const W = canvas.clientWidth;
-  const H = canvas.clientHeight;
-  console.log('Canvas dimensions:', W, 'x', H);
-  
-  // Scene
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x161616);
-  console.log('✓ Scene created');
-  
-  // Camera
-  const camera = new THREE.PerspectiveCamera(50, W / H, 0.01, 1000);
-  const config = MODEL_CONFIGS[canvasId];
-  camera.position.set(config.camX, config.camY, config.camZ);
-  camera.lookAt(0, 0, 0);
-  console.log('✓ Camera positioned at:', config.camX, config.camY, config.camZ);
-  
-  // Renderer
-  const renderer = new THREE.WebGLRenderer({ 
-    canvas, 
-    antialias: true,
-    alpha: false
-  });
-  renderer.setSize(W, H);
-  renderer.setPixelRatio(window.devicePixelRatio || 1);
-  console.log('✓ Renderer created');
-  
-  // Lights
-  const light1 = new THREE.DirectionalLight(0xffffff, 1.2);
-  light1.position.set(5, 10, 7);
-  scene.add(light1);
-  
-  const light2 = new THREE.AmbientLight(0xffffff, 0.7);
-  scene.add(light2);
-  console.log('✓ Lights added');
-  
-  let model = null;
-  let angle = 0;
-  
-  // Load model
-  console.log('Loading model from:', config.file);
-  const loader = new THREE.GLTFLoader();
-  
-  loader.load(
-    config.file,
-    (gltf) => {
-      console.log('✅ Model loaded successfully:', config.name);
-      
-      if (model) scene.remove(model);
-      model = gltf.scene;
-      
-      // Apply transform
-      model.scale.set(config.scale, config.scale, config.scale);
-      model.position.set(config.px, config.py, config.pz);
-      model.rotation.order = 'XYZ';
-      model.rotation.x = config.rotX;
-      model.rotation.y = config.rotY;
-      model.rotation.z = config.rotZ;
-      
-      scene.add(model);
-      console.log('✓ Model added to scene');
+}, 5000);
+
+function initializeViewers() {
+  // Carousel functionality
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.carousel-slide');
+  const dots = document.querySelectorAll('.carousel-btn');
+  console.log('Found slides:', slides.length, 'dots:', dots.length);
+
+  window.goToSlide = function(n) {
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    slides[n].classList.add('active');
+    dots[n].classList.add('active');
+    document.getElementById('current-slide').textContent = n + 1;
+    currentSlide = n;
+  }
+
+  window.nextProduct = function() {
+    window.goToSlide((currentSlide + 1) % slides.length);
+  }
+
+  window.prevProduct = function() {
+    window.goToSlide((currentSlide - 1 + slides.length) % slides.length);
+  }
+
+  // 3D Viewer setup
+  const MODEL_CONFIGS = {
+    'canvas-station': { 
+      file: './models/4800_Case_Open.glb', 
+      scale: 0.0043,
+      px: 0, py: 0, pz: 0,
+      rotX: -1.282817, rotY: 0, rotZ: 0,
+      camX: 2, camY: 2, camZ: 5.0,
+      name: 'IsoStation+' 
     },
-    (progress) => {
-      const pct = Math.round((progress.loaded / progress.total) * 100);
-      console.log('Loading:', pct + '%');
-    },
-    (error) => {
-      console.error('❌ Error loading model:', config.name, error);
-      
-      // Fallback box
-      console.log('Creating fallback box...');
-      const geo = new THREE.BoxGeometry(1, 1, 1);
-      const mat = new THREE.MeshPhongMaterial({ color: 0x555555 });
-      model = new THREE.Mesh(geo, mat);
-      model.position.set(config.px, config.py, config.pz);
-      scene.add(model);
-      console.log('✓ Fallback box added');
+    'canvas-point': { 
+      file: './models/model.glb', 
+      scale: 0.0043,
+      px: 0, py: 0, pz: 0,
+      rotX: -1.282817, rotY: 0, rotZ: 0,
+      camX: 2, camY: 2, camZ: 2.7,
+      name: 'IsoPoint+' 
     }
-  );
-  
-  // Interaction
-  canvas.addEventListener('mousemove', (e) => {
-    if (!model) return;
-    const rect = canvas.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    angle = x * Math.PI * 2;
-    model.rotation.z = config.rotZ + angle;
-  });
-  
-  // Render loop
-  function animate() {
-    requestAnimationFrame(animate);
-    renderer.render(scene, camera);
+  };
+
+  function setupViewer(canvasId) {
+    console.log('Setting up viewer for:', canvasId);
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) {
+      console.error('❌ Canvas not found:', canvasId);
+      return;
+    }
+    
+    console.log('✓ Canvas found:', canvasId);
+    
+    const W = canvas.clientWidth;
+    const H = canvas.clientHeight;
+    console.log('Canvas dimensions:', W, 'x', H);
+    
+    // Scene
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x161616);
+    
+    // Camera
+    const camera = new THREE.PerspectiveCamera(50, W / H, 0.01, 1000);
+    const config = MODEL_CONFIGS[canvasId];
+    camera.position.set(config.camX, config.camY, config.camZ);
+    camera.lookAt(0, 0, 0);
+    console.log('✓ Camera positioned at:', config.camX, config.camY, config.camZ);
+    
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({ 
+      canvas, 
+      antialias: true,
+      alpha: false
+    });
+    renderer.setSize(W, H);
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
+    console.log('✓ Renderer created');
+    
+    // Lights
+    const light1 = new THREE.DirectionalLight(0xffffff, 1.2);
+    light1.position.set(5, 10, 7);
+    scene.add(light1);
+    
+    const light2 = new THREE.AmbientLight(0xffffff, 0.7);
+    scene.add(light2);
+    console.log('✓ Lights added');
+    
+    let model = null;
+    let angle = 0;
+    
+    // Load model using window.GLTFLoader
+    console.log('Loading model from:', config.file);
+    const GLTFLoader = window.GLTFLoader;
+    const loader = new GLTFLoader();
+    
+    loader.load(
+      config.file,
+      (gltf) => {
+        console.log('✅ Model loaded successfully:', config.name);
+        
+        if (model) scene.remove(model);
+        model = gltf.scene;
+        
+        model.scale.set(config.scale, config.scale, config.scale);
+        model.position.set(config.px, config.py, config.pz);
+        model.rotation.order = 'XYZ';
+        model.rotation.x = config.rotX;
+        model.rotation.y = config.rotY;
+        model.rotation.z = config.rotZ;
+        
+        scene.add(model);
+        console.log('✓ Model added to scene');
+      },
+      (progress) => {
+        const pct = Math.round((progress.loaded / progress.total) * 100);
+        console.log('Loading:', pct + '%');
+      },
+      (error) => {
+        console.error('❌ Error loading model:', config.name, error);
+        
+        // Fallback box
+        const geo = new THREE.BoxGeometry(1, 1, 1);
+        const mat = new THREE.MeshPhongMaterial({ color: 0x666666 });
+        model = new THREE.Mesh(geo, mat);
+        model.position.set(config.px, config.py, config.pz);
+        scene.add(model);
+        console.log('✓ Fallback box added');
+      }
+    );
+    
+    // Interaction
+    canvas.addEventListener('mousemove', (e) => {
+      if (!model) return;
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      angle = x * Math.PI * 2;
+      model.rotation.z = config.rotZ + angle;
+    });
+    
+    // Render loop
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+    animate();
+    console.log('✓ Animation loop started for:', canvasId);
   }
-  animate();
-  console.log('✓ Animation loop started for:', canvasId);
-}
 
-// Run when DOM is ready
-console.log('Document ready state:', document.readyState);
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOMContentLoaded fired');
-    setupViewer('canvas-station');
-    setupViewer('canvas-point');
-  });
-} else {
-  console.log('DOM already loaded, setting up viewers immediately');
   setupViewer('canvas-station');
   setupViewer('canvas-point');
 }
