@@ -7,11 +7,7 @@
 <title>IsoWatt Configurator - Design Your System</title>
 <link rel="stylesheet" href="style.css">
 <style>
-.config-container {
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
+.config-container { max-width: 1000px; margin: 0 auto; }
 .config-section {
   background: var(--card);
   border: 1px solid var(--border);
@@ -19,7 +15,6 @@
   padding: 2rem;
   margin-bottom: 2rem;
 }
-
 .section-title {
   font-size: 18px;
   font-weight: 700;
@@ -28,11 +23,7 @@
   padding-bottom: 1rem;
   border-bottom: 2px solid var(--amber);
 }
-
-.config-group {
-  margin-bottom: 1.5rem;
-}
-
+.config-group { margin-bottom: 1.5rem; }
 .config-label {
   display: block;
   font-size: 13px;
@@ -42,13 +33,11 @@
   color: var(--subtle);
   margin-bottom: 8px;
 }
-
 .config-description {
   font-size: 12px;
   color: var(--muted);
   margin-top: 4px;
 }
-
 select, input[type="number"] {
   width: 100%;
   padding: 10px;
@@ -58,18 +47,8 @@ select, input[type="number"] {
   color: var(--text);
   font-size: 14px;
   font-family: inherit;
-  transition: border-color 0.2s;
 }
-
-select:hover, input[type="number"]:hover {
-  border-color: var(--muted);
-}
-
-select:focus, input[type="number"]:focus {
-  outline: none;
-  border-color: var(--amber);
-}
-
+select:focus, input:focus { outline: none; border-color: var(--amber); }
 .price-item {
   display: flex;
   justify-content: space-between;
@@ -78,87 +57,44 @@ select:focus, input[type="number"]:focus {
   font-size: 14px;
   border-bottom: 1px solid var(--border);
 }
-
-.price-item:last-child {
-  border-bottom: none;
-}
-
-.price-item .label {
-  color: var(--text);
-}
-
 .price-item .amount {
   color: var(--amber);
   font-weight: 600;
   font-family: 'Courier New', monospace;
 }
-
 .price-item.total {
   padding: 12px 0;
   border-top: 2px solid var(--border);
   border-bottom: none;
   font-size: 18px;
 }
-
 .price-item.total .label {
   color: var(--white);
   font-weight: 700;
 }
-
-.base-info {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  padding: 1rem;
-  background: var(--surface);
-  border-radius: 6px;
-  margin-bottom: 1.5rem;
-}
-
-.info-item {
-  flex: 1;
-}
-
-.info-label {
-  font-size: 11px;
-  text-transform: uppercase;
-  color: var(--subtle);
-  margin-bottom: 4px;
-}
-
-.info-value {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--white);
-}
-
 .summary-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   margin-bottom: 2rem;
 }
-
 .summary-item {
   padding: 1rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 6px;
 }
-
 .summary-item .label {
   font-size: 12px;
   text-transform: uppercase;
   color: var(--subtle);
   margin-bottom: 4px;
 }
-
 .summary-item .value {
   font-size: 16px;
   font-weight: 600;
   color: var(--white);
 }
-
 .cta-primary {
   width: 100%;
   padding: 16px;
@@ -171,13 +107,8 @@ select:focus, input[type="number"]:focus {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   cursor: pointer;
-  transition: all 0.2s;
 }
-
-.cta-primary:hover {
-  background: #f0b520;
-}
-
+.cta-primary:hover { background: #f0b520; }
 .cta-secondary {
   display: inline-block;
   padding: 12px 24px;
@@ -187,43 +118,42 @@ select:focus, input[type="number"]:focus {
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
   text-decoration: none;
 }
-
-.cta-secondary:hover {
-  background: var(--amber-bg);
-}
-
+.cta-secondary:hover { background: var(--amber-bg); }
 @media (max-width: 768px) {
-  .config-section {
-    padding: 1.5rem;
-  }
-  
-  .base-info, .summary-grid {
-    grid-template-columns: 1fr;
-  }
+  .config-section { padding: 1.5rem; }
+  .summary-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
+<nav class="nav">
+<div class="nav-left">
+<a href="index.html" class="nav-logo"><span class="iso">Iso</span>Watt</a>
+</div>
+<div class="nav-center">
+<a href="index.html" class="nav-link">Home</a>
+<a href="products.html" class="nav-link">Products</a>
+</div>
+<div class="nav-right">
+<span class="nav-location">Bellefonte, PA</span>
+</div>
+</nav>
 
-<nav class="nav" id="main-nav"></nav>
-
-<div class="hero">
-<div class="hero-content">
-<p class="hero-eyebrow">Build Your Configuration</p>
-<h1>Design Your System.</h1>
-<p class="hero-desc">Start with a base model and customize every component to match your exact needs.</p>
+<div style="min-height:40vh;display:flex;align-items:center;background:var(--black);padding:4rem 2rem;">
+<div class="container">
+<p class="eyebrow">Build Your Configuration</p>
+<h1 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(48px,9vw,96px);font-weight:900;text-transform:uppercase;letter-spacing:0.02em;line-height:0.9;color:var(--white);margin-bottom:1rem;">Design Your System.</h1>
+<p style="font-size:17px;color:var(--subtle);max-width:480px;line-height:1.7;">Start with a base model and customize every component to match your exact needs.</p>
 </div>
 </div>
 
-<div class="page-width config-container">
+<div class="page-width config-container" style="padding:0 2rem;margin:0 auto;">
 
-<!-- Step 1: Base Model Selection -->
+<!-- Step 1: Base Model -->
 <section class="config-section">
 <div class="section-title">Step 1: Choose Your Base Model</div>
-
 <div class="config-group">
 <label class="config-label">Base Model</label>
 <select id="baseModel" onchange="updateConfig()">
@@ -232,23 +162,11 @@ select:focus, input[type="number"]:focus {
 </select>
 <p class="config-description">Select the core battery and enclosure for your system.</p>
 </div>
-
-<div class="base-info">
-<div class="info-item">
-<div class="info-label">Battery Capacity</div>
-<div class="info-value" id="info-capacity">1.2kWh</div>
-</div>
-<div class="info-item">
-<div class="info-label">Base Price</div>
-<div class="info-value" id="info-base">$1,200</div>
-</div>
-</div>
 </section>
 
 <!-- Step 2: Power & Charging -->
 <section class="config-section">
 <div class="section-title">Step 2: Power & Inverter</div>
-
 <div class="config-group">
 <label class="config-label">AC Inverter</label>
 <select id="inverter" onchange="updateConfig()">
@@ -268,7 +186,6 @@ select:focus, input[type="number"]:focus {
 <option value="fast">Fast 20A - $100</option>
 <option value="none">No Charger - $0</option>
 </select>
-<p class="config-description">Select your wall charging speed and options.</p>
 </div>
 </section>
 
@@ -301,7 +218,6 @@ select:focus, input[type="number"]:focus {
 <option value="led">LED Indicator Only - $20</option>
 <option value="none">None - $0</option>
 </select>
-<p class="config-description">Real-time state of charge and battery health monitoring.</p>
 </div>
 </section>
 
@@ -341,64 +257,27 @@ select:focus, input[type="number"]:focus {
 <div class="section-title">Order Summary</div>
 
 <div class="summary-grid">
-<div class="summary-item">
-<div class="label">Configuration</div>
-<div class="value" id="summary-config">IsoStation Custom</div>
-</div>
-<div class="summary-item">
-<div class="label">Total Capacity</div>
-<div class="value" id="summary-capacity">1.2kWh</div>
-</div>
-<div class="summary-item">
-<div class="label">Lead Time</div>
-<div class="value" id="summary-lead">2-3 weeks</div>
-</div>
-<div class="summary-item">
-<div class="label">Deposit Required</div>
-<div class="value" id="summary-deposit">$0</div>
-</div>
+<div class="summary-item"><div class="label">Configuration</div><div class="value" id="summary-config">IsoStation Custom</div></div>
+<div class="summary-item"><div class="label">Total Capacity</div><div class="value" id="summary-capacity">1.2kWh</div></div>
+<div class="summary-item"><div class="label">Lead Time</div><div class="value" id="summary-lead">2-3 weeks</div></div>
+<div class="summary-item"><div class="label">Deposit Required</div><div class="value" id="summary-deposit">$0</div></div>
 </div>
 
-<div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
-<div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
-<strong style="font-size: 14px;">Pricing Breakdown</strong>
-</div>
-
+<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:2rem;">
+<div style="margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border);"><strong style="font-size:14px;">Pricing Breakdown</strong></div>
 <div id="pricing-breakdown">
-<div class="price-item">
-<span class="label">Base Model</span>
-<span class="amount" id="price-base">$1,200</span>
-</div>
-<div class="price-item">
-<span class="label">Inverter</span>
-<span class="amount" id="price-inverter">$0</span>
-</div>
-<div class="price-item">
-<span class="label">Charger</span>
-<span class="amount" id="price-charger">$50</span>
-</div>
-<div class="price-item">
-<span class="label">Ports & Connectivity</span>
-<span class="amount" id="price-ports">$130</span>
-</div>
-<div class="price-item">
-<span class="label">Accessories</span>
-<span class="amount" id="price-accessories">$95</span>
-</div>
-<div class="price-item total">
-<span class="label">Total Price</span>
-<span class="amount" id="price-total">$1,475</span>
-</div>
+<div class="price-item"><span class="label">Base Model</span><span class="amount" id="price-base">$1,200</span></div>
+<div class="price-item"><span class="label">Inverter</span><span class="amount" id="price-inverter">$0</span></div>
+<div class="price-item"><span class="label">Charger</span><span class="amount" id="price-charger">$50</span></div>
+<div class="price-item"><span class="label">Ports & Connectivity</span><span class="amount" id="price-ports">$130</span></div>
+<div class="price-item"><span class="label">Accessories</span><span class="amount" id="price-accessories">$95</span></div>
+<div class="price-item total"><span class="label">Total Price</span><span class="amount" id="price-total">$1,475</span></div>
 </div>
 </div>
 
-<p style="font-size: 12px; color: var(--muted); margin-bottom: 1.5rem;">50% deposit required to reserve. Final payment due before shipping.</p>
-
-<button class="cta-primary" onclick="submitOrder()">Reserve This Build</button>
-
-<div style="margin-top: 1rem; text-align: center;">
-<a href="products.html" class="cta-secondary">← View Prebuilt Options</a>
-</div>
+<p style="font-size:12px;color:var(--muted);margin-bottom:1.5rem;">50% deposit required to reserve. Final payment due before shipping.</p>
+<button class="cta-primary" onclick="alert('Your configuration has been saved. Next step: contact us for deposit.')">Reserve This Build</button>
+<div style="margin-top:1rem;text-align:center;"><a href="products.html" class="cta-secondary">← View Prebuilt Options</a></div>
 </section>
 
 </div>
@@ -423,123 +302,49 @@ Build to order · LiFePO4 Power Systems
 </div>
 </footer>
 
-<script src="site.js"></script>
 <script>
 const BASE_MODELS = {
-  'iso-station': {
-    name: 'IsoStation',
-    capacity: '1.2kWh',
-    battery: '100Ah',
-    basePrice: 1200,
-    leadTime: '2-3 weeks'
-  },
-  'iso-point': {
-    name: 'IsoPoint',
-    capacity: '0.15kWh',
-    battery: '12Ah',
-    basePrice: 600,
-    leadTime: '1-2 weeks'
-  }
+  'iso-station': { name: 'IsoStation', capacity: '1.2kWh', basePrice: 1200, leadTime: '2-3 weeks' },
+  'iso-point': { name: 'IsoPoint', capacity: '0.15kWh', basePrice: 600, leadTime: '1-2 weeks' }
 };
 
-const COMPONENT_PRICES = {
-  inverter: {
-    'none': 0,
-    '400w': 150,
-    '600w': 200,
-    '1000w': 300,
-    '2000w': 400
-  },
-  charger: {
-    'standard': 50,
-    'fast': 100,
-    'none': 0
-  },
-  usbc: {
-    '1': 30,
-    '2': 50,
-    '4': 90
-  },
-  '12v': {
-    'lighter': 20,
-    'anderson': 40,
-    'both': 60
-  },
-  monitor: {
-    'bluetooth': 60,
-    'led': 20,
-    'none': 0
-  },
-  light: {
-    'none': 0,
-    'integrated': 35,
-    'external': 60
-  },
-  protection: {
-    'standard': 0,
-    'upgraded': 75
-  },
-  transport: {
-    'none': 0,
-    'handle': 40,
-    'cart': 120
-  }
+const PRICES = {
+  inverter: { 'none': 0, '400w': 150, '600w': 200, '1000w': 300, '2000w': 400 },
+  charger: { 'standard': 50, 'fast': 100, 'none': 0 },
+  usbc: { '1': 30, '2': 50, '4': 90 },
+  '12v': { 'lighter': 20, 'anderson': 40, 'both': 60 },
+  monitor: { 'bluetooth': 60, 'led': 20, 'none': 0 },
+  light: { 'none': 0, 'integrated': 35, 'external': 60 },
+  protection: { 'standard': 0, 'upgraded': 75 },
+  transport: { 'none': 0, 'handle': 40, 'cart': 120 }
 };
 
 function updateConfig() {
-  const baseModel = document.getElementById('baseModel').value;
-  const model = BASE_MODELS[baseModel];
-  
-  // Update base info
-  document.getElementById('info-capacity').textContent = model.capacity;
-  document.getElementById('info-base').textContent = '$' + model.basePrice.toLocaleString();
-  
-  // Calculate total
-  const total = model.basePrice +
-    COMPONENT_PRICES.inverter[document.getElementById('inverter').value] +
-    COMPONENT_PRICES.charger[document.getElementById('charger').value] +
-    COMPONENT_PRICES.usbc[document.getElementById('usbc').value] +
-    COMPONENT_PRICES['12v'][document.getElementById('12v').value] +
-    COMPONENT_PRICES.monitor[document.getElementById('monitor').value] +
-    COMPONENT_PRICES.light[document.getElementById('light').value] +
-    COMPONENT_PRICES.protection[document.getElementById('protection').value] +
-    COMPONENT_PRICES.transport[document.getElementById('transport').value];
-  
-  // Update pricing breakdown
-  document.getElementById('price-base').textContent = '$' + model.basePrice;
-  document.getElementById('price-inverter').textContent = '$' + COMPONENT_PRICES.inverter[document.getElementById('inverter').value];
-  document.getElementById('price-charger').textContent = '$' + COMPONENT_PRICES.charger[document.getElementById('charger').value];
-  document.getElementById('price-ports').textContent = '$' + (
-    COMPONENT_PRICES.usbc[document.getElementById('usbc').value] +
-    COMPONENT_PRICES['12v'][document.getElementById('12v').value] +
-    COMPONENT_PRICES.monitor[document.getElementById('monitor').value]
-  );
-  document.getElementById('price-accessories').textContent = '$' + (
-    COMPONENT_PRICES.light[document.getElementById('light').value] +
-    COMPONENT_PRICES.protection[document.getElementById('protection').value] +
-    COMPONENT_PRICES.transport[document.getElementById('transport').value]
-  );
+  const base = BASE_MODELS[document.getElementById('baseModel').value];
+  const total = base.basePrice +
+    PRICES.inverter[document.getElementById('inverter').value] +
+    PRICES.charger[document.getElementById('charger').value] +
+    PRICES.usbc[document.getElementById('usbc').value] +
+    PRICES['12v'][document.getElementById('12v').value] +
+    PRICES.monitor[document.getElementById('monitor').value] +
+    PRICES.light[document.getElementById('light').value] +
+    PRICES.protection[document.getElementById('protection').value] +
+    PRICES.transport[document.getElementById('transport').value];
+
+  document.getElementById('price-base').textContent = '$' + base.basePrice;
+  document.getElementById('price-inverter').textContent = '$' + PRICES.inverter[document.getElementById('inverter').value];
+  document.getElementById('price-charger').textContent = '$' + PRICES.charger[document.getElementById('charger').value];
+  document.getElementById('price-ports').textContent = '$' + (PRICES.usbc[document.getElementById('usbc').value] + PRICES['12v'][document.getElementById('12v').value] + PRICES.monitor[document.getElementById('monitor').value]);
+  document.getElementById('price-accessories').textContent = '$' + (PRICES.light[document.getElementById('light').value] + PRICES.protection[document.getElementById('protection').value] + PRICES.transport[document.getElementById('transport').value]);
   document.getElementById('price-total').textContent = '$' + total.toLocaleString();
-  
-  // Update summary
-  document.getElementById('summary-config').textContent = model.name + ' - Custom';
-  document.getElementById('summary-capacity').textContent = model.capacity;
-  document.getElementById('summary-lead').textContent = model.leadTime;
+
+  document.getElementById('summary-config').textContent = base.name + ' - Custom';
+  document.getElementById('summary-capacity').textContent = base.capacity;
+  document.getElementById('summary-lead').textContent = base.leadTime;
   document.getElementById('summary-deposit').textContent = '$' + Math.floor(total / 2).toLocaleString();
 }
 
-function submitOrder() {
-  const baseModel = document.getElementById('baseModel').value;
-  const model = BASE_MODELS[baseModel];
-  alert('Your configuration has been saved. Next: Contact form for deposit.');
-}
-
-// Initialize on load
 updateConfig();
-
-if (typeof initNav === 'function') {
-  initNav('configurator');
-}
 </script>
 </body>
 </html>
