@@ -343,16 +343,11 @@ margin-bottom: 1rem;
 </style>
 </head>
 <body>
-<nav class="nav">
-<div class="nav-left">
-<a href="index.html" class="nav-logo"><span class="iso">Iso</span>Watt</a>
-</div>
-<div class="nav-center">
-<a href="index.html" class="nav-link active">Home</a>
-<a href="products.html" class="nav-link">Products</a>
-</div>
-<div class="nav-right">
-<span class="nav-location">Bellefonte, PA</span>
+<nav class="nav" style="background:var(--black);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;sticky;top:0;z-index:100;">
+<a href="index.html" class="nav-logo" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;letter-spacing:0.1em;text-transform:uppercase;color:var(--white);text-decoration:none;"><span style="color:var(--amber);">Iso</span>Watt</a>
+<div style="display:flex;gap:2rem;">
+<a href="index.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Home</a>
+<a href="products.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Products</a>
 </div>
 </nav>
 
