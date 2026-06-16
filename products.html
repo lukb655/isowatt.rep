@@ -295,6 +295,7 @@ function setupViewer(canvasId) {
   const scene = new window.THREE.Scene();
   scene.background = new window.THREE.Color(0x161616);
 
+  // Camera straight-on, slight elevation — same as configurator final tuning
   const camera = new window.THREE.PerspectiveCamera(50, W / H, 0.001, 1000);
   camera.position.set(0, 0.2, config.camZ);
   camera.lookAt(0, 0, 0);
@@ -312,7 +313,10 @@ function setupViewer(canvasId) {
   scene.add(fill);
 
   let model = null;
-  const orbit = { active: false, lastX: 0, dragY: 0, autoRotate: true };
+  let spinZ = 0;
+  let isDragging = false;
+  let lastX = 0;
+  let autoRotate = true;
 
   const loader = new window.GLTFLoader();
   loader.load(
@@ -321,6 +325,7 @@ function setupViewer(canvasId) {
       model = gltf.scene;
       model.scale.setScalar(config.scale);
       model.position.set(config.px, config.py, config.pz);
+      // XYZ order: rotX tilts model upright, Z spins it like a turntable
       model.rotation.order = 'XYZ';
       model.rotation.x = config.rotX;
       model.rotation.y = config.rotY;
@@ -332,24 +337,27 @@ function setupViewer(canvasId) {
     (err) => { console.error('❌ Model load error:', config.name, err); }
   );
 
+  // Drag to spin on Z axis only
   canvas.addEventListener('mousedown', (e) => {
-    orbit.active = true;
-    orbit.lastX = e.clientX;
-    orbit.autoRotate = false;
+    isDragging = true;
+    lastX = e.clientX;
+    autoRotate = false;
   });
-  window.addEventListener('mouseup', () => { orbit.active = false; });
+  window.addEventListener('mouseup', () => { isDragging = false; });
   canvas.addEventListener('mousemove', (e) => {
-    if (!orbit.active || !model) return;
-    orbit.dragY += (e.clientX - orbit.lastX) * 0.01;
-    orbit.lastX = e.clientX;
-    if (model) model.rotation.y = config.rotY + orbit.dragY;
+    if (!isDragging || !model) return;
+    spinZ += (e.clientX - lastX) * 0.01;
+    lastX = e.clientX;
+    model.rotation.z = config.rotZ + spinZ;
   });
+  canvas.addEventListener('mouseleave', () => { isDragging = false; });
 
+  // Auto-rotate on Z axis — spins upright like a turntable
   (function animate() {
     requestAnimationFrame(animate);
-    if (model && orbit.autoRotate) {
-      orbit.dragY += 0.003;
-      model.rotation.y = config.rotY + orbit.dragY;
+    if (model && autoRotate) {
+      spinZ += 0.003;
+      model.rotation.z = config.rotZ + spinZ;
     }
     renderer.render(scene, camera);
   })();
