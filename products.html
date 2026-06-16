@@ -38,8 +38,8 @@
 .price-label { font-size: 12px; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.05em; }
 .price-amount { font-size: 42px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; color: var(--white); }
 .price-note { font-size: 12px; color: rgba(255,255,255,0.6); }
-.cta-button { width: 100%; padding: 14px; background: var(--black); color: var(--amber); border: none; border-radius: 6px; font-weight: 700; font-size: 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s; }
-.cta-button:hover { background: #1a1a1a; }
+.cta-button { width: 100%; padding: 14px; background: var(--amber); color: #000; border: none; border-radius: 6px; font-weight: 700; font-size: 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s; }
+.cta-button:hover { background: #d4920a; }
 .canvas-viewer { position: relative; width: 100%; height: 500px; background: #161616; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
 .canvas-viewer canvas { width: 100%; height: 100%; }
 .rotate-hint { position: absolute; top: 10px; right: 12px; font-size: 16px; color: var(--amber); font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.15em; text-transform: uppercase; pointer-events: none; font-weight: 700; }
@@ -48,11 +48,28 @@
 .product-visual { position: static; }
 .product-header h2 { font-size: 36px; }
 }
+@media (max-width: 600px) {
+.carousel-nav { padding: 0 1rem 1rem; }
+.carousel-nav button { padding: 8px 14px; font-size: 13px; }
+.product-detail { padding: 1.5rem 1rem; }
+.canvas-viewer { height: 240px; }
+.canvas-viewer canvas { height: 240px !important; }
+.product-specs-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.spec-item { padding: 0.75rem; }
+.spec-label { font-size: 10px; }
+.spec-value { font-size: 14px; }
+.product-header { margin-bottom: 1.25rem; }
+.product-header h2 { font-size: 30px; }
+.features-list li { font-size: 13px; }
+.pricing-section { margin-top: 1.5rem; }
+.price-amount { font-size: 36px; }
+.cta-button { padding: 14px; font-size: 15px; }
+}
 </style>
 </head>
 <body>
 <nav class="nav" style="background:var(--black);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;sticky;top:0;z-index:100;">
-<a href="index.html" class="nav-logo" style="display:flex;align-items:center;text-decoration:none;"><img src="./IW_LOGO_FAV.png" alt="IsoWatt" style="height:36px;width:auto;display:block;"></a>
+<a href="index.html" class="nav-logo" style="display:flex;align-items:center;text-decoration:none;"><img src="./IW_LOGO_FAV.png" alt="IsoWatt" style="height:36px;width:auto;display:block;mix-blend-mode:screen;"></a>
 <div style="display:flex;gap:2rem;">
 <a href="index.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Home</a>
 <a href="products.html" class="nav-link" style="color:var(--amber);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid var(--amber);">Products</a>
@@ -275,13 +292,13 @@ const MODEL_CONFIGS = {
     file: './models/4800_Case_Open.glb',
     scale: 0.0066, px: 0.0, py: 1.333, pz: 0.0,
     rotX: -1.413717, rotY: 0.0, rotZ: 0.0,
-    camZ: 6.0, name: 'IsoStation+'
+    camZ: 7.5, name: 'IsoStation+'
   },
   'canvas-point': {
     file: './models/model.glb',
     scale: 0.009, px: 0.0, py: 1.333, pz: 0.0,
     rotX: -1.413717, rotY: 0.0, rotZ: 0.0,
-    camZ: 2.2, name: 'IsoPoint+'
+    camZ: 3.2, name: 'IsoPoint+'
   }
 };
 
