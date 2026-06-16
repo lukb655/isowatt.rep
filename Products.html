@@ -6,32 +6,271 @@
 <meta name="description" content="IsoWatt Prebuilt Power Stations — IsoStation+ and IsoPoint+ with variable inverter options. Built in Bellefonte, PA.">
 <title>IsoWatt Prebuilt Power Stations</title>
 <link rel="stylesheet" href="style.css">
+<style>
+.product-detail { margin-bottom: 4rem; }
+.product-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+  margin-bottom: 3rem;
+}
+.product-visual {
+  position: sticky;
+  top: 100px;
+}
+.product-header { margin-bottom: 2rem; }
+.product-badge {
+  display: inline-block;
+  background: var(--amber);
+  color: #000;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+.product-header h2 {
+  font-size: 48px;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+  color: var(--white);
+}
+.product-subtitle {
+  color: var(--muted);
+  font-size: 16px;
+}
+.product-specs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+.spec-item {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.spec-label {
+  font-size: 11px;
+  color: var(--subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+.spec-value {
+  font-weight: 600;
+  color: var(--white);
+}
+.option-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.option-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--subtle);
+  margin-bottom: 12px;
+}
+.option-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+}
+.option-btn {
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.option-btn:hover { border-color: var(--muted); }
+.option-btn.active {
+  background: var(--amber-bg);
+  border-color: var(--amber);
+}
+.option-name {
+  display: block;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+.option-price {
+  display: block;
+  font-size: 12px;
+  color: var(--subtle);
+}
+.option-btn.active .option-price { color: var(--amber); }
+.features-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.features-list li {
+  font-size: 14px;
+  color: var(--text);
+  padding-left: 20px;
+  position: relative;
+}
+.features-list li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--amber);
+  font-weight: 700;
+}
+.pricing-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--amber-bg);
+  border: 1px solid var(--amber-dim);
+  border-radius: 8px;
+}
+.price-display {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 1.5rem;
+}
+.price-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.price-amount {
+  font-size: 42px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  color: var(--white);
+}
+.price-note {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+}
+.cta-button {
+  width: 100%;
+  padding: 14px;
+  background: var(--black);
+  color: var(--amber);
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.2s;
+}
+.cta-button:hover { background: #1a1a1a; }
+.specs-detail {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.specs-detail h3 { margin-bottom: 1.5rem; }
+.specs-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.specs-table tr {
+  border-bottom: 1px solid var(--border);
+}
+.specs-table td {
+  padding: 12px;
+  font-size: 14px;
+}
+.specs-table td:first-child {
+  font-weight: 600;
+  color: var(--muted);
+  width: 40%;
+}
+.specs-table tr:last-child { border-bottom: none; }
+.section-divider { margin: 4rem 0; border: none; border-top: 1px solid var(--border); }
+.canvas-viewer {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  background: #161616;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.canvas-viewer canvas {
+  width: 100%;
+  height: 100%;
+}
+.rotate-hint {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 16px;
+  color: var(--amber);
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  pointer-events: none;
+  font-weight: 700;
+}
+@media (max-width: 900px) {
+  .product-split { grid-template-columns: 1fr; }
+  .product-visual { position: static; }
+  .product-header h2 { font-size: 36px; }
+  .specs-table td:first-child { width: 50%; }
+}
+</style>
 </head>
 <body>
+<nav class="nav">
+<div class="nav-left">
+<a href="index.html" class="nav-logo"><span class="iso">Iso</span>Watt</a>
+</div>
+<div class="nav-center">
+<a href="index.html" class="nav-link">Home</a>
+<a href="products.html" class="nav-link active">Products</a>
+</div>
+<div class="nav-right">
+<span class="nav-location">Bellefonte, PA</span>
+</div>
+</nav>
 
-<nav class="nav" id="main-nav"></nav>
-
-<div class="hero">
-<div class="hero-content">
-<p class="hero-eyebrow">Prebuilt & Ready to Ship</p>
-<h1>Choose Your Power.</h1>
-<p class="hero-desc">IsoStation+ and IsoPoint+ come fully assembled with premium components. Pick your inverter wattage and ship date.</p>
+<div style="min-height:60vh;display:flex;align-items:center;background:var(--black);padding:6rem 2rem;">
+<div class="container">
+<p class="eyebrow">Prebuilt & Ready to Ship</p>
+<h1 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(60px,11vw,130px);font-weight:900;text-transform:uppercase;letter-spacing:0.02em;line-height:0.9;color:var(--white);margin-bottom:2rem;">Choose Your Power.</h1>
+<p style="font-size:17px;color:var(--subtle);max-width:480px;line-height:1.7;">IsoStation+ and IsoPoint+ come fully assembled with premium components. Pick your inverter wattage and ship date.</p>
 </div>
 </div>
 
-<div class="page-width">
+<div class="page-width" style="max-width:1080px;margin:0 auto;padding:0 2rem;">
 
-<!-- IsoStation+ Section -->
+<!-- IsoStation+ -->
 <section class="product-detail">
 <div class="product-split">
 <div class="product-visual">
-<div style="position:relative;width:100%;height:500px;background:#161616;border:1px solid #333;border-radius:8px;overflow:hidden;">
-<canvas id="canvas-station" style="width:100%;height:100%;"></canvas>
-<div style="position:absolute;top:10px;right:12px;font-size:16px;color:#F0A500;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.15em;text-transform:uppercase;pointer-events:none;font-weight:700;">↻ Drag to rotate</div>
+<div class="canvas-viewer">
+<canvas id="canvas-station"></canvas>
+<div class="rotate-hint">↻ Drag to rotate</div>
 </div>
 </div>
 
-<div class="product-info">
+<div>
 <div class="product-header">
 <span class="product-badge">Flagship</span>
 <h2><span class="iso">Iso</span>Station<span class="iso">+</span></h2>
@@ -39,41 +278,29 @@
 </div>
 
 <div class="product-specs-grid">
-<div class="spec-item">
-<span class="spec-label">Battery</span>
-<span class="spec-value">100Ah LiFePO4</span>
-</div>
-<div class="spec-item">
-<span class="spec-label">Capacity</span>
-<span class="spec-value">1.2kWh (1200Wh)</span>
-</div>
-<div class="spec-item">
-<span class="spec-label">Enclosure</span>
-<span class="spec-value">Apache 4800</span>
-</div>
-<div class="spec-item">
-<span class="spec-label">Warranty</span>
-<span class="spec-value">2 Years</span>
-</div>
+<div class="spec-item"><span class="spec-label">Battery</span><span class="spec-value">100Ah LiFePO4</span></div>
+<div class="spec-item"><span class="spec-label">Capacity</span><span class="spec-value">1.2kWh</span></div>
+<div class="spec-item"><span class="spec-label">Enclosure</span><span class="spec-value">Apache 4800</span></div>
+<div class="spec-item"><span class="spec-label">Warranty</span><span class="spec-value">2 Years</span></div>
 </div>
 
-<div class="inverter-options">
+<div class="option-section">
 <div class="option-title">Select AC Inverter</div>
 <div class="option-buttons">
-<button class="option-btn active" onclick="selectOption('station', '1000w')">
+<button class="option-btn active" onclick="this.classList.add('active');this.parentElement.querySelector('[data-option]').classList.remove('active');">
 <span class="option-name">1000W</span>
 <span class="option-price">+$0</span>
 </button>
-<button class="option-btn" onclick="selectOption('station', '2000w')">
+<button class="option-btn" onclick="this.classList.add('active');this.parentElement.querySelector('.option-btn:first-child').classList.remove('active');" data-option>
 <span class="option-name">2000W</span>
 <span class="option-price">+$70</span>
 </button>
 </div>
 </div>
 
-<div class="what-included">
-<h3>What's Included</h3>
-<ul class="features-list">
+<div class="option-section">
+<strong>What's Included</strong>
+<ul class="features-list" style="margin-top:1rem;">
 <li>100Ah LiFePO4 battery with Bluetooth monitoring</li>
 <li>Dual 110V AC outlets (selected inverter power)</li>
 <li>Dual 96W USB-C fast charge ports</li>
@@ -81,8 +308,6 @@
 <li>LED work lighting with brightness control</li>
 <li>12V 10A wall charger with SAE connector</li>
 <li>Battery monitor with real-time SOC display</li>
-<li>Integrated ANL fusing and master disconnect</li>
-<li>Anderson SB175/SB50 connectors</li>
 </ul>
 </div>
 
@@ -101,35 +326,32 @@
 <div class="specs-detail">
 <h3>Detailed Specifications</h3>
 <table class="specs-table">
-<tr><td>Battery Chemistry</td><td>LiFePO4 (Lithium Iron Phosphate)</td></tr>
+<tr><td>Battery Chemistry</td><td>LiFePO4</td></tr>
 <tr><td>Nominal Voltage</td><td>12V</td></tr>
 <tr><td>Capacity</td><td>100Ah / 1200Wh</td></tr>
 <tr><td>Max Continuous Discharge</td><td>80A</td></tr>
-<tr><td>Peak Discharge</td><td>150A (5 seconds)</td></tr>
-<tr><td>AC Inverter Options</td><td>1000W or 2000W (selectable)</td></tr>
+<tr><td>AC Inverter Options</td><td>1000W or 2000W</td></tr>
 <tr><td>AC Outlets</td><td>2x 110V, 15A breaker each</td></tr>
 <tr><td>USB Outputs</td><td>2x USB-C 96W fast charge</td></tr>
-<tr><td>12V Outputs</td><td>1x 10A lighter socket</td></tr>
 <tr><td>Weight</td><td>~78 lbs</td></tr>
-<tr><td>Dimensions (L×W×H)</td><td>22" × 15.5" × 10.5"</td></tr>
-<tr><td>Enclosure</td><td>Apache 4800 ABS case</td></tr>
+<tr><td>Dimensions</td><td>22" × 15.5" × 10.5"</td></tr>
 </table>
 </div>
 </section>
 
 <hr class="section-divider">
 
-<!-- IsoPoint+ Section -->
+<!-- IsoPoint+ -->
 <section class="product-detail">
 <div class="product-split">
 <div class="product-visual">
-<div style="position:relative;width:100%;height:500px;background:#161616;border:1px solid #333;border-radius:8px;overflow:hidden;">
-<canvas id="canvas-point" style="width:100%;height:100%;"></canvas>
-<div style="position:absolute;top:10px;right:12px;font-size:16px;color:#F0A500;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.15em;text-transform:uppercase;pointer-events:none;font-weight:700;">↻ Drag to rotate</div>
+<div class="canvas-viewer">
+<canvas id="canvas-point"></canvas>
+<div class="rotate-hint">↻ Drag to rotate</div>
 </div>
 </div>
 
-<div class="product-info">
+<div>
 <div class="product-header">
 <span class="product-badge">Popular</span>
 <h2><span class="iso">Iso</span>Point<span class="iso">+</span></h2>
@@ -137,53 +359,39 @@
 </div>
 
 <div class="product-specs-grid">
-<div class="spec-item">
-<span class="spec-label">Battery</span>
-<span class="spec-value">12Ah LiFePO4</span>
-</div>
-<div class="spec-item">
-<span class="spec-label">Capacity</span>
-<span class="spec-value">0.15kWh (150Wh)</span>
-</div>
-<div class="spec-item">
-<span class="spec-label">Enclosure</span>
-<span class="spec-value">Apache 2800</span>
-</div>
-<div class="spec-item">
-<span class="spec-label">Warranty</span>
-<span class="spec-value">2 Years</span>
-</div>
+<div class="spec-item"><span class="spec-label">Battery</span><span class="spec-value">12Ah LiFePO4</span></div>
+<div class="spec-item"><span class="spec-label">Capacity</span><span class="spec-value">0.15kWh</span></div>
+<div class="spec-item"><span class="spec-label">Enclosure</span><span class="spec-value">Apache 2800</span></div>
+<div class="spec-item"><span class="spec-label">Warranty</span><span class="spec-value">2 Years</span></div>
 </div>
 
-<div class="inverter-options">
+<div class="option-section">
 <div class="option-title">Select AC Power</div>
 <div class="option-buttons">
-<button class="option-btn active" onclick="selectOption('point', 'dconly')">
+<button class="option-btn active">
 <span class="option-name">DC Only</span>
 <span class="option-price">+$0</span>
 </button>
-<button class="option-btn" onclick="selectOption('point', '300w')">
+<button class="option-btn">
 <span class="option-name">300W AC</span>
 <span class="option-price">+$80</span>
 </button>
-<button class="option-btn" onclick="selectOption('point', '500w')">
+<button class="option-btn">
 <span class="option-name">500W AC</span>
 <span class="option-price">+$120</span>
 </button>
 </div>
 </div>
 
-<div class="what-included">
-<h3>What's Included</h3>
-<ul class="features-list">
+<div class="option-section">
+<strong>What's Included</strong>
+<ul class="features-list" style="margin-top:1rem;">
 <li>12Ah LiFePO4 battery with Bluetooth monitoring</li>
 <li>110V AC outlet (selected inverter option)</li>
 <li>Dual 96W USB-C fast charge ports</li>
 <li>12V cigarette lighter socket</li>
 <li>LED work lighting</li>
 <li>12V 5A wall charger with SAE connector</li>
-<li>Battery monitor with real-time SOC display</li>
-<li>Integrated protection and disconnect</li>
 <li>Compact rugged enclosure (under 9 lbs)</li>
 </ul>
 </div>
@@ -203,26 +411,23 @@
 <div class="specs-detail">
 <h3>Detailed Specifications</h3>
 <table class="specs-table">
-<tr><td>Battery Chemistry</td><td>LiFePO4 (Lithium Iron Phosphate)</td></tr>
+<tr><td>Battery Chemistry</td><td>LiFePO4</td></tr>
 <tr><td>Nominal Voltage</td><td>12V</td></tr>
 <tr><td>Capacity</td><td>12Ah / 150Wh</td></tr>
 <tr><td>Max Continuous Discharge</td><td>10A</td></tr>
-<tr><td>Peak Discharge</td><td>30A (5 seconds)</td></tr>
-<tr><td>AC Power Options</td><td>None, 300W, or 500W (selectable)</td></tr>
+<tr><td>AC Power Options</td><td>None, 300W, or 500W</td></tr>
 <tr><td>AC Outlets</td><td>1x 110V (if inverter selected)</td></tr>
 <tr><td>USB Outputs</td><td>2x USB-C 96W fast charge</td></tr>
-<tr><td>12V Outputs</td><td>1x 10A lighter socket</td></tr>
 <tr><td>Weight</td><td>~8.5 lbs</td></tr>
-<tr><td>Dimensions (L×W×H)</td><td>12" × 10.5" × 6"</td></tr>
-<tr><td>Enclosure</td><td>Apache 2800 ABS case</td></tr>
+<tr><td>Dimensions</td><td>12" × 10.5" × 6"</td></tr>
 </table>
 </div>
 </section>
 
-<div style="margin-top:4rem;padding:2rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;text-align:center;">
+<div style="margin-top:4rem;padding:2rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-align:center;">
 <h3>Looking to Customize?</h3>
-<p style="color:#aaa;margin:1rem 0;">Build your own configuration with our design tool. Choose components, inverter wattage, and accessories to match your exact needs.</p>
-<a href="configurator.html" class="cta-button">Design Custom Build</a>
+<p style="color:var(--muted);margin:1rem 0;">Build your own configuration with our design tool. Choose components, inverter wattage, and accessories to match your exact needs.</p>
+<a href="configurator.html" style="display:inline-block;margin-top:1rem;padding:12px 24px;background:var(--amber);color:#000;border:none;border-radius:6px;font-weight:700;text-decoration:none;text-transform:uppercase;letter-spacing:0.05em;">Design Custom Build</a>
 </div>
 
 </div>
@@ -248,408 +453,43 @@ Build to order · LiFePO4 Power Systems
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="site.js"></script>
 <script>
-// 3D Viewer Setup
-const MODEL_CONFIGS = {
-  'iso-station-plus': { file: 'models/4800_Case_Open.glb', scale: 0.004300, px: 0.0, py: 0.0, pz: 0.0, rotX: -1.282817, rotY: 0.0, rotZ: 0.0, camZ: 5.0 },
-  'iso-point-plus': { file: 'models/model.glb', scale: 0.004300, px: 0.0, py: 0.0, pz: 0.0, rotX: -1.282817, rotY: 0.0, rotZ: 0.0, camZ: 2.7 }
-};
-
-function setupViewer(canvasId, modelKey) {
+// Placeholder 3D viewers - will work when models are available
+function setupViewer(canvasId) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
-  
-  let W = canvas.clientWidth;
-  let H = canvas.clientHeight;
-  
+  const W = canvas.clientWidth;
+  const H = canvas.clientHeight;
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x161616);
-  
   const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
-  renderer.setPixelRatio(window.devicePixelRatio);
+  camera.position.set(2, 2, 5);
+  camera.lookAt(0, 0, 0);
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(W, H);
-  
   const light = new THREE.DirectionalLight(0xffffff, 0.8);
   light.position.set(5, 10, 7);
   scene.add(light);
-  
-  const ambLight = new THREE.AmbientLight(0xffffff, 0.4);
-  scene.add(ambLight);
-  
-  const orbit = {
-    active: false,
-    lastX: 0, lastY: 0,
-    angle: 0,
-    verticalAngle: 0,
-    camZ: 5.0
-  };
-  
-  function updateCamera() {
-    const originalX = 2;
-    const originalZ = orbit.camZ;
-    const radius = Math.sqrt(originalX * originalX + originalZ * originalZ);
-    const baseAngle = Math.atan2(originalX, originalZ);
-    const angle = orbit.angle + baseAngle;
-    
-    const x = Math.sin(angle) * radius;
-    const z = Math.cos(angle) * radius;
-    const y = 2 + Math.sin(orbit.verticalAngle) * 2;
-    
-    camera.position.set(x, y, z);
-    camera.lookAt(0, 0, 0);
-  }
-  
-  canvas.addEventListener('mousedown', (e) => {
-    orbit.active = true;
-    orbit.lastX = e.clientX;
-    orbit.lastY = e.clientY;
-  });
-  
+  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+  const geo = new THREE.BoxGeometry(1, 1, 1);
+  const mat = new THREE.MeshStandardMaterial({ color: 0x333 });
+  const mesh = new THREE.Mesh(geo, mat);
+  scene.add(mesh);
+  let angle = 0;
   canvas.addEventListener('mousemove', (e) => {
-    if (!orbit.active) return;
-    const dx = (e.clientX - orbit.lastX) * 0.01;
-    const dy = (e.clientY - orbit.lastY) * 0.01;
-    orbit.angle += dx;
-    orbit.verticalAngle += dy;
-    orbit.verticalAngle = Math.max(-0.1745, Math.min(0.1745, orbit.verticalAngle));
-    orbit.lastX = e.clientX;
-    orbit.lastY = e.clientY;
-    updateCamera();
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    angle = x * Math.PI * 2;
+    mesh.rotation.z = angle;
   });
-  
-  canvas.addEventListener('mouseup', () => { orbit.active = false; });
-  
-  canvas.addEventListener('wheel', (e) => { e.preventDefault(); }, { passive: false });
-  
-  // Load model
-  const config = MODEL_CONFIGS[modelKey];
-  orbit.camZ = config.camZ;
-  updateCamera();
-  
-  // Placeholder geometry until models load
-  const geometry = new THREE.BoxGeometry(1, 1, 1);
-  const material = new THREE.MeshStandardMaterial({ color: 0x333 });
-  const model = new THREE.Mesh(geometry, material);
-  model.scale.set(config.scale * 1000, config.scale * 1000, config.scale * 1000);
-  model.rotation.x = config.rotX;
-  model.rotation.y = config.rotY;
-  model.rotation.z = config.rotZ;
-  scene.add(model);
-  
   function animate() {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
   }
   animate();
-  
-  window.addEventListener('resize', () => {
-    W = canvas.clientWidth;
-    H = canvas.clientHeight;
-    camera.aspect = W / H;
-    camera.updateProjectionMatrix();
-    renderer.setSize(W, H);
-  });
 }
-
-function selectOption(product, option) {
-  const buttons = event.target.closest('.option-buttons').querySelectorAll('.option-btn');
-  buttons.forEach(b => b.classList.remove('active'));
-  event.target.closest('.option-btn').classList.add('active');
-}
-
-// Initialize viewers
-setupViewer('canvas-station', 'iso-station-plus');
-setupViewer('canvas-point', 'iso-point-plus');
-
-// Initialize nav
-if (typeof initNav === 'function') {
-  initNav('products');
-}
+setupViewer('canvas-station');
+setupViewer('canvas-point');
 </script>
-
-<style>
-.product-detail {
-  margin-bottom: 4rem;
-}
-
-.product-split {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  align-items: start;
-  margin-bottom: 3rem;
-}
-
-.product-visual {
-  position: sticky;
-  top: 100px;
-}
-
-.product-header {
-  margin-bottom: 2rem;
-}
-
-.product-badge {
-  display: inline-block;
-  background: var(--amber);
-  color: #000;
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 1rem;
-}
-
-.product-header h2 {
-  font-size: 48px;
-  font-family: 'Barlow Condensed', sans-serif;
-  letter-spacing: 0.05em;
-  margin-bottom: 8px;
-  color: var(--white);
-}
-
-.product-subtitle {
-  color: var(--muted);
-  font-size: 16px;
-}
-
-.product-specs-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin: 2rem 0;
-}
-
-.spec-item {
-  display: flex;
-  flex-direction: column;
-  padding: 12px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-}
-
-.spec-label {
-  font-size: 11px;
-  color: var(--subtle);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 4px;
-}
-
-.spec-value {
-  font-weight: 600;
-  color: var(--white);
-}
-
-.inverter-options {
-  margin: 2rem 0;
-  padding: 1.5rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-
-.option-title {
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--subtle);
-  margin-bottom: 12px;
-}
-
-.option-buttons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 8px;
-}
-
-.option-btn {
-  padding: 12px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-align: center;
-}
-
-.option-btn:hover {
-  border-color: var(--muted);
-}
-
-.option-btn.active {
-  background: var(--amber-bg);
-  border-color: var(--amber);
-}
-
-.option-name {
-  display: block;
-  font-weight: 600;
-  color: var(--white);
-  margin-bottom: 4px;
-}
-
-.option-price {
-  display: block;
-  font-size: 12px;
-  color: var(--subtle);
-}
-
-.option-btn.active .option-price {
-  color: var(--amber);
-}
-
-.what-included {
-  margin: 2rem 0;
-  padding: 1.5rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-
-.what-included h3 {
-  margin-bottom: 1rem;
-  font-size: 16px;
-}
-
-.features-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.features-list li {
-  font-size: 14px;
-  color: var(--text);
-  padding-left: 20px;
-  position: relative;
-}
-
-.features-list li:before {
-  content: "✓";
-  position: absolute;
-  left: 0;
-  color: var(--amber);
-  font-weight: 700;
-}
-
-.pricing-section {
-  margin: 2rem 0;
-  padding: 1.5rem;
-  background: var(--amber-bg);
-  border: 1px solid var(--amber-dim);
-  border-radius: 8px;
-}
-
-.price-display {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-bottom: 1.5rem;
-}
-
-.price-label {
-  font-size: 12px;
-  color: rgba(255,255,255,0.7);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.price-amount {
-  font-size: 42px;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  color: var(--white);
-}
-
-.price-note {
-  font-size: 12px;
-  color: rgba(255,255,255,0.6);
-}
-
-.cta-button {
-  width: 100%;
-  padding: 14px;
-  background: var(--black);
-  color: var(--amber);
-  border: none;
-  border-radius: 6px;
-  font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  transition: all 0.2s;
-}
-
-.cta-button:hover {
-  background: #1a1a1a;
-}
-
-.specs-detail {
-  margin-top: 3rem;
-  padding: 2rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-
-.specs-detail h3 {
-  margin-bottom: 1.5rem;
-}
-
-.specs-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.specs-table tr {
-  border-bottom: 1px solid var(--border);
-}
-
-.specs-table td {
-  padding: 12px;
-  font-size: 14px;
-}
-
-.specs-table td:first-child {
-  font-weight: 600;
-  color: var(--muted);
-  width: 40%;
-}
-
-.specs-table tr:last-child {
-  border-bottom: none;
-}
-
-.section-divider {
-  margin: 4rem 0;
-  border: none;
-  border-top: 1px solid var(--border);
-}
-
-@media (max-width: 900px) {
-  .product-split {
-    grid-template-columns: 1fr;
-  }
-  
-  .product-visual {
-    position: static;
-  }
-  
-  .product-header h2 {
-    font-size: 36px;
-  }
-  
-  .specs-table td:first-child {
-    width: 50%;
-  }
-}
-</style>
+</body>
+</html>
