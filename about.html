@@ -3,332 +3,71 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="About IsoWatt — handbuilt LiFePO4 power stations from Lebanon, PA. Our story, our process, our mission.">
-<title>About — IsoWatt</title>
+<meta name="description" content="About IsoWatt — Portable LiFePO4 power systems engineered in Bellefonte, PA.">
+<title>About IsoWatt</title>
 <link rel="stylesheet" href="style.css">
 <style>
-  .page-hero {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 5rem 2rem 4rem;
-    position: relative;
-    overflow: hidden;
-  }
-  .page-hero::before {
-    content: '';
-    position: absolute;
-    top: -100px; right: -100px;
-    width: 500px; height: 500px;
-    background: radial-gradient(ellipse, rgba(240,165,0,0.05) 0%, transparent 65%);
-    pointer-events: none;
-  }
-  .page-hero-inner { max-width: 1080px; margin: 0 auto; }
-  .page-hero .breadcrumb {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .page-hero .breadcrumb a { color: var(--subtle); text-decoration: none; }
-  .page-hero .breadcrumb a:hover { color: var(--text); }
-  .page-hero h1 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(44px, 8vw, 80px);
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--white);
-    line-height: 0.95;
-    margin-bottom: 1.25rem;
-  }
-  .page-hero h1 em { font-style: normal; color: var(--amber); }
-  .page-hero .lead {
-    font-size: 18px;
-    color: var(--subtle);
-    max-width: 560px;
-    line-height: 1.7;
-  }
-
-  /* ── STORY ── */
-  .story-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: start;
-  }
-  @media (max-width: 720px) {
-    .story-grid { grid-template-columns: 1fr; gap: 2rem; }
-  }
-  .story-body p {
-    font-size: 16px;
-    color: var(--subtle);
-    line-height: 1.8;
-    margin-bottom: 1.25rem;
-  }
-  .story-body p strong { color: var(--text); font-weight: 600; }
-  .pull-quote {
-    border-left: 3px solid var(--amber);
-    padding: 1rem 1.5rem;
-    background: var(--card);
-    border-radius: 0 6px 6px 0;
-    margin: 2rem 0;
-  }
-  .pull-quote p {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--white);
-    line-height: 1.4;
-    letter-spacing: 0.02em;
-    margin: 0 !important;
-  }
-
-  /* ── PROCESS ── */
-  .process-section { background: var(--surface); }
-  .process-steps {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-    margin-top: 3rem;
-  }
-  @media (max-width: 800px) {
-    .process-steps { grid-template-columns: 1fr 1fr; }
-  }
-  @media (max-width: 480px) {
-    .process-steps { grid-template-columns: 1fr; }
-  }
-  .process-step {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1.5rem;
-  }
-  .step-num {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 48px;
-    font-weight: 900;
-    color: var(--amber-dim);
-    line-height: 1;
-    margin-bottom: 0.75rem;
-  }
-  .step-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--white);
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.03em;
-  }
-  .step-body { font-size: 13.5px; color: var(--subtle); line-height: 1.65; }
-
-  /* ── VALUES ── */
-  .values-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-top: 3rem;
-  }
-  @media (max-width: 600px) {
-    .values-grid { grid-template-columns: 1fr; }
-  }
-  .value-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1.5rem;
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-  }
-  .value-dot {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    background: var(--amber);
-    flex-shrink: 0;
-    margin-top: 5px;
-  }
-  .value-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--white);
-    margin-bottom: 4px;
-    letter-spacing: 0.03em;
-  }
-  .value-body { font-size: 13.5px; color: var(--subtle); line-height: 1.65; }
-
-  /* ── CTA ── */
-  .about-cta {
-    background: var(--amber-bg);
-    border-top: 1px solid var(--amber-dim);
-    padding: 4rem 2rem;
-    text-align: center;
-  }
-  .about-cta h2 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(32px, 5vw, 54px);
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--white);
-    margin-bottom: 0.75rem;
-  }
-  .about-cta p { color: var(--subtle); font-size: 16px; margin-bottom: 2rem; }
-  .about-cta .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.page-hero { min-height: 50vh; display: flex; align-items: center; background: var(--black); padding: 4rem 2rem; }
+.page-hero h1 { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(48px, 8vw, 96px); font-weight: 900; text-transform: uppercase; color: var(--white); margin-bottom: 1rem; }
+.page-hero p { font-size: 17px; color: var(--subtle); max-width: 600px; line-height: 1.7; }
+.content-block { max-width: 900px; margin: 4rem auto; padding: 0 2rem; }
+.content-block h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 42px; font-weight: 700; margin-bottom: 2rem; color: var(--white); }
+.content-block p { font-size: 16px; line-height: 1.8; color: var(--text); margin-bottom: 1.5rem; }
 </style>
 </head>
 <body>
+<nav class="nav" style="background:var(--black);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;sticky;top:0;z-index:100;">
+<a href="index.html" class="nav-logo" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;letter-spacing:0.1em;text-transform:uppercase;color:var(--white);text-decoration:none;"><span style="color:var(--amber);">Iso</span>Watt</a>
+<div style="display:flex;gap:2rem;">
+<a href="index.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Home</a>
+<a href="products.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Products</a>
+<a href="about.html" class="nav-link" style="color:var(--amber);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid var(--amber);">About</a>
+<a href="contact.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Contact</a>
+</div>
+</nav>
 
-<nav class="nav" id="main-nav"></nav>
-<div class="mobile-menu" id="mobile-menu"></div>
+<div class="page-hero">
+<div class="container">
+<h1>Built Different. On Purpose.</h1>
+<p>IsoWatt makes portable LiFePO4 power systems engineered for real-world use. No compromises. No mass production. Every unit assembled by hand in Bellefonte, PA.</p>
+</div>
+</div>
 
-<main class="page">
+<div class="content-block">
+<h2>Our Story</h2>
+<p>IsoWatt started as a personal need: reliable, portable power for work in remote locations. Existing options were either underpowered, overpriced, or came with compromises that didn't fit the job. So we built our own.</p>
+<p>What began as a one-off project evolved into a business. We realized other people needed what we had built — systems that just work, built with quality components, and backed by someone who actually understands the product.</p>
 
-  <div class="page-hero">
-    <div class="page-hero-inner">
-      <div class="breadcrumb">
-        <a href="index.html">Home</a>
-        <span>›</span>
-        <span>About</span>
-      </div>
-      <h1>Built by hand.<br><em>Backed by the builder.</em></h1>
-      <p class="lead">IsoWatt is a one-person operation out of Lebanon, PA — assembling portable LiFePO4 power systems for people who work, camp, and live away from the grid.</p>
-    </div>
-  </div>
+<h2>Why LiFePO4?</h2>
+<p>LiFePO4 chemistry is what industrial power systems use. It's stable, safe, and lasts. 2,000+ charge cycles. No thermal runaway. No overnight failures. It costs more upfront, but it's the chemistry we trust with our own equipment.</p>
 
-  <!-- STORY -->
-  <section class="section">
-    <div class="container">
-      <div class="story-grid">
-        <div class="story-body reveal">
-          <span class="eyebrow">The Story</span>
-          <h2 class="section-title" style="margin-bottom:1.5rem;">Why <em>IsoWatt</em> exists.</h2>
-          <p>Off-grid power has always been available — but never quite right. Mass-market brands ship plastic boxes with locked-down software, cheap cells, and no path to repair. Professional systems cost thousands and require a dealer to touch.</p>
-          <p>IsoWatt sits in the gap. <strong>Consumer-level price. Industrial-level build.</strong> Every unit uses LiFePO4 cells — the same chemistry in electric buses and grid storage systems — wired properly, fused correctly, and assembled in a way that can be serviced if it ever needs to be.</p>
-          <div class="pull-quote">
-            <p>"If I wouldn't trust it to run my own gear all night, I won't sell it."</p>
-          </div>
-          <p>Each build is a direct reflection of the person behind it. There are no shortcuts taken, no cheaper components swapped in to improve margin. The BOM is the BOM, and the build is the build.</p>
-        </div>
+<h2>Built to Order</h2>
+<p>We don't keep inventory. We don't mass-produce. Every IsoStation and IsoPoint is assembled, wired, and load-tested by hand before it ships. That means longer lead times, but it also means quality control that's personal.</p>
 
-        <div class="reveal" style="display:flex; flex-direction:column; gap:16px; padding-top:3.5rem;">
-          <div style="background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1.5rem;">
-            <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--subtle); margin-bottom:0.75rem;">The Builder</div>
-            <div style="font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:700; color:var(--white); margin-bottom:4px;">Mechatronics Technician</div>
-            <div style="font-size:13px; color:var(--subtle); line-height:1.6;">Day job in industrial additive manufacturing. Nights and weekends building power systems that hold up in the real world.</div>
-          </div>
-          <div style="background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1.5rem;">
-            <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--subtle); margin-bottom:0.75rem;">Location</div>
-            <div style="font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:700; color:var(--white); margin-bottom:4px;">Lebanon, PA</div>
-            <div style="font-size:13px; color:var(--subtle); line-height:1.6;">Built local. Sold local — and shipped anywhere in the US for customers who want a builder they can actually call.</div>
-          </div>
-          <div style="background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1.5rem;">
-            <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--subtle); margin-bottom:0.75rem;">Model</div>
-            <div style="font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:700; color:var(--white); margin-bottom:4px;">Build to Order</div>
-            <div style="font-size:13px; color:var(--subtle); line-height:1.6;">No inventory sitting in a warehouse. Your unit is built when you order it, tested before it ships.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<h2>Local Support</h2>
+<p>You're not talking to a call center. Issues get escalated to someone who built the unit. Questions get answered by someone who uses them in the field.</p>
+</div>
 
-  <hr class="divider">
-
-  <!-- PROCESS -->
-  <section class="section process-section">
-    <div class="container">
-      <span class="eyebrow reveal">How It Works</span>
-      <h2 class="section-title reveal">From order to <em>field-ready.</em></h2>
-      <div class="process-steps">
-        <div class="process-step reveal">
-          <div class="step-num">01</div>
-          <div class="step-title">Configure</div>
-          <p class="step-body">Use the configurator to pick your tier, see specs, and understand exactly what you're getting.</p>
-        </div>
-        <div class="process-step reveal">
-          <div class="step-num">02</div>
-          <div class="step-title">Reserve</div>
-          <p class="step-body">Submit a reservation with a 50% deposit. We confirm within 24 hours and lock in your build slot.</p>
-        </div>
-        <div class="process-step reveal">
-          <div class="step-num">03</div>
-          <div class="step-title">Build</div>
-          <p class="step-body">Your unit is assembled, wired, and load-tested. Every connection verified. Every circuit confirmed.</p>
-        </div>
-        <div class="process-step reveal">
-          <div class="step-num">04</div>
-          <div class="step-title">Deliver</div>
-          <p class="step-body">Balance collected at delivery. Local pickup available in Lebanon, PA — or shipped anywhere in the US.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <hr class="divider">
-
-  <!-- VALUES -->
-  <section class="section">
-    <div class="container">
-      <span class="eyebrow reveal">What We Stand For</span>
-      <h2 class="section-title reveal">No shortcuts.<br><em>No exceptions.</em></h2>
-      <div class="values-grid">
-        <div class="value-card reveal">
-          <div class="value-dot"></div>
-          <div>
-            <div class="value-title">Correct Overcurrent Protection</div>
-            <p class="value-body">Every circuit has the right fuse for the wire gauge. Every inverter has a dedicated breaker. ANL fusing on the main run. Not optional.</p>
-          </div>
-        </div>
-        <div class="value-card reveal">
-          <div class="value-dot"></div>
-          <div>
-            <div class="value-title">Derated Components</div>
-            <p class="value-body">Switches, relays, and breakers are rated well above operating load. Lower heat, longer life, higher reliability under real-world conditions.</p>
-          </div>
-        </div>
-        <div class="value-card reveal">
-          <div class="value-dot"></div>
-          <div>
-            <div class="value-title">Proper Wire Gauge</div>
-            <p class="value-body">6 AWG on main runs. 10–14 AWG on branch circuits. No undersized wire. No heat buildup. No fire risk from corner-cutting.</p>
-          </div>
-        </div>
-        <div class="value-card reveal">
-          <div class="value-dot"></div>
-          <div>
-            <div class="value-title">Transparent Pricing</div>
-            <p class="value-body">No hidden fees. No bait-and-switch. You see the price before you reserve, and the price doesn't change when the bill comes.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT CTA -->
-  <div class="about-cta">
-    <div class="container-sm">
-      <h2 class="reveal">Ready to <span style="color:var(--amber);">build yours?</span></h2>
-      <p class="reveal">Configure your system, see specs, and reserve your build slot today.</p>
-      <div class="actions reveal">
-        <a href="configurator.html" class="btn btn-primary">Configure Yours ↗</a>
-        <a href="contact.html" class="btn btn-ghost">Get in Touch</a>
-      </div>
-    </div>
-  </div>
-
-</main>
-
-<footer class="footer" id="main-footer"></footer>
-
-<script src="site.js"></script>
-<script>
-  initNav('about');
-  initFooter();
-</script>
+<footer class="footer" style="background:var(--surface);border-top:1px solid var(--border);padding:3rem 2rem;margin-top:4rem;">
+<div style="max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;">
+<div>
+<h4 style="color:var(--white);margin-bottom:0.5rem;">IsoWatt</h4>
+<p style="font-size:14px;color:var(--subtle);">Portable LiFePO4 power systems.<br>Built in Bellefonte, PA.</p>
+</div>
+<div>
+<a href="index.html" style="display:block;color:var(--text);text-decoration:none;margin-bottom:0.5rem;">Home</a>
+<a href="products.html" style="display:block;color:var(--text);text-decoration:none;margin-bottom:0.5rem;">Products</a>
+<a href="about.html" style="display:block;color:var(--amber);text-decoration:none;margin-bottom:0.5rem;">About</a>
+<a href="contact.html" style="display:block;color:var(--text);text-decoration:none;">Contact</a>
+</div>
+<div>
+<p style="font-size:12px;color:#666;">
+<strong>IsoWatt LLC</strong><br>
+Bellefonte, PA<br>
+Build to order · LiFePO4 Power Systems
+</p>
+</div>
+</div>
+</footer>
 </body>
 </html>
