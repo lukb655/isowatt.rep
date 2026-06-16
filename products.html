@@ -48,22 +48,41 @@
 .product-visual { position: static; }
 .product-header h2 { font-size: 36px; }
 }
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+/* Hero section */
+.container { padding: 0 1rem; }
+/* Carousel nav */
 .carousel-nav { padding: 0 1rem 1rem; }
-.carousel-nav button { padding: 8px 14px; font-size: 13px; }
-.product-detail { padding: 1.5rem 1rem; }
-.canvas-viewer { height: 240px; }
-.canvas-viewer canvas { height: 240px !important; }
-.product-specs-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-.spec-item { padding: 0.75rem; }
+.carousel-nav button { font-size: 13px; }
+/* Split goes single column */
+.product-split { grid-template-columns: 1fr; gap: 1.5rem; }
+.product-visual { position: static; }
+/* 3D viewer shorter on mobile */
+.canvas-viewer { height: 260px; }
+.canvas-viewer canvas { width: 100% !important; height: 260px !important; }
+/* Header */
+.product-header { margin-bottom: 1rem; }
+.product-header h2 { font-size: 32px; }
+.product-subtitle { font-size: 14px; }
+/* Specs */
+.product-specs-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; margin: 1rem 0; }
+.spec-item { padding: 0.6rem 0.75rem; }
 .spec-label { font-size: 10px; }
-.spec-value { font-size: 14px; }
-.product-header { margin-bottom: 1.25rem; }
-.product-header h2 { font-size: 30px; }
+.spec-value { font-size: 13px; }
+/* Info boxes */
+.product-detail section > div > div[style] { padding: 1rem !important; margin: 1rem 0 !important; }
+/* Features list */
 .features-list li { font-size: 13px; }
-.pricing-section { margin-top: 1.5rem; }
-.price-amount { font-size: 36px; }
-.cta-button { padding: 14px; font-size: 15px; }
+.features-list { gap: 8px; }
+/* Pricing */
+.pricing-section { padding: 1rem; margin-top: 1rem; }
+.price-amount { font-size: 34px; }
+.price-label { font-size: 11px; }
+.cta-button { padding: 13px; font-size: 14px; }
+/* Page wrapper padding */
+.page-width { padding: 0 1rem !important; }
+/* Product detail bottom margin */
+.product-detail { margin-bottom: 2rem; }
 }
 </style>
 </head>
@@ -78,7 +97,7 @@
 </div>
 </nav>
 
-<div style="min-height:60vh;display:flex;align-items:center;background:var(--black);padding:6rem 2rem;">
+<div style="min-height:60vh;display:flex;align-items:center;background:var(--black);padding:clamp(3rem,8vw,6rem) clamp(1rem,4vw,2rem);">
 <div class="container">
 <p class="eyebrow">Prebuilt & Ready to Ship</p>
 <h1 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(60px,11vw,130px);font-weight:900;text-transform:uppercase;letter-spacing:0.02em;line-height:0.9;color:var(--white);margin-bottom:2rem;">Choose Your Power.</h1>
@@ -86,7 +105,7 @@
 </div>
 </div>
 
-<div class="page-width" style="max-width:1080px;margin:0 auto;padding:0 2rem;">
+<div class="page-width" style="max-width:1080px;margin:0 auto;padding:0 clamp(1rem,4vw,2rem);">
 
 <!-- Carousel Navigation -->
 <div class="carousel-nav">
@@ -123,12 +142,12 @@
 <div class="spec-item"><span class="spec-label">Enclosure</span><span class="spec-value">Apache 4800</span></div>
 </div>
 
-<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0;">
+<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:clamp(1rem,3vw,1.5rem);margin:clamp(1rem,3vw,2rem) 0;">
 <strong>Permanent Configuration</strong>
 <p style="color:var(--subtle);font-size:14px;margin-top:0.5rem;">IsoStation+ includes a fixed 2000W peak AC inverter (1000W continuous rated). No customization on power output — this is the configuration that works best for the platform.</p>
 </div>
 
-<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;">
+<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:clamp(1rem,3vw,1.5rem);">
 <strong>What's Included</strong>
 <ul class="features-list" style="margin-top:1rem;">
 <li>100Ah LiFePO4 battery with Bluetooth monitoring</li>
@@ -181,12 +200,12 @@
 <div class="spec-item"><span class="spec-label">Enclosure</span><span class="spec-value">Apache 2800</span></div>
 </div>
 
-<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0;">
+<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:clamp(1rem,3vw,1.5rem);margin:clamp(1rem,3vw,2rem) 0;">
 <strong>Flexible Configuration</strong>
 <p style="color:var(--subtle);font-size:14px;margin-top:0.5rem;">Choose DC-only, 300W AC, or 500W AC power. Perfect for field work, camping, or backup power with true portability under 9 lbs.</p>
 </div>
 
-<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;">
+<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:clamp(1rem,3vw,1.5rem);">
 <strong>What's Included</strong>
 <ul class="features-list" style="margin-top:1rem;">
 <li>12Ah LiFePO4 battery with Bluetooth monitoring</li>
