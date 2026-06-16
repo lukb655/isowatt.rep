@@ -1049,6 +1049,7 @@ const orbit = {
 active: false,
 lastX: 0, lastY: 0,
 angle: 0,
+verticalAngle: 0,
 camZ: 5.0
 };
 
@@ -1084,12 +1085,17 @@ scene.add(ambLight);
 canvas.addEventListener('mousedown', (e) => {
 orbit.active = true;
 orbit.lastX = e.clientX;
+orbit.lastY = e.clientY;
 });
 canvas.addEventListener('mousemove', (e) => {
 if (!orbit.active) return;
 const dx = (e.clientX - orbit.lastX) * 0.01;
+const dy = (e.clientY - orbit.lastY) * 0.01;
 orbit.angle += dx;
+orbit.verticalAngle += dy;
+orbit.verticalAngle = Math.max(-0.1745, Math.min(0.1745, orbit.verticalAngle));
 orbit.lastX = e.clientX;
+orbit.lastY = e.clientY;
 updateCameraPosition();
 });
 canvas.addEventListener('mouseup', () => { orbit.active = false; });
@@ -1103,12 +1109,17 @@ e.preventDefault();
 canvas.addEventListener('touchstart', (e) => {
 orbit.active = true;
 orbit.lastX = e.touches[0].clientX;
+orbit.lastY = e.touches[0].clientY;
 }, { passive: true });
 canvas.addEventListener('touchmove', (e) => {
 if (!orbit.active) return;
 const dx = (e.touches[0].clientX - orbit.lastX) * 0.01;
+const dy = (e.touches[0].clientY - orbit.lastY) * 0.01;
 orbit.angle += dx;
+orbit.verticalAngle += dy;
+orbit.verticalAngle = Math.max(-0.1745, Math.min(0.1745, orbit.verticalAngle));
 orbit.lastX = e.touches[0].clientX;
+orbit.lastY = e.touches[0].clientY;
 updateCameraPosition();
 }, { passive: true });
 canvas.addEventListener('touchend', () => { orbit.active = false; }, { passive: true });
@@ -1125,16 +1136,19 @@ animate();
 function updateCameraPosition() {
 if (!camera) return;
 // Orbit around center point while maintaining original isometric view
-// Original position: (2, 2, camZ) - calculate its radius and starting angle
 const originalX = 2;
 const originalZ = orbit.camZ;
 const radius = Math.sqrt(originalX * originalX + originalZ * originalZ);
 const baseAngle = Math.atan2(originalX, originalZ);
 const angle = orbit.angle + baseAngle;
 
+// Horizontal orbit
 const x = Math.sin(angle) * radius;
-const y = 2;
 const z = Math.cos(angle) * radius;
+
+// Vertical rotation (tilting up/down, clamped to ±10 degrees)
+const y = 2 + Math.sin(orbit.verticalAngle) * 2;
+
 camera.position.set(x, y, z);
 camera.lookAt(0, 0, 0);
 }
@@ -1163,6 +1177,7 @@ scene.add(model);
 
 // Reset camera to initial view
 orbit.angle = 0;
+orbit.verticalAngle = 0;
 orbit.camZ = config.camZ;
 updateCameraPosition();
 
