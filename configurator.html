@@ -1067,7 +1067,7 @@ scene = new THREE.Scene();
 scene.background = new THREE.Color(0x161616);
 
 camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 1000);
-orbit.distance = 6.0;
+orbit.angle = 0;
 updateCameraPosition();
 
 renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
@@ -1094,6 +1094,11 @@ updateCameraPosition();
 });
 canvas.addEventListener('mouseup', () => { orbit.active = false; });
 
+// Prevent scroll zoom
+canvas.addEventListener('wheel', (e) => {
+e.preventDefault();
+}, { passive: false });
+
 // Touch events for mobile
 canvas.addEventListener('touchstart', (e) => {
 orbit.active = true;
@@ -1119,10 +1124,11 @@ animate();
 
 function updateCameraPosition() {
 if (!camera) return;
-// Orbit camera around the origin at a fixed isometric angle
-const x = Math.sin(orbit.angle) * 2;
+// Perfect circular orbit around the model in XZ plane at fixed height
+const radius = 2.8; // Fixed radius for stable circular orbit
+const x = Math.sin(orbit.angle) * radius;
 const y = 2;
-const z = Math.cos(orbit.angle) * orbit.distance;
+const z = Math.cos(orbit.angle) * radius; // Same radius, not distance
 camera.position.set(x, y, z);
 camera.lookAt(0, 0, 0);
 }
@@ -1149,9 +1155,8 @@ model.rotation.y = config.rotY;
 model.rotation.z = config.rotZ;
 scene.add(model);
 
-// Reset camera to initial isometric view
+// Reset camera to initial view
 orbit.angle = 0;
-orbit.distance = config.camZ;
 updateCameraPosition();
 
 document.getElementById('model-info-label').textContent = config.label;
