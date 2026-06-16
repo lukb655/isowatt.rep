@@ -1049,7 +1049,7 @@ const orbit = {
 active: false,
 lastX: 0, lastY: 0,
 angle: 0,
-distance: 6.0
+camZ: 5.0
 };
 
 function init3D() {
@@ -1124,11 +1124,17 @@ animate();
 
 function updateCameraPosition() {
 if (!camera) return;
-// Perfect circular orbit around the model in XZ plane at fixed height
-const radius = 2.8; // Fixed radius for stable circular orbit
-const x = Math.sin(orbit.angle) * radius;
+// Orbit around center point while maintaining original isometric view
+// Original position: (2, 2, camZ) - calculate its radius and starting angle
+const originalX = 2;
+const originalZ = orbit.camZ;
+const radius = Math.sqrt(originalX * originalX + originalZ * originalZ);
+const baseAngle = Math.atan2(originalX, originalZ);
+const angle = orbit.angle + baseAngle;
+
+const x = Math.sin(angle) * radius;
 const y = 2;
-const z = Math.cos(orbit.angle) * radius; // Same radius, not distance
+const z = Math.cos(angle) * radius;
 camera.position.set(x, y, z);
 camera.lookAt(0, 0, 0);
 }
@@ -1157,6 +1163,7 @@ scene.add(model);
 
 // Reset camera to initial view
 orbit.angle = 0;
+orbit.camZ = config.camZ;
 updateCameraPosition();
 
 document.getElementById('model-info-label').textContent = config.label;
