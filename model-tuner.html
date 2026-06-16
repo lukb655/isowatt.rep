@@ -3,573 +3,328 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3D Model Tuner — IsoWatt</title>
+<title>IsoWatt 3D Model Tuner</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --black:   #0D0D0D;
-    --surface: #161616;
-    --card:    #1E1E1E;
-    --border:  #2C2C2C;
-    --text:    #E8E4DC;
-    --subtle:  #888;
-    --amber:   #F0A500;
-    --green:   #3DDB8A;
-    --red:     #E84040;
-  }
-  body {
-    background: var(--black);
-    color: var(--text);
-    font-family: 'Courier New', monospace;
-    font-size: 13px;
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    grid-template-rows: 44px 1fr;
-    height: 100vh;
-    overflow: hidden;
-  }
-  .header {
-    grid-column: 1 / -1;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1.25rem;
-    font-size: 12px;
-  }
-  .header-title { font-weight: 700; color: var(--amber); letter-spacing: 0.1em; text-transform: uppercase; }
-  .header-hint  { color: var(--subtle); font-size: 11px; }
-
-  /* LEFT: Preview pane — matches EXACTLY configurator's preview-wrap */
-  #viewer {
-    background: #161616;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  /* This box replicates the EXACT dimensions of .preview-wrap in the configurator */
-  #sim-wrap {
-    width: 600px;       /* typical left-col width on desktop */
-    height: 300px;      /* matches .preview-wrap height: 300px exactly */
-    position: relative;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    background: var(--surface);
-    flex-shrink: 0;
-  }
-  #canvas-3d {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    cursor: grab;
-  }
-  #canvas-3d:active { cursor: grabbing; }
-  #status {
-    position: absolute;
-    top: 8px; left: 10px;
-    font-size: 10px;
-    color: var(--amber);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    pointer-events: none;
-  }
-  .sim-label {
-    position: absolute;
-    bottom: 8px; left: 10px;
-    font-size: 10px;
-    color: var(--subtle);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    pointer-events: none;
-  }
-  .sim-hint {
-    position: absolute;
-    top: 8px; right: 10px;
-    font-size: 10px;
-    color: #444;
-    pointer-events: none;
-  }
-  .viewer-bg-note {
-    position: absolute;
-    bottom: 8px; right: 10px;
-    font-size: 9px;
-    color: #333;
-    pointer-events: none;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-
-  /* RIGHT: Controls panel */
-  .panel {
-    background: var(--surface);
-    border-left: 1px solid var(--border);
-    overflow-y: auto;
-    padding: 0.875rem;
-  }
-  .section { margin-bottom: 1rem; }
-  .sec-title {
-    font-size: 9px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--subtle);
-    padding-bottom: 0.35rem;
-    margin-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .ctrl {
-    display: grid;
-    grid-template-columns: 42px 1fr 56px;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 6px;
-  }
-  .ctrl-lbl { font-size: 10px; color: var(--subtle); }
-  input[type="range"] { width: 100%; accent-color: var(--amber); cursor: pointer; height: 16px; }
-  .ctrl-val { font-size: 10px; color: var(--amber); text-align: right; font-variant-numeric: tabular-nums; }
-
-  .file-row { display: flex; gap: 5px; margin-bottom: 6px; }
-  .file-input {
-    flex: 1; background: var(--black); border: 1px solid var(--border);
-    border-radius: 3px; padding: 4px 7px; color: var(--text);
-    font-family: monospace; font-size: 10px;
-  }
-  .btn {
-    padding: 4px 8px; background: var(--card); border: 1px solid var(--border);
-    border-radius: 3px; color: var(--text); font-size: 10px; cursor: pointer;
-    white-space: nowrap; font-family: monospace;
-  }
-  .btn:hover { border-color: var(--amber); color: var(--amber); }
-  .btn-primary {
-    width: 100%; padding: 7px; background: var(--amber); border: none;
-    border-radius: 3px; color: #000; font-family: monospace; font-size: 11px;
-    font-weight: 700; cursor: pointer; margin-top: 6px;
-  }
-  .btn-primary:hover { filter: brightness(1.1); }
-  .btn-primary.ok { background: var(--green); }
-  .btn-reset {
-    width: 100%; padding: 5px; background: transparent; border: 1px solid var(--border);
-    border-radius: 3px; color: var(--subtle); font-family: monospace; font-size: 10px;
-    cursor: pointer; margin-top: 4px;
-  }
-  .btn-reset:hover { color: var(--text); border-color: var(--subtle); }
-  .output {
-    background: var(--black); border: 1px solid var(--border); border-radius: 3px;
-    padding: 0.6rem; font-size: 10px; color: var(--green); line-height: 1.8;
-    white-space: pre-wrap; word-break: break-all; margin-top: 6px;
-  }
-  .divider { height: 1px; background: var(--border); margin: 0.75rem 0; }
-  .axis-btn { flex: 1; text-align: center; font-weight: 700; }
-  .axis-btn.active { border-color: var(--amber); color: var(--amber); background: rgba(240,165,0,0.08); }
-  #pause-btn.paused { border-color: var(--green); color: var(--green); }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+background: #0a0a0a;
+color: #e0e0e0;
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+padding: 20px;
+}
+.container {
+display: grid;
+grid-template-columns: 1fr 350px;
+gap: 20px;
+max-width: 1400px;
+margin: 0 auto;
+}
+canvas {
+display: block;
+width: 100%;
+height: 600px;
+border: 1px solid #333;
+border-radius: 8px;
+background: #161616;
+}
+.controls {
+background: #1a1a1a;
+border: 1px solid #333;
+border-radius: 8px;
+padding: 20px;
+height: fit-content;
+}
+.control-group {
+margin-bottom: 20px;
+}
+label {
+display: block;
+font-size: 12px;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+color: #888;
+margin-bottom: 8px;
+}
+input[type="range"] {
+width: 100%;
+height: 6px;
+border-radius: 3px;
+background: #333;
+outline: none;
+-webkit-appearance: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+-webkit-appearance: none;
+appearance: none;
+width: 16px;
+height: 16px;
+border-radius: 50%;
+background: #F0A500;
+cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+width: 16px;
+height: 16px;
+border-radius: 50%;
+background: #F0A500;
+cursor: pointer;
+border: none;
+}
+.value-display {
+display: inline-block;
+background: #222;
+padding: 4px 8px;
+border-radius: 3px;
+font-size: 11px;
+color: #F0A500;
+font-family: 'Courier New', monospace;
+margin-left: 8px;
+}
+.model-select {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 8px;
+margin-bottom: 20px;
+}
+.model-btn {
+padding: 8px;
+background: #222;
+border: 1px solid #333;
+border-radius: 4px;
+color: #e0e0e0;
+cursor: pointer;
+font-size: 12px;
+transition: all 0.2s;
+}
+.model-btn:hover {
+border-color: #555;
+}
+.model-btn.active {
+background: #F0A500;
+border-color: #F0A500;
+color: #000;
+}
+button {
+width: 100%;
+padding: 10px;
+background: #F0A500;
+color: #000;
+border: none;
+border-radius: 4px;
+font-weight: 600;
+cursor: pointer;
+margin-top: 10px;
+}
+button:hover {
+background: #f0b520;
+}
+.info {
+font-size: 11px;
+color: #666;
+margin-top: 15px;
+padding-top: 15px;
+border-top: 1px solid #333;
+line-height: 1.5;
+}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-title">⚙ 3D Tuner — Exact Configurator Preview</div>
-  <div class="header-hint">600×300px — same as site · Drag to orbit Y-axis · Copy values when ready</div>
+<div class="container">
+<canvas id="canvas"></canvas>
+
+<div class="controls">
+<div class="model-select">
+<button class="model-btn active" onclick="switchModel('iso-station')">IsoStation</button>
+<button class="model-btn" onclick="switchModel('iso-station-plus')">IsoStation+</button>
+<button class="model-btn" onclick="switchModel('iso-point')">IsoPoint</button>
+<button class="model-btn" onclick="switchModel('iso-point-plus')">IsoPoint+</button>
 </div>
 
-<!-- LEFT: viewer -->
-<div id="viewer">
-  <!-- sim-wrap is EXACTLY 600×300 — same as .preview-wrap on site -->
-  <div id="sim-wrap">
-    <canvas id="canvas-3d"></canvas>
-    <div id="status">Loading Three.js...</div>
-    <div class="sim-label" id="model-label">No model loaded</div>
-    <div class="sim-hint">Drag to rotate</div>
-    <div class="viewer-bg-note">600 × 300 px · FOV 45°</div>
-  </div>
+<div class="control-group">
+<label>Camera X <span class="value-display" id="camX-val">2</span></label>
+<input type="range" id="camX" min="-5" max="5" step="0.1" value="2" oninput="updateControls()">
 </div>
 
-<!-- RIGHT: controls -->
-<div class="panel">
-
-  <div class="section">
-    <div class="sec-title">Model File</div>
-    <div class="file-row">
-      <input class="file-input" id="model-url" value="models/4800_Case_Open.glb" placeholder="models/file.glb">
-      <button class="btn" onclick="loadFromUrl()">Load</button>
-    </div>
-    <input type="file" id="file-picker" accept=".glb,.gltf" style="display:none" onchange="loadLocalFile(this)">
-    <button class="btn" style="width:100%" onclick="document.getElementById('file-picker').click()">📁 Load local .glb</button>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Position</div>
-    <div class="ctrl">
-      <span class="ctrl-lbl">X</span>
-      <input type="range" id="px" min="-5" max="5" step="0.001" value="0" oninput="update()">
-      <span class="ctrl-val" id="px-v">0.000</span>
-    </div>
-    <div class="ctrl">
-      <span class="ctrl-lbl">Y</span>
-      <input type="range" id="py" min="-5" max="5" step="0.001" value="1.333" oninput="update()">
-      <span class="ctrl-val" id="py-v">1.333</span>
-    </div>
-    <div class="ctrl">
-      <span class="ctrl-lbl">Z</span>
-      <input type="range" id="pz" min="-5" max="5" step="0.001" value="0" oninput="update()">
-      <span class="ctrl-val" id="pz-v">0.000</span>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Base Rotation (degrees)</div>
-    <div class="ctrl">
-      <span class="ctrl-lbl">X</span>
-      <input type="range" id="rx" min="-180" max="180" step="0.5" value="-81" oninput="update()">
-      <span class="ctrl-val" id="rx-v">-81°</span>
-    </div>
-    <div class="ctrl">
-      <span class="ctrl-lbl">Y</span>
-      <input type="range" id="ry" min="-180" max="180" step="0.5" value="0" oninput="update()">
-      <span class="ctrl-val" id="ry-v">0°</span>
-    </div>
-    <div class="ctrl">
-      <span class="ctrl-lbl">Z</span>
-      <input type="range" id="rz" min="-180" max="180" step="0.5" value="0" oninput="update()">
-      <span class="ctrl-val" id="rz-v">0°</span>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Scale</div>
-    <div class="ctrl">
-      <span class="ctrl-lbl">Scale</span>
-      <input type="range" id="sc" min="0.0001" max="0.05" step="0.0001" value="0.0066" oninput="update()">
-      <span class="ctrl-val" id="sc-v">0.006600</span>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Camera</div>
-    <div class="ctrl">
-      <span class="ctrl-lbl">Dist Z</span>
-      <input type="range" id="cz" min="0.5" max="20" step="0.05" value="6.0" oninput="update()">
-      <span class="ctrl-val" id="cz-v">6.00</span>
-    </div>
-    <div class="ctrl">
-      <span class="ctrl-lbl">Height Y</span>
-      <input type="range" id="cy" min="-3" max="3" step="0.05" value="0.2" oninput="update()">
-      <span class="ctrl-val" id="cy-v">0.20</span>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Auto-Spin</div>
-    <div style="display:flex;gap:5px;margin-bottom:6px;">
-      <button class="btn axis-btn active" id="axis-x" onclick="setAxis('x')">X</button>
-      <button class="btn axis-btn active" id="axis-y" onclick="setAxis('y')">Y</button>
-      <button class="btn axis-btn active" id="axis-z" onclick="setAxis('z')">Z</button>
-      <button class="btn" id="pause-btn" onclick="togglePause()" style="flex:2;text-align:center;">⏸ Pause</button>
-    </div>
-    <div class="ctrl">
-      <span class="ctrl-lbl">Speed</span>
-      <input type="range" id="spin-speed" min="0.001" max="0.04" step="0.001" value="0.006" oninput="updateSpeedLabel()">
-      <span class="ctrl-val" id="speed-v">0.006</span>
-    </div>
-  </div>
-
-  <button class="btn-reset" onclick="resetSliders()">↺ Reset sliders</button>
-
-  <div class="divider"></div>
-
-  <div class="section">
-    <div class="sec-title">Output — paste into configurator MODEL_CONFIGS</div>
-    <div class="output" id="output">Adjust sliders...</div>
-    <button class="btn-primary" id="copy-btn" onclick="copyOutput()">Copy to clipboard</button>
-  </div>
-
+<div class="control-group">
+<label>Camera Y <span class="value-display" id="camY-val">2</span></label>
+<input type="range" id="camY" min="-5" max="8" step="0.1" value="2" oninput="updateControls()">
 </div>
 
-<!-- THREE.JS -->
-<script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
-    "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
-  }
-}
-</script>
-<script type="module">
-  import * as THREE from 'three';
-  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-  window.THREE = THREE;
-  window.GLTFLoader = GLTFLoader;
-</script>
+<div class="control-group">
+<label>Camera Z <span class="value-display" id="camZ-val">5</span></label>
+<input type="range" id="camZ" min="1" max="10" step="0.1" value="5" oninput="updateControls()">
+</div>
 
+<div class="control-group">
+<label>Rotation Angle <span class="value-display" id="angle-val">0°</span></label>
+<input type="range" id="angle" min="0" max="360" step="1" value="0" oninput="updateControls()">
+</div>
+
+<button onclick="exportSettings()">Copy Settings</button>
+
+<div class="info">
+Drag on canvas to rotate.
+Adjust sliders to fine-tune camera position.
+</div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// ── Exact same constants as configurator ──
-const CANVAS_W = 600;
-const CANVAS_H = 300;
-const FOV      = 45;
+const canvas = document.getElementById('canvas');
+let W = canvas.clientWidth;
+let H = canvas.clientHeight;
 
 let scene, camera, renderer, model;
-let baseRotX = -1.413717, baseRotY = 0, baseRotZ = 0;
+let currentModel = 'iso-station';
 
-// Orbit state
-const orbit = { active: false, lastX: 0, lastY: 0, dragY: 0, dragX: 0 };
+const MODEL_CONFIGS = {
+'iso-station': { file: 'models/4800_Case_Open.glb', scale: 0.004300, px: 0.0, py: 0.0, pz: 0.0, rotX: -1.282817, rotY: 0.0, rotZ: 0.0, camZ: 5.0, label: 'Apache 4800 · IsoStation' },
+'iso-station-plus': { file: 'models/4800_Case_Open.glb', scale: 0.004300, px: 0.0, py: 0.0, pz: 0.0, rotX: -1.282817, rotY: 0.0, rotZ: 0.0, camZ: 5.0, label: 'Apache 4800 · IsoStation+' },
+'iso-point': { file: 'models/model.glb', scale: 0.004300, px: 0.0, py: 0.0, pz: 0.0, rotX: -1.282817, rotY: 0.0, rotZ: 0.0, camZ: 2.7, label: 'Apache 2800 · IsoPoint' },
+'iso-point-plus': { file: 'models/model.glb', scale: 0.004300, px: 0.0, py: 0.0, pz: 0.0, rotX: -1.282817, rotY: 0.0, rotZ: 0.0, camZ: 2.7, label: 'Apache 2800 · IsoPoint+' }
+};
 
-// Spin state
-const spin = { paused: false, axis: 'y', accum: { x: 0, y: 0, z: 0 } };
-
-function setAxis(a) {
-  spin.axis = a;
-  ['x','y','z'].forEach(id => {
-    document.getElementById('axis-' + id).classList.toggle('active', id === a);
-  });
-}
-
-function togglePause() {
-  spin.paused = !spin.paused;
-  const btn = document.getElementById('pause-btn');
-  btn.textContent = spin.paused ? '▶ Resume' : '⏸ Pause';
-  btn.classList.toggle('paused', spin.paused);
-}
-
-function updateSpeedLabel() {
-  document.getElementById('speed-v').textContent =
-    parseFloat(document.getElementById('spin-speed').value).toFixed(3);
-}
+const orbit = {
+active: false,
+lastX: 0,
+angle: 0,
+camZ: 5.0,
+camX: 2,
+camY: 2
+};
 
 function init3D() {
-  if (!window.THREE || !window.GLTFLoader) { setTimeout(init3D, 50); return; }
+scene = new THREE.Scene();
+scene.background = new THREE.Color(0x161616);
 
-  const canvas = document.getElementById('canvas-3d');
+camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 1000);
+updateCameraPosition();
 
-  // ── Use EXACT same dimensions as configurator preview-wrap ──
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x161616);
+renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(W, H);
 
-  // Exact same camera as configurator
-  camera = new THREE.PerspectiveCamera(FOV, CANVAS_W / CANVAS_H, 0.001, 1000);
-  camera.position.set(0, 0.2, 6.0);
-  camera.lookAt(0, 0, 0);
+const light = new THREE.DirectionalLight(0xffffff, 0.8);
+light.position.set(5, 10, 7);
+scene.add(light);
 
-  // Exact same renderer settings as configurator
-  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-  renderer.setSize(CANVAS_W, CANVAS_H);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.shadowMap.enabled = true;
+const ambLight = new THREE.AmbientLight(0xffffff, 0.4);
+scene.add(ambLight);
 
-  // Exact same 3-point lighting as configurator
-  scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-  const key = new THREE.DirectionalLight(0xffffff, 1.2);
-  key.position.set(3, 4, 5); key.castShadow = true; scene.add(key);
-  const fill = new THREE.DirectionalLight(0xfff4e0, 0.5);
-  fill.position.set(-4, 1, -2); scene.add(fill);
-  const rim = new THREE.DirectionalLight(0xffffff, 0.3);
-  rim.position.set(0, -3, -5); scene.add(rim);
+canvas.addEventListener('mousedown', (e) => {
+orbit.active = true;
+orbit.lastX = e.clientX;
+});
+canvas.addEventListener('mousemove', (e) => {
+if (!orbit.active) return;
+const dx = (e.clientX - orbit.lastX) * 0.5;
+orbit.angle += dx;
+orbit.lastX = e.clientX;
+updateCameraPosition();
+updateControls();
+});
+canvas.addEventListener('mouseup', () => { orbit.active = false; });
 
-  // ── Drag to orbit — Y axis only (matches configurator auto-rotate) ──
-  canvas.addEventListener('mousedown', e => {
-    orbit.active = true;
-    orbit.lastX = e.clientX;
-    orbit.lastY = e.clientY;
-  });
-  window.addEventListener('mouseup', () => { orbit.active = false; });
-  window.addEventListener('mousemove', e => {
-    if (!orbit.active || !model) return;
-    orbit.dragY += (e.clientX - orbit.lastX) * 0.01;
-    orbit.dragX += (e.clientY - orbit.lastY) * 0.01;
-    orbit.dragX  = Math.max(-Math.PI/3, Math.min(Math.PI/3, orbit.dragX));
-    orbit.lastX  = e.clientX;
-    orbit.lastY  = e.clientY;
-    applyTransform();
-  });
+canvas.addEventListener('wheel', (e) => { e.preventDefault(); }, { passive: false });
 
-  // Touch
-  canvas.addEventListener('touchstart', e => {
-    orbit.active = true;
-    orbit.lastX = e.touches[0].clientX;
-    orbit.lastY = e.touches[0].clientY;
-  }, { passive: true });
-  canvas.addEventListener('touchend', () => { orbit.active = false; });
-  canvas.addEventListener('touchmove', e => {
-    if (!orbit.active || !model) return;
-    orbit.dragY += (e.touches[0].clientX - orbit.lastX) * 0.01;
-    orbit.dragX += (e.touches[0].clientY - orbit.lastY) * 0.01;
-    orbit.dragX  = Math.max(-Math.PI/3, Math.min(Math.PI/3, orbit.dragX));
-    orbit.lastX  = e.touches[0].clientX;
-    orbit.lastY  = e.touches[0].clientY;
-    applyTransform();
-  }, { passive: true });
-
-  // Scroll to zoom
-  canvas.addEventListener('wheel', e => {
-    const sl = document.getElementById('cz');
-    sl.value  = Math.max(0.5, Math.min(20, parseFloat(sl.value) + e.deltaY * 0.005));
-    update();
-  }, { passive: true });
-
-  // Render loop — auto-rotate on selected axis
-  (function animate() {
-    requestAnimationFrame(animate);
-    if (model && !orbit.active && !spin.paused) {
-      const speed = parseFloat(document.getElementById('spin-speed').value) || 0.006;
-      spin.accum[spin.axis] += speed;
-      // Map accumulator into orbit drag axes
-      if (spin.axis === 'y') orbit.dragY = spin.accum.y;
-      if (spin.axis === 'x') orbit.dragX = spin.accum.x;
-      if (spin.axis === 'z') orbit.dragY = 0; // Z handled in applyTransform
-      applyTransform();
-    }
-    renderer.render(scene, camera);
-  })();
-
-  document.getElementById('status').textContent = '✓ Ready';
-  document.getElementById('status').style.color = '#3DDB8A';
-
-  loadFromUrl();
+loadModel('iso-station');
+animate();
 }
 
-function applyTransform() {
-  if (!model) return;
-  const px = parseFloat(document.getElementById('px').value);
-  const py = parseFloat(document.getElementById('py').value);
-  const pz = parseFloat(document.getElementById('pz').value);
-  const sc = parseFloat(document.getElementById('sc').value);
-  const cz = parseFloat(document.getElementById('cz').value);
-  const cy = parseFloat(document.getElementById('cy').value);
+function updateCameraPosition() {
+if (!camera) return;
+const originalX = orbit.camX;
+const originalZ = orbit.camZ;
+const radius = Math.sqrt(originalX * originalX + originalZ * originalZ);
+const baseAngle = Math.atan2(originalX, originalZ);
+const angle = (orbit.angle * Math.PI / 180) + baseAngle;
 
-  model.scale.setScalar(sc);
-  model.position.set(px, py, pz);
-
-  // Apply base rotation (sliders) + orbit drag on top
-  // This exactly mirrors configurator behavior:
-  // base rotX from cfg.rotX, orbit adds on top for Y dragging
-  model.rotation.order = 'XYZ';
-  model.rotation.x = baseRotX + orbit.dragX;
-  model.rotation.y = baseRotY + orbit.dragY;
-  // Z spin: accumulate directly when Z axis is selected
-  model.rotation.z = baseRotZ + (spin && spin.axis === 'z' ? spin.accum.z : 0);
-
-  camera.position.set(0, cy, cz);
-  camera.lookAt(0, 0, 0);
-
-  updateOutput();
+const x = Math.sin(angle) * radius;
+const y = orbit.camY;
+const z = Math.cos(angle) * radius;
+camera.position.set(x, y, z);
+camera.lookAt(0, 0, 0);
 }
 
-function update() {
-  baseRotX = parseFloat(document.getElementById('rx').value) * Math.PI / 180;
-  baseRotY = parseFloat(document.getElementById('ry').value) * Math.PI / 180;
-  baseRotZ = parseFloat(document.getElementById('rz').value) * Math.PI / 180;
-
-  document.getElementById('px-v').textContent = parseFloat(document.getElementById('px').value).toFixed(3);
-  document.getElementById('py-v').textContent = parseFloat(document.getElementById('py').value).toFixed(3);
-  document.getElementById('pz-v').textContent = parseFloat(document.getElementById('pz').value).toFixed(3);
-  document.getElementById('rx-v').textContent = document.getElementById('rx').value + '°';
-  document.getElementById('ry-v').textContent = document.getElementById('ry').value + '°';
-  document.getElementById('rz-v').textContent = document.getElementById('rz').value + '°';
-  document.getElementById('sc-v').textContent = parseFloat(document.getElementById('sc').value).toFixed(6);
-  document.getElementById('cz-v').textContent = parseFloat(document.getElementById('cz').value).toFixed(2);
-  document.getElementById('cy-v').textContent = parseFloat(document.getElementById('cy').value).toFixed(2);
-
-  applyTransform();
+function loadModel(key) {
+currentModel = key;
+const config = MODEL_CONFIGS[key];
+orbit.camZ = config.camZ;
+orbit.angle = 0;
+document.querySelectorAll('.model-btn').forEach(b => b.classList.remove('active'));
+event.target.classList.add('active');
+if (model) scene.remove(model);
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshStandardMaterial({ color: 0x444 });
+model = new THREE.Mesh(geometry, material);
+model.scale.set(config.scale * 1000, config.scale * 1000, config.scale * 1000);
+model.position.set(config.px, config.py, config.pz);
+model.rotation.order = 'XYZ';
+model.rotation.x = config.rotX;
+model.rotation.y = config.rotY;
+model.rotation.z = config.rotZ;
+scene.add(model);
+updateCameraPosition();
+updateControls();
 }
 
-function updateOutput() {
-  const file  = document.getElementById('model-url').value.trim();
-  const key   = file.includes('4800') ? 'if100' : 'ip12 / ip12p';
-  const label = file.includes('4800') ? 'Apache 4800 · IsoFortress Enclosure' : 'Apache 2800 · IsoPoint Enclosure';
-  const px = parseFloat(document.getElementById('px').value).toFixed(4);
-  const py = parseFloat(document.getElementById('py').value).toFixed(4);
-  const pz = parseFloat(document.getElementById('pz').value).toFixed(4);
-  const rx = (parseFloat(document.getElementById('rx').value) * Math.PI / 180).toFixed(6);
-  const ry = (parseFloat(document.getElementById('ry').value) * Math.PI / 180).toFixed(6);
-  const rz = (parseFloat(document.getElementById('rz').value) * Math.PI / 180).toFixed(6);
-  const sc = parseFloat(document.getElementById('sc').value).toFixed(6);
-  const cz = parseFloat(document.getElementById('cz').value).toFixed(1);
+function updateControls() {
+orbit.camX = parseFloat(document.getElementById('camX').value);
+orbit.camY = parseFloat(document.getElementById('camY').value);
+orbit.camZ = parseFloat(document.getElementById('camZ').value);
 
-  document.getElementById('output').textContent =
-`${key}: {
-  file: '${file}',
-  scale: ${sc},
-  px: ${px}, py: ${py}, pz: ${pz},
-  rotX: ${rx},
-  rotY: ${ry},
-  rotZ: ${rz},
-  camZ: ${cz},
-  label: '${label}'
-}`;
+document.getElementById('camX-val').textContent = orbit.camX.toFixed(1);
+document.getElementById('camY-val').textContent = orbit.camY.toFixed(1);
+document.getElementById('camZ-val').textContent = orbit.camZ.toFixed(1);
+document.getElementById('angle-val').textContent = Math.round(orbit.angle) + '°';
+
+updateCameraPosition();
 }
 
-function loadFromUrl() {
-  const url = document.getElementById('model-url').value.trim();
-  if (!url || !window.GLTFLoader) return;
-  loadModel(url);
+function animate() {
+requestAnimationFrame(animate);
+renderer.render(scene, camera);
 }
 
-function loadLocalFile(input) {
-  const file = input.files[0];
-  if (!file) return;
-  document.getElementById('model-url').value = file.name;
-  loadModel(URL.createObjectURL(file));
+function switchModel(key) {
+currentModel = key;
+const config = MODEL_CONFIGS[key];
+orbit.camZ = config.camZ;
+orbit.angle = 0;
+document.querySelectorAll('.model-btn').forEach(b => b.classList.remove('active'));
+event.target.classList.add('active');
+document.getElementById('camZ').value = config.camZ;
+updateControls();
 }
 
-function loadModel(url) {
-  const status = document.getElementById('status');
-  const label  = document.getElementById('model-label');
-  status.textContent  = 'Loading...';
-  status.style.color  = '#F0A500';
-
-  const loader = new window.GLTFLoader();
-  loader.load(url, (gltf) => {
-    if (model) scene.remove(model);
-    model = gltf.scene;
-    model.traverse(c => {
-      if (c.isMesh) {
-        c.castShadow = c.receiveShadow = true;
-        if (c.material) c.material.side = THREE.DoubleSide;
-      }
-    });
-    scene.add(model);
-    orbit.dragX = 0; orbit.dragY = 0;
-    status.textContent = '✓ ' + url.split('/').pop();
-    status.style.color = '#3DDB8A';
-    label.textContent  = url.split('/').pop();
-    update();
-  }, undefined, err => {
-    status.textContent = '✗ Failed — check path';
-    status.style.color = '#E84040';
-    console.error(err);
-  });
+function exportSettings() {
+const settings = {
+camX: orbit.camX,
+camY: orbit.camY,
+camZ: orbit.camZ,
+angle: orbit.angle
+};
+const json = JSON.stringify(settings, null, 2);
+navigator.clipboard.writeText(json).then(() => {
+alert('Settings copied to clipboard:\n' + json);
+}).catch(() => {
+alert('Could not copy. Settings:\n' + json);
+});
 }
 
-function resetSliders() {
-  document.getElementById('px').value = 0;
-  document.getElementById('py').value = 0;
-  document.getElementById('pz').value = 0;
-  document.getElementById('rx').value = 0;
-  document.getElementById('ry').value = 0;
-  document.getElementById('rz').value = 0;
-  document.getElementById('sc').value = 0.003328;
-  document.getElementById('cz').value = 5.0;
-  document.getElementById('cy').value = 0.2;
-  orbit.dragX = 0; orbit.dragY = 0;
-  spin.accum = { x: 0, y: 0, z: 0 };
-  update();
-}
+window.addEventListener('resize', () => {
+W = canvas.clientWidth;
+H = canvas.clientHeight;
+camera.aspect = W / H;
+camera.updateProjectionMatrix();
+renderer.setSize(W, H);
+});
 
-function copyOutput() {
-  navigator.clipboard.writeText(document.getElementById('output').textContent).then(() => {
-    const btn = document.getElementById('copy-btn');
-    btn.textContent = '✓ Copied!';
-    btn.classList.add('ok');
-    setTimeout(() => { btn.textContent = 'Copy to clipboard'; btn.classList.remove('ok'); }, 2000);
-  });
-}
-
-window.addEventListener('load', init3D);
+init3D();
 </script>
+
 </body>
 </html>
