@@ -141,9 +141,6 @@ text-transform: uppercase;
 letter-spacing: 0.1em;
 font-family: 'Barlow Condensed', sans-serif;
 }
-@media (max-width: 600px) {
-.stats-inner { grid-template-columns: repeat(2, 1fr); }
-}
 /* ── PRODUCTS ── */
 .products-section { background: var(--black); }
 .products-grid {
@@ -346,8 +343,18 @@ margin-bottom: 1rem;
 </style>
 </head>
 <body>
-<nav class="nav" id="main-nav"></nav>
-<div class="mobile-menu" id="mobile-menu"></div>
+<nav class="nav">
+<div class="nav-left">
+<a href="index.html" class="nav-logo"><span class="iso">Iso</span>Watt</a>
+</div>
+<div class="nav-center">
+<a href="index.html" class="nav-link active">Home</a>
+<a href="products.html" class="nav-link">Products</a>
+</div>
+<div class="nav-right">
+<span class="nav-location">Bellefonte, PA</span>
+</div>
+</nav>
 
 <main class="page">
 <!-- HERO -->
@@ -363,8 +370,8 @@ margin-bottom: 1rem;
 </h1>
 <p class="hero-sub">Portable LiFePO4 power stations engineered for the field. Built to order, tested before delivery, backed by the person who built it.</p>
 <div class="hero-actions">
-<a href="configurator.html" class="btn btn-primary">PRODUCTS ↗</a>
-<a href="about.html" class="btn btn-ghost">Our Story</a>
+<a href="products.html" class="btn btn-primary">SHOP PREBUILT ↗</a>
+<a href="configurator.html" class="btn btn-ghost">Design Custom</a>
 </div>
 </div>
 <button class="hero-scroll" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})" aria-label="Scroll to products">
@@ -376,15 +383,15 @@ Explore
 <!-- STATS -->
 <div class="stats-bar">
 <div class="stats-inner">
-<div class="stat-item reveal">
+<div class="stat-item">
 <div class="stat-num">1.2<span style="font-size:20px;">kWh</span></div>
 <div class="stat-label">Max Capacity</div>
 </div>
-<div class="stat-item reveal">
+<div class="stat-item">
 <div class="stat-num">Up to 2000W</div>
 <div class="stat-label">AC Power</div>
 </div>
-<div class="stat-item reveal">
+<div class="stat-item">
 <div class="stat-num">LiFePO4</div>
 <div class="stat-label">Chemistry</div>
 </div>
@@ -394,12 +401,12 @@ Explore
 <!-- PRODUCTS -->
 <section class="section products-section" id="products">
 <div class="container">
-<span class="eyebrow reveal">Power Station Lineup</span>
-<h2 class="section-title reveal">Choose your <em>system.</em></h2>
-<p class="section-body reveal">Two platforms. Three tiers. Every unit assembled by hand, tested under load, and shipped ready to work.</p>
+<span class="eyebrow">Power Station Lineup</span>
+<h2 class="section-title">Choose your <em>system.</em></h2>
+<p class="section-body">Two prebuilt options. One custom path. Every unit assembled by hand, tested under load, and shipped ready to work.</p>
 
 <div class="products-grid">
-<a href="products.html" class="product-card featured reveal">
+<a href="products.html" class="product-card featured">
 <span class="featured-badge">Flagship</span>
 <div class="card-tier">Premium Tier +</div>
 <div class="card-name"><span class="iso">Iso</span>Station<span class="iso">+</span></div>
@@ -417,7 +424,7 @@ Explore
 <span class="card-cta">View Details ↗</span>
 </a>
 
-<a href="products.html" class="product-card featured reveal">
+<a href="products.html" class="product-card featured">
 <span class="featured-badge">Popular</span>
 <div class="card-tier">Compact Tier +</div>
 <div class="card-name"><span class="iso">Iso</span>Point<span class="iso">+</span></div>
@@ -435,7 +442,7 @@ Explore
 <span class="card-cta">View Details ↗</span>
 </a>
 
-<a href="configurator.html" class="product-card reveal" style="grid-column: 1 / -1;">
+<a href="configurator.html" class="product-card" style="grid-column: 1 / -1;">
 <div class="card-tier">Custom Build</div>
 <div class="card-name">Design Your Own</div>
 <p class="card-desc">Start with a base IsoStation or IsoPoint and customize every component. Choose your inverter wattage, ports, accessories, and enclosure. Build it exactly how you need it.</p>
@@ -458,20 +465,20 @@ Explore
 <!-- WHY ISOWATT -->
 <section class="section why-section">
 <div class="container">
-<span class="eyebrow reveal">Why IsoWatt</span>
-<h2 class="section-title reveal">Built different.<br><em>On purpose.</em></h2>
+<span class="eyebrow">Why IsoWatt</span>
+<h2 class="section-title">Built different.<br><em>On purpose.</em></h2>
 <div class="why-grid">
-<div class="why-card reveal">
+<div class="why-card">
 <span class="why-icon">⚡</span>
 <div class="why-title">LiFePO4 Chemistry</div>
 <p class="why-body">Safer, longer-lasting, and more stable than lithium-ion. No thermal runaway. 2,000+ charge cycles. The chemistry that industrial systems trust.</p>
 </div>
-<div class="why-card reveal">
+<div class="why-card">
 <span class="why-icon">🔧</span>
 <div class="why-title">Built to Order</div>
 <p class="why-body">No warehouse. No mass production. Every unit is assembled, wired, and load-tested by hand before it ships. You get what we'd build for ourselves.</p>
 </div>
-<div class="why-card reveal">
+<div class="why-card">
 <span class="why-icon">📍</span>
 <div class="why-title">Made in Bellefonte, PA</div>
 <p class="why-body">Local product. Local support. When something needs attention, you're not filing a ticket with a call center — you're talking to the builder.</p>
@@ -483,9 +490,9 @@ Explore
 <!-- CTA BAND -->
 <section class="cta-band">
 <div class="container-sm">
-<h2 class="reveal">Ready to <em style="font-style:normal;color:var(--amber);">go off-grid?</em></h2>
-<p class="reveal">Configure your power station, get a real price, and reserve your build with a 50% deposit.</p>
-<div class="actions reveal">
+<h2>Ready to <em style="font-style:normal;color:var(--amber);">go off-grid?</em></h2>
+<p>Configure your power station, get a real price, and reserve your build with a 50% deposit.</p>
+<div class="actions">
 <a href="configurator.html" class="btn btn-primary">Start Configuring ↗</a>
 <a href="contact.html" class="btn btn-ghost">Ask a Question</a>
 </div>
@@ -493,12 +500,24 @@ Explore
 </section>
 </main>
 
-<footer class="footer" id="main-footer"></footer>
-
-<script src="site.js"></script>
-<script>
-initNav('home');
-initFooter();
-</script>
+<footer class="footer">
+<div class="footer-content">
+<div class="footer-section">
+<h4>IsoWatt</h4>
+<p>Portable LiFePO4 power systems.<br>Built in Bellefonte, PA.</p>
+</div>
+<div class="footer-section">
+<a href="index.html">Home</a>
+<a href="products.html">Products</a>
+</div>
+<div class="footer-section">
+<p style="font-size:11px;color:#666;">
+<strong>Gridless Fabrication LLC</strong><br>
+Bellefonte, PA<br>
+Build to order · LiFePO4 Power Systems
+</p>
+</div>
+</div>
+</footer>
 </body>
 </html>
