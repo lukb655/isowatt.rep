@@ -129,17 +129,32 @@ select:focus, input:focus { outline: none; border-color: var(--amber); }
 </style>
 </head>
 <body>
-<nav class="nav" style="background:var(--black);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;sticky;top:0;z-index:100;">
-<a href="index.html" class="nav-logo" style="display:flex;align-items:center;text-decoration:none;"><img src="./IW_LOGO_FAV.png" alt="IsoWatt" style="height:36px;width:auto;display:block;"></a>
-<div style="display:flex;gap:2rem;">
-<a href="index.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Home</a>
-<a href="products.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Products</a>
-<a href="about.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">About</a>
-<a href="contact.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Contact</a>
-</div>
+<nav class="nav">
+  <a href="index.html" class="wordmark">
+    <span class="iso">Iso</span><span class="watt">Watt</span>
+    <span class="sub">Consumer Grade · Industrial Power.</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="products.html" class="active">Products</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="configurator.html" class="nav-cta">Configure →</a></li>
+  </ul>
+  <button class="nav-burger" id="nav-burger" onclick="toggleMobileMenu()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="products.html" class="active">Products</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="configurator.html" class="amber">Configure →</a>
+</div>
+<script>function toggleMobileMenu(){var m=document.getElementById('mobile-menu');m.classList.toggle('open');}</script>
 
-<div style="min-height:40vh;display:flex;align-items:center;background:var(--black);padding:4rem 2rem;">
+<div style="padding-top:var(--nav-h)" style="min-height:40vh;display:flex;align-items:center;background:var(--black);padding:4rem 2rem;">
 <div class="container">
 <p class="eyebrow">Build Your Configuration</p>
 <h1 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(48px,9vw,96px);font-weight:900;text-transform:uppercase;letter-spacing:0.02em;line-height:0.9;color:var(--white);margin-bottom:1rem;">Design Your System.</h1>
@@ -274,32 +289,35 @@ select:focus, input:focus { outline: none; border-color: var(--amber); }
 </div>
 
 <p style="font-size:12px;color:var(--muted);margin-bottom:1.5rem;">50% deposit required to reserve. Final payment due before shipping.</p>
-<button class="cta-primary" onclick="alert('Your configuration has been saved. Next step: contact us for deposit.')">Reserve This Build</button>
+<button class="cta-primary" id="reserve-config-btn" onclick="reserveConfig()">Reserve This Build</button>
 <div style="margin-top:1rem;text-align:center;"><a href="products.html" class="cta-secondary">← View Prebuilt Options</a></div>
 </section>
 
 </div>
 
-<footer class="footer" style="background:var(--surface);border-top:1px solid var(--border);padding:3rem 2rem;margin-top:4rem;">
-<div style="max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;">
-<div>
-<h4 style="color:var(--white);margin-bottom:0.5rem;">IsoWatt</h4>
-<p style="font-size:14px;color:var(--subtle);">Portable LiFePO4 power systems.<br>Built in Bellefonte, PA.</p>
-</div>
-<div>
-<a href="index.html" style="display:block;color:var(--text);text-decoration:none;margin-bottom:0.5rem;">Home</a>
-<a href="products.html" style="display:block;color:var(--text);text-decoration:none;margin-bottom:0.5rem;">Products</a>
-<a href="about.html" style="display:block;color:var(--text);text-decoration:none;margin-bottom:0.5rem;">About</a>
-<a href="contact.html" style="display:block;color:var(--text);text-decoration:none;">Contact</a>
-</div>
-<div>
-<p style="font-size:12px;color:#666;">
-<strong>IsoWatt LLC</strong><br>
-Bellefonte, PA<br>
-Build to order · LiFePO4 Power Systems
-</p>
-</div>
-</div>
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="col-title">IsoWatt</div>
+      <p>Portable LiFePO4 power systems.<br>Built in Bellefonte, PA.</p>
+    </div>
+    <div class="footer-col">
+      <div class="col-title">Navigation</div>
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="configurator.html">Configure</a>
+    </div>
+    <div class="footer-col">
+      <div class="col-title">IsoWatt LLC</div>
+      <p>Bellefonte, PA<br>Build to order · LiFePO4 Power Systems</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 IsoWatt LLC · Bellefonte, PA</span>
+    <span class="amber">Consumer Grade. Industrial Power.</span>
+  </div>
 </footer>
 
 <script>
@@ -421,6 +439,47 @@ function updateConfig() {
   } catch (_) { /* use FALLBACK */ }
   updateConfig();
 })();
+</script>
+
+<script>
+// Wire Reserve button to Stripe — config summary sent via URL params
+let _configStripe = {};
+(async () => {
+  try {
+    const res = await fetch('./prices.json?v=' + Date.now());
+    if (res.ok) { const p = await res.json(); _configStripe = p.stripe || {}; }
+  } catch(_) {}
+})();
+
+function reserveConfig() {
+  const total    = document.getElementById('price-total')?.textContent || '';
+  const config   = document.getElementById('summary-config')?.textContent || 'Custom';
+  const deposit  = document.getElementById('summary-deposit')?.textContent || '';
+  const link = _configStripe.customBuildContactLink || _configStripe.isoStationPlusDepositLink;
+  if (link && link.startsWith('http')) {
+    // Pass config summary as URL param if Stripe link supports it
+    window.location.href = link;
+  } else {
+    // Fallback: mailto with config summary
+    const subject = encodeURIComponent('IsoWatt Custom Build — ' + config);
+    const body    = encodeURIComponent(
+      'Hi,
+
+I would like to reserve a custom build:
+
+Configuration: ' + config +
+      '
+Total: ' + total + '
+Deposit (50%): ' + deposit +
+      '
+
+Please let me know the next steps.
+
+Thank you.'
+    );
+    window.location.href = 'mailto:hello@isowatt.shop?subject=' + subject + '&body=' + body;
+  }
+}
 </script>
 </body>
 </html>

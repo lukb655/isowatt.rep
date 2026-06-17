@@ -17,17 +17,32 @@
 </style>
 </head>
 <body>
-<nav class="nav" style="background:var(--black);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;sticky;top:0;z-index:100;">
-<a href="index.html" class="nav-logo" style="display:flex;align-items:center;text-decoration:none;"><img src="./IW_LOGO_FAV.png" alt="IsoWatt" style="height:36px;width:auto;display:block;"></a>
-<div style="display:flex;gap:2rem;">
-<a href="index.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Home</a>
-<a href="products.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Products</a>
-<a href="about.html" class="nav-link" style="color:var(--amber);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid var(--amber);">About</a>
-<a href="contact.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Contact</a>
-</div>
+<nav class="nav">
+  <a href="index.html" class="wordmark">
+    <span class="iso">Iso</span><span class="watt">Watt</span>
+    <span class="sub">Consumer Grade · Industrial Power.</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="configurator.html" class="nav-cta">Configure →</a></li>
+  </ul>
+  <button class="nav-burger" id="nav-burger" onclick="toggleMobileMenu()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="products.html">Products</a>
+  <a href="about.html" class="active">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="configurator.html" class="amber">Configure →</a>
+</div>
+<script>function toggleMobileMenu(){var m=document.getElementById('mobile-menu');m.classList.toggle('open');}</script>
 
-<div class="page-hero">
+<div style="padding-top:var(--nav-h)" class="page-hero">
 <div class="container">
 <h1>Built Different. On Purpose.</h1>
 <p>IsoWatt makes portable LiFePO4 power systems engineered for real-world use. No compromises. No mass production. Every unit assembled by hand in Bellefonte, PA.</p>
@@ -49,26 +64,29 @@
 <p>You're not talking to a call center. Issues get escalated to someone who built the unit. Questions get answered by someone who uses them in the field.</p>
 </div>
 
-<footer class="footer" style="background:var(--surface);border-top:1px solid var(--border);padding:3rem 2rem;margin-top:4rem;">
-<div style="max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;">
-<div>
-<h4 style="color:var(--white);margin-bottom:0.5rem;">IsoWatt</h4>
-<p style="font-size:14px;color:var(--subtle);">Portable LiFePO4 power systems.<br>Built in Bellefonte, PA.</p>
-</div>
-<div>
-<a href="index.html" style="display:block;color:var(--text);text-decoration:none;margin-bottom:0.5rem;">Home</a>
-<a href="products.html" style="display:block;color:var(--text);text-decoration:none;margin-bottom:0.5rem;">Products</a>
-<a href="about.html" style="display:block;color:var(--amber);text-decoration:none;margin-bottom:0.5rem;">About</a>
-<a href="contact.html" style="display:block;color:var(--text);text-decoration:none;">Contact</a>
-</div>
-<div>
-<p style="font-size:12px;color:#666;">
-<strong>IsoWatt LLC</strong><br>
-Bellefonte, PA<br>
-Build to order · LiFePO4 Power Systems
-</p>
-</div>
-</div>
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="col-title">IsoWatt</div>
+      <p>Portable LiFePO4 power systems.<br>Built in Bellefonte, PA.</p>
+    </div>
+    <div class="footer-col">
+      <div class="col-title">Navigation</div>
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="configurator.html">Configure</a>
+    </div>
+    <div class="footer-col">
+      <div class="col-title">IsoWatt LLC</div>
+      <p>Bellefonte, PA<br>Build to order · LiFePO4 Power Systems</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 IsoWatt LLC · Bellefonte, PA</span>
+    <span class="amber">Consumer Grade. Industrial Power.</span>
+  </div>
 </footer>
 </body>
 </html>

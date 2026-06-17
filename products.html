@@ -87,17 +87,32 @@
 </style>
 </head>
 <body>
-<nav class="nav" style="background:var(--black);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;sticky;top:0;z-index:100;">
-<a href="index.html" class="nav-logo" style="display:flex;align-items:center;text-decoration:none;"><img src="./IW_LOGO_FAV.png" alt="IsoWatt" style="height:36px;width:auto;display:block;mix-blend-mode:screen;"></a>
-<div style="display:flex;gap:2rem;">
-<a href="index.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Home</a>
-<a href="products.html" class="nav-link" style="color:var(--amber);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid var(--amber);">Products</a>
-<a href="about.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">About</a>
-<a href="contact.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Contact</a>
-</div>
+<nav class="nav">
+  <a href="index.html" class="wordmark">
+    <span class="iso">Iso</span><span class="watt">Watt</span>
+    <span class="sub">Consumer Grade · Industrial Power.</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="products.html" class="active">Products</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="configurator.html" class="nav-cta">Configure →</a></li>
+  </ul>
+  <button class="nav-burger" id="nav-burger" onclick="toggleMobileMenu()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="products.html" class="active">Products</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="configurator.html" class="amber">Configure →</a>
+</div>
+<script>function toggleMobileMenu(){var m=document.getElementById('mobile-menu');m.classList.toggle('open');}</script>
 
-<div style="min-height:60vh;display:flex;align-items:center;background:var(--black);padding:clamp(3rem,8vw,6rem) clamp(1rem,4vw,2rem);">
+<div style="padding-top:var(--nav-h)" style="min-height:60vh;display:flex;align-items:center;background:var(--black);padding:clamp(3rem,8vw,6rem) clamp(1rem,4vw,2rem);">
 <div class="container">
 <p class="eyebrow">Prebuilt & Ready to Ship</p>
 <h1 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(60px,11vw,130px);font-weight:900;text-transform:uppercase;letter-spacing:0.02em;line-height:0.9;color:var(--white);margin-bottom:2rem;">Choose Your Power.</h1>
@@ -167,7 +182,7 @@
 <span class="price-amount" id="price-isostation-plus">$1,289</span>
 <span class="price-note">50% deposit to reserve</span>
 </div>
-<button class="cta-button">Reserve Your IsoStation+</button>
+<button class="cta-button" id="reserve-station" onclick="reserveProduct('iso-station-plus')">Reserve Your IsoStation+</button>
 <p style="font-size:12px;color:#888;margin-top:8px;">Typical lead time: 2-3 weeks</p>
 </div>
 </div>
@@ -225,7 +240,7 @@
 <span class="price-amount" id="price-isopoint-plus">$365</span>
 <span class="price-note">50% deposit to reserve</span>
 </div>
-<button class="cta-button">Reserve Your IsoPoint+</button>
+<button class="cta-button" id="reserve-point" onclick="reserveProduct('iso-point-plus')">Reserve Your IsoPoint+</button>
 <p style="font-size:12px;color:#888;margin-top:8px;">Typical lead time: 1-2 weeks</p>
 </div>
 </div>
@@ -249,26 +264,29 @@
 
 </div>
 
-<footer class="footer" style="background:var(--surface);border-top:1px solid var(--border);padding:3rem 2rem;margin-top:4rem;">
-<div style="max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;">
-<div>
-<h4 style="color:var(--white);margin-bottom:0.5rem;">IsoWatt</h4>
-<p style="font-size:14px;color:var(--subtle);">Portable LiFePO4 power systems.<br>Built in Bellefonte, PA.</p>
-</div>
-<div>
-<a href="index.html" style="display:block;color:var(--text);text-decoration:none;margin-bottom:0.5rem;">Home</a>
-<a href="products.html" style="display:block;color:var(--text);text-decoration:none;margin-bottom:0.5rem;">Products</a>
-<a href="about.html" style="display:block;color:var(--text);text-decoration:none;margin-bottom:0.5rem;">About</a>
-<a href="contact.html" style="display:block;color:var(--text);text-decoration:none;">Contact</a>
-</div>
-<div>
-<p style="font-size:12px;color:#666;">
-<strong>IsoWatt LLC</strong><br>
-Bellefonte, PA<br>
-Build to order · LiFePO4 Power Systems
-</p>
-</div>
-</div>
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="col-title">IsoWatt</div>
+      <p>Portable LiFePO4 power systems.<br>Built in Bellefonte, PA.</p>
+    </div>
+    <div class="footer-col">
+      <div class="col-title">Navigation</div>
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="configurator.html">Configure</a>
+    </div>
+    <div class="footer-col">
+      <div class="col-title">IsoWatt LLC</div>
+      <p>Bellefonte, PA<br>Build to order · LiFePO4 Power Systems</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 IsoWatt LLC · Bellefonte, PA</span>
+    <span class="amber">Consumer Grade. Industrial Power.</span>
+  </div>
 </footer>
 
 <script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
@@ -400,8 +418,12 @@ function setupViewer(canvasId) {
   })();
 }
 
+let _3dRetries = 0;
 function init3D() {
-  if (!window.THREE || !window.GLTFLoader) { setTimeout(init3D, 50); return; }
+  if (!window.THREE || !window.GLTFLoader) {
+    if (++_3dRetries > 120) { console.warn("3D: THREE.js failed to load after 6s"); return; }
+    setTimeout(init3D, 50); return;
+  }
   console.log('✓ THREE and GLTFLoader ready');
   setupViewer('canvas-station');
   setupViewer('canvas-point');
@@ -431,5 +453,42 @@ init3D();
 })();
 </script>
 
+
+<script>
+// Stripe payment link wiring — links loaded from prices.json
+let _stripeLinks = {};
+(async () => {
+  try {
+    const res = await fetch('./prices.json?v=' + Date.now());
+    if (res.ok) {
+      const p = await res.json();
+      _stripeLinks = p.stripe || {};
+      // Update reserve button labels if links are live
+      if (_stripeLinks.isoStationPlusDepositLink) {
+        const btn = document.getElementById('reserve-station');
+        if (btn) btn.textContent = 'Reserve — Pay 50% Deposit';
+      }
+      if (_stripeLinks.isoPointPlusDepositLink) {
+        const btn = document.getElementById('reserve-point');
+        if (btn) btn.textContent = 'Reserve — Pay 50% Deposit';
+      }
+    }
+  } catch(_) {}
+})();
+
+function reserveProduct(productId) {
+  const linkMap = {
+    'iso-station-plus': _stripeLinks.isoStationPlusDepositLink,
+    'iso-point-plus':   _stripeLinks.isoPointPlusDepositLink
+  };
+  const link = linkMap[productId];
+  if (link) {
+    window.location.href = link;
+  } else {
+    // Fallback: contact page until Stripe is set up
+    window.location.href = 'contact.html';
+  }
+}
+</script>
 </body>
 </html>

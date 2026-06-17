@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IsoWatt Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="./IW_LOGO_FAV.png">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#070707;--surface:#111;--card:#161616;--border:#252525;
+  --amber:#f0a500;--amber-bg:rgba(240,165,0,0.08);--amber-dim:rgba(240,165,0,0.25);
+  --green:#3ddb8a;--green-bg:rgba(61,219,138,0.08);
+  --red:#e84040;--red-bg:rgba(232,64,64,0.08);
+  --blue:#4d9fff;--blue-bg:rgba(77,159,255,0.08);
+  --white:#f5f5f5;--text:#ccc;--subtle:#888;--muted:#555;
+}
+body{background:var(--black);color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;min-height:100vh;}
+
+/* Lock Screen */
+#lock-screen{
+  position:fixed;inset:0;background:var(--black);z-index:1000;
+  display:flex;align-items:center;justify-content:center;
+}
+.lock-box{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:2.5rem 2rem;width:340px;text-align:center;
+}
+.lock-logo{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;letter-spacing:0.05em;margin-bottom:0.5rem;}
+.lock-logo .iso{color:var(--white)}.lock-logo .watt{color:var(--amber)}
+.lock-sub{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--subtle);margin-bottom:2rem;}
+.lock-input{
+  width:100%;padding:10px 14px;background:var(--surface);border:1px solid var(--border);
+  border-radius:6px;color:var(--white);font-size:15px;font-family:'Barlow',sans-serif;
+  text-align:center;letter-spacing:0.15em;margin-bottom:1rem;
+}
+.lock-input:focus{outline:none;border-color:var(--amber);}
+.lock-btn{
+  width:100%;padding:11px;background:var(--amber);color:#000;border:none;border-radius:6px;
+  font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.1em;cursor:pointer;
+}
+.lock-btn:hover{opacity:0.9;}
+.lock-err{font-size:12px;color:var(--red);margin-top:8px;min-height:16px;}
+
+/* App shell */
+#app{display:none;}
+.topbar{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 1.5rem;height:56px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.topbar-logo{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;letter-spacing:0.05em;}
+.topbar-logo .iso{color:var(--white)}.topbar-logo .watt{color:var(--amber)}
+.topbar-title{font-size:13px;color:var(--subtle);margin-left:16px;text-transform:uppercase;letter-spacing:0.08em;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-back{
+  font-size:12px;color:var(--subtle);text-decoration:none;
+  border:1px solid var(--border);border-radius:5px;padding:5px 12px;
+  transition:color 0.15s,border-color 0.15s;
+}
+.topbar-back:hover{color:var(--amber);border-color:var(--amber-dim);}
+.topbar-lock{
+  font-size:12px;color:var(--subtle);background:none;border:none;cursor:pointer;
+  border:1px solid var(--border);border-radius:5px;padding:5px 12px;
+  transition:color 0.15s;
+}
+.topbar-lock:hover{color:var(--red);}
+.last-updated{font-size:11px;color:var(--muted);}
+
+.main{padding:1.5rem;max-width:1200px;margin:0 auto;}
+.section-label{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;
+  color:var(--subtle);margin-bottom:1rem;padding-bottom:8px;border-bottom:1px solid var(--border);
+}
+
+/* Stat cards */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;margin-bottom:2rem;}
+.stat-card{
+  background:var(--card);border:1px solid var(--border);border-radius:8px;
+  padding:1.25rem 1.5rem;
+}
+.stat-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--subtle);margin-bottom:8px;}
+.stat-val{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:800;color:var(--white);line-height:1;}
+.stat-val.green{color:var(--green);}
+.stat-val.amber{color:var(--amber);}
+.stat-val.red{color:var(--red);}
+.stat-sub{font-size:12px;color:var(--subtle);margin-top:6px;}
+.stat-delta{font-size:12px;margin-top:4px;}
+.stat-delta.up{color:var(--green);}
+.stat-delta.down{color:var(--red);}
+
+/* Two-col layout */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+@media(max-width:700px){.two-col{grid-template-columns:1fr;}}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+@media(max-width:900px){.three-col{grid-template-columns:1fr 1fr;}}
+@media(max-width:600px){.three-col{grid-template-columns:1fr;}}
+
+.panel{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;}
+.panel-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.05em;color:var(--white);margin-bottom:1rem;
+}
+
+/* Chart canvas */
+.chart-wrap{position:relative;height:200px;}
+
+/* Pipeline */
+.pipe-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;border-bottom:1px solid var(--border);gap:1rem;
+}
+.pipe-row:last-child{border-bottom:none;}
+.pipe-name{font-size:13px;font-weight:600;color:var(--white);flex:1;}
+.pipe-sub{font-size:11px;color:var(--subtle);}
+.pipe-amt{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--amber);white-space:nowrap;}
+.pipe-badge{
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;
+  padding:3px 8px;border-radius:20px;white-space:nowrap;
+}
+.badge-new{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(77,159,255,0.3);}
+.badge-dep{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-dim);}
+.badge-build{background:rgba(153,100,255,0.1);color:#9964ff;border:1px solid rgba(153,100,255,0.3);}
+.badge-ship{background:var(--green-bg);color:var(--green);border:1px solid rgba(61,219,138,0.3);}
+.badge-done{background:var(--border);color:var(--subtle);border:1px solid var(--border);}
+
+/* Orders table */
+.orders-table{width:100%;border-collapse:collapse;font-size:13px;}
+.orders-table th{
+  text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--subtle);padding:0 8px 10px;border-bottom:1px solid var(--border);
+}
+.orders-table td{padding:10px 8px;border-bottom:1px solid rgba(37,37,37,0.6);color:var(--text);vertical-align:middle;}
+.orders-table tr:last-child td{border-bottom:none;}
+.orders-table tr:hover td{background:rgba(255,255,255,0.02);}
+
+/* Margin bars */
+.margin-item{margin-bottom:12px;}
+.margin-item:last-child{margin-bottom:0;}
+.margin-top{display:flex;justify-content:space-between;margin-bottom:5px;}
+.margin-name{font-size:13px;color:var(--text);}
+.margin-pct{font-size:13px;font-weight:700;color:var(--white);}
+.margin-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.margin-fill{height:100%;border-radius:3px;transition:width 0.4s ease;}
+.margin-fill.hi{background:var(--green);}
+.margin-fill.mid{background:var(--amber);}
+.margin-fill.lo{background:var(--red);}
+
+/* Stripe setup banner */
+.setup-banner{
+  background:var(--amber-bg);border:1px solid var(--amber-dim);border-radius:8px;
+  padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;
+  margin-bottom:1.5rem;
+}
+.setup-banner-icon{font-size:20px;flex-shrink:0;}
+.setup-banner-text{font-size:13px;color:var(--text);line-height:1.6;}
+.setup-banner-text strong{color:var(--amber);}
+.setup-banner-text a{color:var(--amber);text-decoration:none;}
+.setup-banner-text a:hover{text-decoration:underline;}
+.setup-banner-close{background:none;border:none;color:var(--subtle);cursor:pointer;font-size:18px;flex-shrink:0;margin-left:auto;}
+
+/* Stripe key input */
+.stripe-key-row{display:flex;gap:8px;margin-top:8px;}
+.stripe-key-input{
+  flex:1;padding:8px 12px;background:var(--surface);border:1px solid var(--border);
+  border-radius:5px;color:var(--white);font-size:13px;font-family:monospace;
+}
+.stripe-key-input:focus{outline:none;border-color:var(--amber);}
+.stripe-key-btn{
+  padding:8px 14px;background:var(--amber);color:#000;border:none;border-radius:5px;
+  font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;
+  font-family:'Barlow Condensed',sans-serif;letter-spacing:0.05em;text-transform:uppercase;
+}
+
+/* Focus list */
+.focus-item{
+  display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start;
+}
+.focus-item:last-child{border-bottom:none;}
+.focus-num{
+  font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;
+  color:var(--amber);line-height:1;flex-shrink:0;width:28px;
+}
+.focus-body{font-size:13px;color:var(--text);line-height:1.6;}
+.focus-body strong{color:var(--white);}
+
+/* News */
+.news-item{padding:10px 0;border-bottom:1px solid var(--border);}
+.news-item:last-child{border-bottom:none;}
+.news-src{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--subtle);margin-bottom:3px;}
+.news-headline{font-size:13px;color:var(--white);line-height:1.5;}
+.news-age{font-size:11px;color:var(--muted);margin-top:3px;}
+
+/* Responsive */
+@media(max-width:600px){
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .main{padding:1rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- Lock Screen -->
+<div id="lock-screen">
+  <div class="lock-box">
+    <div class="lock-logo"><span class="iso">Iso</span><span class="watt">Watt</span></div>
+    <div class="lock-sub">Sales & Marketing Dashboard</div>
+    <input type="password" class="lock-input" id="lock-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')unlock()">
+    <button class="lock-btn" onclick="unlock()">Unlock →</button>
+    <div class="lock-err" id="lock-err"></div>
+  </div>
+</div>
+
+<!-- Main App -->
+<div id="app">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;">
+      <div class="topbar-logo"><span class="iso">Iso</span><span class="watt">Watt</span></div>
+      <div class="topbar-title">Dashboard</div>
+    </div>
+    <div class="topbar-right">
+      <span class="last-updated" id="last-updated"></span>
+      <a href="admin.html" class="topbar-back">Price Admin ↗</a>
+      <a href="index.html" class="topbar-back">Site →</a>
+      <button class="topbar-lock" onclick="lockApp()">Lock</button>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- Stripe setup banner (shown until key is saved) -->
+    <div class="setup-banner" id="stripe-banner">
+      <div class="setup-banner-icon">🔑</div>
+      <div class="setup-banner-text">
+        <strong>Activate live Stripe data</strong> — paste a <a href="https://dashboard.stripe.com/apikeys" target="_blank">Stripe Restricted Key</a> (read-only: charges, customers, payment_intents) to pull real orders. Until then, demo data is shown.
+        <div class="stripe-key-row">
+          <input type="password" class="stripe-key-input" id="stripe-key-input" placeholder="rk_live_...">
+          <button class="stripe-key-btn" onclick="saveStripeKey()">Save Key</button>
+        </div>
+      </div>
+      <button class="setup-banner-close" onclick="dismissBanner()" title="Dismiss">×</button>
+    </div>
+
+    <!-- KPI row -->
+    <div class="section-label">Overview · <span id="period-label">Last 30 days</span></div>
+    <div class="stats-grid" id="stats-grid">
+      <!-- filled by JS -->
+    </div>
+
+    <!-- Revenue chart + pipeline -->
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Revenue (Monthly)</div>
+        <div class="chart-wrap"><canvas id="revenue-chart"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Order Pipeline</div>
+        <div id="pipeline-list"></div>
+      </div>
+    </div>
+
+    <!-- Margins + recent orders -->
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Margin by Product</div>
+        <div id="margin-list"></div>
+      </div>
+      <div class="panel" style="overflow-x:auto;">
+        <div class="panel-title">Recent Orders</div>
+        <table class="orders-table" id="orders-table">
+          <thead><tr>
+            <th>Customer</th><th>Product</th><th>Amount</th><th>Status</th>
+          </tr></thead>
+          <tbody id="orders-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Focus + news -->
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Today's Focus</div>
+        <div id="focus-list"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Industry Pulse</div>
+        <div id="news-list"></div>
+      </div>
+    </div>
+
+    <!-- Product mix chart -->
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Revenue by Product</div>
+        <div class="chart-wrap"><canvas id="mix-chart"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Build Pipeline Value</div>
+        <div class="chart-wrap"><canvas id="pipe-chart"></canvas></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ─── Auth ─────────────────────────────────────────────── */
+const DEFAULT_PW = btoa('isowatt');
+function getStoredPW() { return localStorage.getItem('iw_pw') || DEFAULT_PW; }
+
+function unlock() {
+  const val = document.getElementById('lock-pw').value;
+  if (btoa(val) === getStoredPW()) {
+    localStorage.setItem('iw_dash_auth', '1');
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    init();
+  } else {
+    document.getElementById('lock-err').textContent = 'Incorrect password.';
+    setTimeout(() => document.getElementById('lock-err').textContent = '', 2000);
+  }
+}
+
+function lockApp() {
+  localStorage.removeItem('iw_dash_auth');
+  location.reload();
+}
+
+// Auto-unlock if already authenticated this session
+if (localStorage.getItem('iw_dash_auth') === '1') {
+  document.getElementById('lock-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+}
+
+/* ─── Stripe Key ────────────────────────────────────────── */
+function saveStripeKey() {
+  const key = document.getElementById('stripe-key-input').value.trim();
+  if (!key.startsWith('rk_')) { alert('Paste a Restricted Key starting with rk_live_ or rk_test_'); return; }
+  localStorage.setItem('iw_stripe_key', key);
+  document.getElementById('stripe-banner').style.display = 'none';
+  init(); // reload with real data
+}
+function dismissBanner() {
+  document.getElementById('stripe-banner').style.display = 'none';
+}
+
+/* ─── Data layer ────────────────────────────────────────── */
+// Try Stripe → fall back to demo data
+const STRIPE_KEY = localStorage.getItem('iw_stripe_key');
+
+// Demo data (shown until Stripe key is added)
+const DEMO = {
+  stats: [
+    { label:'Revenue (30d)', value:'$4,820', sub:'3 completed orders', delta:'+12% vs prev 30d', dir:'up' },
+    { label:'Pipeline Value', value:'$7,650', sub:'5 active leads', delta:'', dir:'' },
+    { label:'Avg Order Value', value:'$1,607', sub:'excl. deposits', delta:'+$220 vs prev', dir:'up' },
+    { label:'Deposit Rate', value:'66%', sub:'2 of 3 reserved', delta:'', dir:'', cls:'amber' },
+    { label:'Gross Margin', value:'44%', sub:'blended all products', delta:'', dir:'', cls:'green' },
+    { label:'Leads This Mo.', value:'8', sub:'3 from configurator', delta:'+3 vs last mo.', dir:'up' },
+  ],
+  revenue: {
+    labels: ['Jan','Feb','Mar','Apr','May','Jun'],
+    data:   [0, 0, 1289, 730, 1560, 1241]
+  },
+  pipeline: [
+    { name:'Custom IsoStation — RV Build', sub:'Solar + 2000W inverter', amt:'$2,100', stage:'build' },
+    { name:'IsoPoint+ — Trail Rig', sub:'Standard config', amt:'$365', stage:'dep' },
+    { name:'IsoStation+ — Fleet (×3)', sub:'Awaiting final spec', amt:'$3,870', stage:'new' },
+    { name:'Custom IsoStation — Boat', sub:'Marine waterproof spec', amt:'$1,600', stage:'new' },
+    { name:'IsoPoint+ — Gifting', sub:'Shipped', amt:'$365', stage:'ship' },
+  ],
+  orders: [
+    { cust:'Mike T.', product:'Custom IsoStation', amt:'$1,289', status:'Completed', scls:'badge-done' },
+    { cust:'Sarah K.', product:'IsoPoint+', amt:'$365', status:'Shipped', scls:'badge-ship' },
+    { cust:'Dave R.', product:'Custom IsoStation', amt:'$2,100', status:'Building', scls:'badge-build' },
+    { cust:'Julia M.', product:'IsoPoint+', amt:'$365', status:'Deposit Rcvd', scls:'badge-dep' },
+    { cust:'Fleet Inquiry', product:'IsoStation+ ×3', amt:'$3,870', status:'Lead', scls:'badge-new' },
+  ],
+  margins: [
+    { name:'IsoStation+', pct:48 },
+    { name:'IsoPoint+', pct:41 },
+    { name:'Custom IsoStation', pct:44 },
+  ],
+  focus: [
+    { body:'<strong>Set up Stripe</strong> — paste your restricted key above to activate live order data. Create a Payment Link for each product and save the URLs in the Price Admin.' },
+    { body:'<strong>Verify domain in Resend</strong> — add the DNS records so contact form emails send from hello@isowatt.shop.' },
+    { body:'<strong>Fleet inquiry follow-up</strong> — 3× IsoStation+ at $1,290 each. Reply within 24h to hold intent.' },
+    { body:'<strong>Post first customer build</strong> — photo + short writeup for Reddit (r/overlanding, r/SolarDIY). Tag @isowatt.' },
+    { body:'<strong>Fill in COGS</strong> in Price Admin — margins shown are estimates until component costs are entered.' },
+  ],
+  news: [
+    { src:'Electrek', headline:'LiFePO4 cell prices drop 18% YoY as BYD scales blade battery output — tailwind for small assemblers.', age:'2 days ago' },
+    { src:'Outdoor Retailer', headline:'Portable power station category grows 34% in outdoor retail — Jackery and EcoFlow dominate mass market.', age:'3 days ago' },
+    { src:'CleanTechnica', headline:'Van life and overlanding communities drive demand for modular, repairable power — mass brands lag on repairability.', age:'4 days ago' },
+    { src:'TechCrunch', headline:'Stripe launches new Payment Links analytics dashboard for solo founders.', age:'5 days ago' },
+    { src:'Battery Technology', headline:'UN38.3 compliance increasingly demanded by Amazon sellers — third-party testing labs backlogged 6–8 weeks.', age:'5 days ago' },
+  ]
+};
+
+/* ─── Render ────────────────────────────────────────────── */
+let revenueChart, mixChart, pipeChart;
+
+function renderStats(stats) {
+  const grid = document.getElementById('stats-grid');
+  grid.innerHTML = stats.map(s => `
+    <div class="stat-card">
+      <div class="stat-label">${s.label}</div>
+      <div class="stat-val ${s.cls||''}">${s.value}</div>
+      <div class="stat-sub">${s.sub}</div>
+      ${s.delta ? `<div class="stat-delta ${s.dir}">${s.dir==='up'?'↑':'↓'} ${s.delta}</div>` : ''}
+    </div>`).join('');
+}
+
+function renderPipeline(items) {
+  const stageMap = {
+    new:   ['badge-new',   'Lead'],
+    dep:   ['badge-dep',   'Deposit Rcvd'],
+    build: ['badge-build', 'Building'],
+    ship:  ['badge-ship',  'Shipped'],
+    done:  ['badge-done',  'Completed'],
+  };
+  document.getElementById('pipeline-list').innerHTML = items.map(p => {
+    const [cls, lbl] = stageMap[p.stage] || ['badge-new','Lead'];
+    return `<div class="pipe-row">
+      <div><div class="pipe-name">${p.name}</div><div class="pipe-sub">${p.sub}</div></div>
+      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+        <div class="pipe-amt">${p.amt}</div>
+        <div class="pipe-badge ${cls}">${lbl}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderOrders(orders) {
+  document.getElementById('orders-tbody').innerHTML = orders.map(o => `
+    <tr>
+      <td>${o.cust}</td>
+      <td>${o.product}</td>
+      <td style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--amber);">${o.amt}</td>
+      <td><span class="pipe-badge ${o.scls}">${o.status}</span></td>
+    </tr>`).join('');
+}
+
+function renderMargins(margins) {
+  document.getElementById('margin-list').innerHTML = margins.map(m => {
+    const cls = m.pct >= 45 ? 'hi' : m.pct >= 35 ? 'mid' : 'lo';
+    return `<div class="margin-item">
+      <div class="margin-top"><span class="margin-name">${m.name}</span><span class="margin-pct">${m.pct}%</span></div>
+      <div class="margin-bar"><div class="margin-fill ${cls}" style="width:${Math.min(m.pct,80)/80*100}%"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function renderFocus(items) {
+  document.getElementById('focus-list').innerHTML = items.map((f,i) => `
+    <div class="focus-item">
+      <div class="focus-num">${i+1}</div>
+      <div class="focus-body">${f.body}</div>
+    </div>`).join('');
+}
+
+function renderNews(items) {
+  document.getElementById('news-list').innerHTML = items.map(n => `
+    <div class="news-item">
+      <div class="news-src">${n.src}</div>
+      <div class="news-headline">${n.headline}</div>
+      <div class="news-age">${n.age}</div>
+    </div>`).join('');
+}
+
+function renderCharts(revenue, margins, pipeline) {
+  const chartDefaults = {
+    color: '#888',
+    plugins: { legend: { labels: { color:'#888', font:{ family:'Barlow' } } } }
+  };
+  Chart.defaults.color = '#888';
+  Chart.defaults.font.family = 'Barlow';
+
+  // Revenue bar chart
+  if (revenueChart) revenueChart.destroy();
+  revenueChart = new Chart(document.getElementById('revenue-chart'), {
+    type: 'bar',
+    data: {
+      labels: revenue.labels,
+      datasets: [{ label:'Revenue ($)', data: revenue.data,
+        backgroundColor:'rgba(240,165,0,0.75)', borderRadius:4, borderSkipped:false }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ display:false } },
+      scales:{
+        x:{ grid:{ color:'rgba(255,255,255,0.04)' }, ticks:{ color:'#888' } },
+        y:{ grid:{ color:'rgba(255,255,255,0.04)' }, ticks:{ color:'#888', callback:v=>'$'+v } }
+      }
+    }
+  });
+
+  // Product mix doughnut
+  if (mixChart) mixChart.destroy();
+  mixChart = new Chart(document.getElementById('mix-chart'), {
+    type:'doughnut',
+    data:{
+      labels: margins.map(m=>m.name),
+      datasets:[{ data: [2578,730,1560],
+        backgroundColor:['#f0a500','#3ddb8a','#4d9fff'],
+        borderColor:'#161616', borderWidth:3 }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:'bottom', labels:{ color:'#888', padding:12, boxWidth:12 } } }
+    }
+  });
+
+  // Pipeline bar
+  const stages = ['Lead','Deposit Rcvd','Building','Shipped','Completed'];
+  const stageVals = [5420,730,2100,365,1289];
+  if (pipeChart) pipeChart.destroy();
+  pipeChart = new Chart(document.getElementById('pipe-chart'), {
+    type:'bar',
+    data:{
+      labels: stages,
+      datasets:[{ label:'Value ($)', data: stageVals,
+        backgroundColor:['#4d9fff','#f0a500','#9964ff','#3ddb8a','#555'],
+        borderRadius:4, borderSkipped:false }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      plugins:{ legend:{ display:false } },
+      scales:{
+        x:{ grid:{ color:'rgba(255,255,255,0.04)' }, ticks:{ color:'#888', callback:v=>'$'+v } },
+        y:{ grid:{ color:'rgba(255,255,255,0.04)' }, ticks:{ color:'#888' } }
+      }
+    }
+  });
+}
+
+/* ─── Live Stripe pull (when key available) ─────────────── */
+async function fetchStripeData(key) {
+  // Stripe API can't be called directly from the browser (CORS) —
+  // This will work once you add a Vercel serverless function (api/stripe-data.js).
+  // For now, log the intent and fall back to demo data.
+  console.log('[Dashboard] Stripe key present — add api/stripe-data.js to enable live pull.');
+  return null; // falls back to demo
+}
+
+/* ─── Init ──────────────────────────────────────────────── */
+async function init() {
+  document.getElementById('last-updated').textContent = 'Updated ' + new Date().toLocaleTimeString();
+
+  // Show/hide banner
+  if (STRIPE_KEY || localStorage.getItem('iw_stripe_banner_dismissed')) {
+    document.getElementById('stripe-banner').style.display = 'none';
+  }
+
+  // Pull prices.json for real margin data
+  let marginData = DEMO.margins;
+  try {
+    const pj = await fetch('./prices.json?v='+Date.now()).then(r=>r.json());
+    const p = pj.prebuilt || {};
+    const computed = Object.values(p).map(prod => {
+      if (!prod.cogs || !prod.startingPrice) return null;
+      const pct = Math.round((prod.startingPrice - prod.cogs) / prod.startingPrice * 100);
+      return { name: prod.name, pct };
+    }).filter(Boolean);
+    if (computed.length) marginData = computed;
+  } catch(e) {}
+
+  // Try live Stripe data
+  let liveData = null;
+  if (STRIPE_KEY) liveData = await fetchStripeData(STRIPE_KEY);
+
+  const D = liveData || DEMO;
+
+  renderStats(D.stats);
+  renderPipeline(D.pipeline);
+  renderOrders(D.orders);
+  renderMargins(marginData);
+  renderFocus(D.focus);
+  renderNews(D.news);
+  renderCharts(D.revenue, marginData, D.pipeline);
+}
+
+// Auto-boot if already authenticated
+if (localStorage.getItem('iw_dash_auth') === '1') init();
+document.getElementById('lock-pw').addEventListener('keydown', e => { if(e.key==='Enter') unlock(); });
+</script>
+</body>
+</html>

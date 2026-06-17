@@ -354,15 +354,30 @@ margin-bottom: 1rem;
 </style>
 </head>
 <body>
-<nav class="nav" style="background:var(--black);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;sticky;top:0;z-index:100;">
-<a href="index.html" class="nav-logo" style="display:flex;align-items:center;text-decoration:none;"><img src="./IW_LOGO_FAV.png" alt="IsoWatt" style="height:36px;width:auto;display:block;mix-blend-mode:screen;"></a>
-<div style="display:flex;gap:2rem;">
-<a href="index.html" class="nav-link" style="color:var(--amber);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid var(--amber);">Home</a>
-<a href="products.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Products</a>
-<a href="about.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">About</a>
-<a href="contact.html" class="nav-link" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='transparent'">Contact</a>
-</div>
+<nav class="nav">
+  <a href="index.html" class="wordmark">
+    <span class="iso">Iso</span><span class="watt">Watt</span>
+    <span class="sub">Consumer Grade · Industrial Power.</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="configurator.html" class="nav-cta">Configure →</a></li>
+  </ul>
+  <button class="nav-burger" id="nav-burger" onclick="toggleMobileMenu()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html" class="active">Home</a>
+  <a href="products.html">Products</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="configurator.html" class="amber">Configure →</a>
+</div>
+<script>function toggleMobileMenu(){var m=document.getElementById('mobile-menu');m.classList.toggle('open');}</script>
 
 <main class="page">
 <!-- HERO -->
@@ -512,25 +527,28 @@ margin-bottom: 1rem;
 </main>
 
 <footer class="footer">
-<div class="footer-content">
-<div class="footer-section">
-<h4>IsoWatt</h4>
-<p>Portable LiFePO4 power systems.<br>Built in Bellefonte, PA.</p>
-</div>
-<div class="footer-section">
-<a href="index.html">Home</a>
-<a href="products.html">Products</a>
-<a href="about.html">About</a>
-<a href="contact.html">Contact</a>
-</div>
-<div class="footer-section">
-<p style="font-size:11px;color:#666;">
-<strong>IsoWatt LLC</strong><br>
-Bellefonte, PA<br>
-Build to order · LiFePO4 Power Systems
-</p>
-</div>
-</div>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="col-title">IsoWatt</div>
+      <p>Portable LiFePO4 power systems.<br>Built in Bellefonte, PA.</p>
+    </div>
+    <div class="footer-col">
+      <div class="col-title">Navigation</div>
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="configurator.html">Configure</a>
+    </div>
+    <div class="footer-col">
+      <div class="col-title">IsoWatt LLC</div>
+      <p>Bellefonte, PA<br>Build to order · LiFePO4 Power Systems</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 IsoWatt LLC · Bellefonte, PA</span>
+    <span class="amber">Consumer Grade. Industrial Power.</span>
+  </div>
 </footer>
 </body>
 </html>

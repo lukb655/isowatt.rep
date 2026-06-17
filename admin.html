@@ -673,6 +673,34 @@ body {
       <div class="settings-wrap">
 
         <div class="settings-card">
+          <div class="settings-card-title">Stripe Payment Links</div>
+          <p style="font-size:12px;color:var(--subtle);margin-bottom:1.25rem;line-height:1.6;">
+            Paste your Stripe Payment Link URLs here. These wire directly to the Reserve buttons on your site. Create links in your Stripe Dashboard → Payment Links.
+          </p>
+          <div class="form-row">
+            <label class="form-lbl">IsoStation+ — 50% Deposit Link</label>
+            <input type="url" id="stripe-station" class="form-ctrl" placeholder="https://buy.stripe.com/...">
+            <div class="form-hint">Create a $644.50 product in Stripe → Payment Link → paste here.</div>
+          </div>
+          <div class="form-row">
+            <label class="form-lbl">IsoPoint+ — 50% Deposit Link</label>
+            <input type="url" id="stripe-point" class="form-ctrl" placeholder="https://buy.stripe.com/...">
+          </div>
+          <div class="form-row">
+            <label class="form-lbl">Custom Build — Contact / Quote Link</label>
+            <input type="url" id="stripe-custom" class="form-ctrl" placeholder="https://buy.stripe.com/... or mailto:...">
+            <div class="form-hint">Can be a Stripe link or your contact page URL.</div>
+          </div>
+          <div class="form-row">
+            <label class="form-lbl">Final Payment Link (variable amount)</label>
+            <input type="url" id="stripe-final" class="form-ctrl" placeholder="https://buy.stripe.com/...">
+            <div class="form-hint">Create a Stripe Payment Link with "customer sets amount" enabled for final balance collection.</div>
+          </div>
+          <button class="btn-sm" onclick="saveStripeLinks()">Save Stripe Links</button>
+          <span id="stripe-result" class="inline-result"></span>
+        </div>
+
+        <div class="settings-card">
           <div class="settings-card-title">GitHub Integration</div>
           <p style="font-size:12px;color:var(--subtle);margin-bottom:1.25rem;line-height:1.6;">
             When you click Deploy, prices.json is committed to your repo. Vercel auto-redeploys in ~30–60 seconds and customers see updated prices on next page load.
@@ -840,6 +868,7 @@ async function refreshFromGitHub() {
     if (res.status === 404) {
       P = deepClone(DEFAULTS);
       render();
+      loadStripeLinks();
       setStatus('warn', 'prices.json not found — will create on deploy');
       showToast('prices.json not in repo yet. Click Deploy to create it.', 'info');
       return;
@@ -848,6 +877,7 @@ async function refreshFromGitHub() {
     const data = await res.json();
     P = JSON.parse(atob(data.content.replace(/\n/g, '')));
     render();
+    loadStripeLinks();
     setStatus('ok', `Synced ${new Date().toLocaleTimeString()}`);
   } catch (err) {
     P = deepClone(DEFAULTS);
@@ -1301,6 +1331,27 @@ function fmtGross(sell, cogs) {
 }
 
 function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
+
+// ── STRIPE LINKS ──
+function loadStripeLinks() {
+  if (!P.stripe) P.stripe = {};
+  document.getElementById('stripe-station').value = P.stripe.isoStationPlusDepositLink || '';
+  document.getElementById('stripe-point').value   = P.stripe.isoPointPlusDepositLink   || '';
+  document.getElementById('stripe-custom').value  = P.stripe.customBuildContactLink    || '';
+  document.getElementById('stripe-final').value   = P.stripe.finalPaymentLink           || '';
+}
+
+function saveStripeLinks() {
+  if (!P.stripe) P.stripe = {};
+  P.stripe.isoStationPlusDepositLink = document.getElementById('stripe-station').value.trim();
+  P.stripe.isoPointPlusDepositLink   = document.getElementById('stripe-point').value.trim();
+  P.stripe.customBuildContactLink    = document.getElementById('stripe-custom').value.trim();
+  P.stripe.finalPaymentLink          = document.getElementById('stripe-final').value.trim();
+  const r = document.getElementById('stripe-result');
+  r.style.color = 'var(--green)';
+  r.textContent = '✓ Saved — click Deploy to push to site.';
+  markDirty();
+}
 </script>
 </body>
 </html>
