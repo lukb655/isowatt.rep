@@ -180,7 +180,7 @@
 <div class="price-display">
 <span class="price-label">Starting Price</span>
 <span class="price-amount" id="price-isostation-plus">$1,289</span>
-<span class="price-note">50% deposit to reserve</span>
+<span class="price-note">Full price at purchase</span>
 </div>
 <button class="cta-button" id="reserve-station" onclick="reserveProduct('iso-station-plus')">Reserve Your IsoStation+</button>
 <p style="font-size:12px;color:#888;margin-top:8px;">Typical lead time: 2-3 weeks</p>
@@ -209,8 +209,8 @@
 </div>
 
 <div class="product-specs-grid">
-<div class="spec-item"><span class="spec-label">Battery</span><span class="spec-value">12Ah LiFePO4</span></div>
-<div class="spec-item"><span class="spec-label">Capacity</span><span class="spec-value">0.15kWh</span></div>
+<div class="spec-item"><span class="spec-label">Battery</span><span class="spec-value">25Ah LiFePO4</span></div>
+<div class="spec-item"><span class="spec-label">Capacity</span><span class="spec-value">0.3kWh</span></div>
 <div class="spec-item"><span class="spec-label">AC Power</span><span class="spec-value">0W-500W Options</span></div>
 <div class="spec-item"><span class="spec-label">Enclosure</span><span class="spec-value">Apache 2800</span></div>
 </div>
@@ -223,7 +223,7 @@
 <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:clamp(1rem,3vw,1.5rem);">
 <strong>What's Included</strong>
 <ul class="features-list" style="margin-top:1rem;">
-<li>12Ah LiFePO4 battery with Bluetooth monitoring</li>
+<li>25Ah LiFePO4 battery with Bluetooth monitoring</li>
 <li>110V AC outlet (selected power option)</li>
 <li>Dual 96W USB-C fast charge ports</li>
 <li>12V cigarette lighter socket</li>
@@ -238,7 +238,7 @@
 <div class="price-display">
 <span class="price-label">Starting Price</span>
 <span class="price-amount" id="price-isopoint-plus">$365</span>
-<span class="price-note">50% deposit to reserve</span>
+<span class="price-note">Full price at purchase</span>
 </div>
 <button class="cta-button" id="reserve-point" onclick="reserveProduct('iso-point-plus')">Reserve Your IsoPoint+</button>
 <p style="font-size:12px;color:#888;margin-top:8px;">Typical lead time: 1-2 weeks</p>
@@ -464,13 +464,13 @@ let _stripeLinks = {};
       const p = await res.json();
       _stripeLinks = p.stripe || {};
       // Update reserve button labels if links are live
-      if (_stripeLinks.isoStationPlusDepositLink) {
+      if (_stripeLinks.isoStationPlusLink) {
         const btn = document.getElementById('reserve-station');
-        if (btn) btn.textContent = 'Reserve — Pay 50% Deposit';
+        if (btn) btn.textContent = 'Buy Now — IsoStation+';
       }
-      if (_stripeLinks.isoPointPlusDepositLink) {
+      if (_stripeLinks.isoPointPlusLink) {
         const btn = document.getElementById('reserve-point');
-        if (btn) btn.textContent = 'Reserve — Pay 50% Deposit';
+        if (btn) btn.textContent = 'Buy Now — IsoPoint+';
       }
     }
   } catch(_) {}
@@ -478,8 +478,8 @@ let _stripeLinks = {};
 
 function reserveProduct(productId) {
   const linkMap = {
-    'iso-station-plus': _stripeLinks.isoStationPlusDepositLink,
-    'iso-point-plus':   _stripeLinks.isoPointPlusDepositLink
+    'iso-station-plus': _stripeLinks.isoStationPlusLink,
+    'iso-point-plus':   _stripeLinks.isoPointPlusLink
   };
   const link = linkMap[productId];
   if (link) {

@@ -171,7 +171,7 @@ select:focus, input:focus { outline: none; border-color: var(--amber); }
 <label class="config-label">Base Model</label>
 <select id="baseModel" onchange="updateConfig()">
 <option value="iso-station">IsoStation - 100Ah LiFePO4 (1.2kWh)</option>
-<option value="iso-point">IsoPoint - 12Ah LiFePO4 (0.15kWh)</option>
+<option value="iso-point">IsoPoint - 25Ah LiFePO4 (0.3kWh)</option>
 </select>
 <p class="config-description">Select the core battery and enclosure for your system.</p>
 </div>
@@ -288,7 +288,7 @@ select:focus, input:focus { outline: none; border-color: var(--amber); }
 </div>
 </div>
 
-<p style="font-size:12px;color:var(--muted);margin-bottom:1.5rem;">50% deposit required to reserve. Final payment due before shipping.</p>
+<p style="font-size:12px;color:var(--muted);margin-bottom:1.5rem;">Submit your config and I'll confirm the build and send an invoice.</p>
 <button class="cta-primary" id="reserve-config-btn" onclick="reserveConfig()">Reserve This Build</button>
 <div style="margin-top:1rem;text-align:center;"><a href="products.html" class="cta-secondary">← View Prebuilt Options</a></div>
 </section>
@@ -327,7 +327,7 @@ let LIVE = null; // loaded from prices.json
 const FALLBACK = {
   baseModels: {
     'iso-station': { name: 'IsoStation', capacity: '1.2kWh', price: 1200, leadTime: '2-3 weeks' },
-    'iso-point':   { name: 'IsoPoint',   capacity: '0.15kWh', price: 600,  leadTime: '1-2 weeks' }
+    'iso-point':   { name: 'IsoPoint',   capacity: '0.3kWh',  price: 600,  leadTime: '1-2 weeks' }
   },
   addons: {
     inverter:   { none: 0, '400w': 150, '600w': 200, '1000w': 300, '2000w': 400 },
