@@ -1,12 +1,12 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-17T22:38:17.672Z",
+    "lastUpdated": "2026-06-17T22:59:49.169Z",
     "currency": "USD"
   },
   "stripe": {
-    "isoStationPlusDepositLink": "",
-    "isoPointPlusDepositLink": "",
+    "isoStationPlusDepositLink": "https://buy.stripe.com/7sY3cvft52UYbLtfHpaR202",
+    "isoPointPlusDepositLink": "https://buy.stripe.com/7sY28r3Kn9jm9Dl0MvaR201",
     "customBuildContactLink": "",
     "finalPaymentLink": ""
   },
