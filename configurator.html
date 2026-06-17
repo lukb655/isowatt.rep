@@ -441,8 +441,39 @@ function updateConfig() {
 })();
 </script>
 
+<!-- Quote Request Modal -->
+<div id="quote-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;width:100%;max-width:420px;position:relative;">
+    <button onclick="closeQuoteModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:var(--subtle);font-size:20px;cursor:pointer;line-height:1;">×</button>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:var(--white);margin-bottom:4px;">Request This Build</div>
+    <div style="font-size:13px;color:var(--subtle);margin-bottom:1.5rem;">I'll review your spec and send a quote within 24 hours.</div>
+
+    <div id="quote-spec-preview" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1rem;font-size:12px;color:var(--subtle);margin-bottom:1.25rem;line-height:1.8;"></div>
+
+    <div style="margin-bottom:1rem;">
+      <label style="display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--subtle);margin-bottom:6px;">Your Name *</label>
+      <input type="text" id="quote-name" placeholder="Jane Smith" style="width:100%;box-sizing:border-box;padding:10px 13px;background:var(--black);border:1px solid var(--border);border-radius:6px;color:var(--white);font-size:14px;font-family:'Barlow',sans-serif;">
+    </div>
+    <div style="margin-bottom:1rem;">
+      <label style="display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--subtle);margin-bottom:6px;">Email Address *</label>
+      <input type="email" id="quote-email" placeholder="jane@example.com" style="width:100%;box-sizing:border-box;padding:10px 13px;background:var(--black);border:1px solid var(--border);border-radius:6px;color:var(--white);font-size:14px;font-family:'Barlow',sans-serif;">
+    </div>
+    <div style="margin-bottom:1.25rem;">
+      <label style="display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--subtle);margin-bottom:6px;">Notes (optional)</label>
+      <textarea id="quote-notes" rows="3" placeholder="Use case, timeline, any special requirements..." style="width:100%;box-sizing:border-box;padding:10px 13px;background:var(--black);border:1px solid var(--border);border-radius:6px;color:var(--white);font-size:14px;font-family:'Barlow',sans-serif;resize:vertical;"></textarea>
+    </div>
+
+    <div id="quote-status" style="display:none;margin-bottom:1rem;padding:10px 14px;border-radius:6px;font-size:13px;font-weight:600;"></div>
+
+    <button id="quote-submit-btn" onclick="submitQuote()" style="width:100%;padding:13px;background:var(--amber);color:#000;border:none;border-radius:7px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <span id="quote-spinner" style="display:none;width:14px;height:14px;border:2px solid rgba(0,0,0,0.3);border-top-color:#000;border-radius:50%;animation:spin 0.7s linear infinite;"></span>
+      <span id="quote-btn-label">Send Quote Request →</span>
+    </button>
+    <p style="font-size:11px;color:var(--muted);margin-top:10px;text-align:center;">No payment now. I'll confirm the build and send a Stripe invoice.</p>
+  </div>
+</div>
+
 <script>
-// Wire Reserve button to Stripe — config summary sent via URL params
 let _configStripe = {};
 (async () => {
   try {
@@ -451,33 +482,139 @@ let _configStripe = {};
   } catch(_) {}
 })();
 
+// Collect the full spec from the page selects
+function collectSpec() {
+  const sel = id => document.getElementById(id);
+  const txt = id => sel(id)?.options?.[sel(id)?.selectedIndex]?.text || '—';
+  return {
+    baseModel:  txt('baseModel'),
+    inverter:   txt('inverter'),
+    charger:    txt('charger'),
+    usbc:       txt('usbc'),
+    outputs12v: txt('12v'),
+    monitor:    txt('monitor'),
+    light:      txt('light'),
+    protection: txt('protection'),
+    transport:  txt('transport'),
+    total:      sel('price-total')?.textContent || '—',
+    deposit:    sel('summary-deposit')?.textContent || '—',
+    capacity:   sel('summary-capacity')?.textContent || '—',
+    leadTime:   sel('summary-lead')?.textContent || '—',
+  };
+}
+
 function reserveConfig() {
-  const total    = document.getElementById('price-total')?.textContent || '';
-  const config   = document.getElementById('summary-config')?.textContent || 'Custom';
-  const deposit  = document.getElementById('summary-deposit')?.textContent || '';
-  const link = _configStripe.customBuildContactLink || _configStripe.isoStationPlusDepositLink;
-  if (link && link.startsWith('http')) {
-    // Pass config summary as URL param if Stripe link supports it
-    window.location.href = link;
-  } else {
-    // Fallback: mailto with config summary
-    const subject = encodeURIComponent('IsoWatt Custom Build — ' + config);
-    const body    = encodeURIComponent(
-      'Hi,
+  const spec = collectSpec();
+  // Populate the spec preview in the modal
+  document.getElementById('quote-spec-preview').innerHTML =
+    `<strong style="color:var(--white);">${spec.baseModel}</strong><br>` +
+    `Inverter: ${spec.inverter} · Charger: ${spec.charger}<br>` +
+    `USB-C: ${spec.usbc} · 12V: ${spec.outputs12v}<br>` +
+    `Monitor: ${spec.monitor} · Light: ${spec.light}<br>` +
+    `Protection: ${spec.protection} · Transport: ${spec.transport}<br>` +
+    `<strong style="color:var(--amber);">Total: ${spec.total}</strong> · Deposit: ${spec.deposit} · Lead time: ${spec.leadTime}`;
 
-I would like to reserve a custom build:
+  // Reset modal state
+  document.getElementById('quote-status').style.display = 'none';
+  document.getElementById('quote-submit-btn').disabled = false;
+  document.getElementById('quote-btn-label').textContent = 'Send Quote Request →';
+  document.getElementById('quote-name').value = '';
+  document.getElementById('quote-email').value = '';
+  document.getElementById('quote-notes').value = '';
 
-Configuration: ' + config +
-      '
-Total: ' + total + '
-Deposit (50%): ' + deposit +
-      '
+  const overlay = document.getElementById('quote-overlay');
+  overlay.style.display = 'flex';
+}
 
-Please let me know the next steps.
+function closeQuoteModal() {
+  document.getElementById('quote-overlay').style.display = 'none';
+}
+document.getElementById('quote-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('quote-overlay')) closeQuoteModal();
+});
 
-Thank you.'
-    );
-    window.location.href = 'mailto:hello@isowatt.shop?subject=' + subject + '&body=' + body;
+async function submitQuote() {
+  const name  = document.getElementById('quote-name').value.trim();
+  const email = document.getElementById('quote-email').value.trim();
+  const notes = document.getElementById('quote-notes').value.trim();
+  const statusEl = document.getElementById('quote-status');
+
+  if (!name || !email) {
+    statusEl.style.display = 'block';
+    statusEl.style.background = 'rgba(232,64,64,0.1)';
+    statusEl.style.border = '1px solid #e84040';
+    statusEl.style.color = '#e84040';
+    statusEl.textContent = 'Please enter your name and email.';
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    statusEl.style.display = 'block';
+    statusEl.style.background = 'rgba(232,64,64,0.1)';
+    statusEl.style.border = '1px solid #e84040';
+    statusEl.style.color = '#e84040';
+    statusEl.textContent = 'Please enter a valid email address.';
+    return;
+  }
+
+  const btn = document.getElementById('quote-submit-btn');
+  btn.disabled = true;
+  document.getElementById('quote-spinner').style.display = 'block';
+  document.getElementById('quote-btn-label').textContent = 'Sending…';
+  statusEl.style.display = 'none';
+
+  const spec = collectSpec();
+  const specText = [
+    'Base Model: '    + spec.baseModel,
+    'Inverter: '      + spec.inverter,
+    'Charger: '       + spec.charger,
+    'USB-C Ports: '   + spec.usbc,
+    '12V Outputs: '   + spec.outputs12v,
+    'Battery Monitor: '+ spec.monitor,
+    'LED Light: '     + spec.light,
+    'Protection: '    + spec.protection,
+    'Transport: '     + spec.transport,
+    '',
+    'Quote Total: '   + spec.total,
+    'Deposit (50%): ' + spec.deposit,
+    'Capacity: '      + spec.capacity,
+    'Lead Time: '     + spec.leadTime,
+    notes ? '\nNotes: ' + notes : ''
+  ].join('\n');
+
+  try {
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        email,
+        type:    'Custom Build Inquiry',
+        subject: 'Custom Build Quote — ' + spec.baseModel + ' · ' + spec.total,
+        message: specText,
+        spec:    spec   // structured spec for email formatting
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+
+    if (res.ok && data.ok) {
+      statusEl.style.display  = 'block';
+      statusEl.style.background = 'rgba(61,219,138,0.08)';
+      statusEl.style.border   = '1px solid #3ddb8a';
+      statusEl.style.color    = '#3ddb8a';
+      statusEl.textContent    = '✓ Sent! I\'ll review your build and reply within 24 hours.';
+      btn.textContent = '✓ Sent';
+    } else {
+      throw new Error(data.error || 'Send failed.');
+    }
+  } catch(err) {
+    btn.disabled = false;
+    document.getElementById('quote-spinner').style.display = 'none';
+    document.getElementById('quote-btn-label').textContent = 'Send Quote Request →';
+    statusEl.style.display  = 'block';
+    statusEl.style.background = 'rgba(232,64,64,0.1)';
+    statusEl.style.border   = '1px solid #e84040';
+    statusEl.style.color    = '#e84040';
+    statusEl.textContent    = err.message || 'Error — email hello@isowatt.shop directly.';
   }
 }
 </script>
