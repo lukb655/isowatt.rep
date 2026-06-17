@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IsoWatt Admin — Price Manager</title>
+<link rel="icon" type="image/png" href="./IW_LOGO_FAV.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap">
+<style>
+:root {
+  --black: #0a0a0a;
+  --surface: #111111;
+  --card: #181818;
+  --border: #252525;
+  --border-hi: #353535;
+  --amber: #f0a820;
+  --amber-bg: rgba(240,168,32,0.07);
+  --amber-dim: rgba(240,168,32,0.22);
+  --white: #f2f2f2;
+  --text: #c0c0c0;
+  --subtle: #7a7a7a;
+  --muted: #555;
+  --red: #e05555;
+  --red-bg: rgba(224,85,85,0.1);
+  --green: #4ec97a;
+  --green-bg: rgba(78,201,122,0.1);
+  --yellow: #e0b850;
+  --yellow-bg: rgba(224,184,80,0.1);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  background: var(--black);
+  color: var(--text);
+  font-family: 'Barlow', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── LOCK ── */
+#lock-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--black);
+}
+.lock-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+  width: 360px;
+}
+.lock-wordmark {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--white);
+  margin-bottom: 2px;
+}
+.lock-sub {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--amber);
+  margin-bottom: 2rem;
+}
+.lock-input {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--white);
+  font-size: 15px;
+  font-family: inherit;
+  margin-bottom: 0.75rem;
+  transition: border-color 0.18s;
+}
+.lock-input:focus { outline: none; border-color: var(--amber); }
+.lock-input.shake { animation: shake 0.35s; }
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%,60% { transform: translateX(-6px); }
+  40%,80% { transform: translateX(6px); }
+}
+.lock-error {
+  color: var(--red);
+  font-size: 12px;
+  margin-bottom: 0.75rem;
+  display: none;
+}
+.btn-full {
+  width: 100%;
+  padding: 12px;
+  background: var(--amber);
+  color: #000;
+  border: none;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background 0.18s;
+  font-family: inherit;
+}
+.btn-full:hover { background: #d4920a; }
+.lock-hint {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 1rem;
+}
+.lock-hint code { color: var(--subtle); background: var(--surface); padding: 1px 5px; border-radius: 3px; }
+
+/* ── SHELL ── */
+#admin { display: none; flex-direction: column; min-height: 100vh; }
+
+.admin-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  height: 56px;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-left { display: flex; align-items: center; gap: 10px; }
+.wordmark {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--white);
+}
+.admin-chip {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--amber);
+  border: 1px solid var(--amber-dim);
+  border-radius: 4px;
+  padding: 2px 7px;
+}
+.header-right { display: flex; align-items: center; gap: 10px; }
+
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--subtle);
+}
+.s-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+}
+.s-dot.pending  { background: var(--yellow); animation: blink 1.4s infinite; }
+.s-dot.active   { background: var(--amber);  animation: blink 0.8s infinite; }
+.s-dot.error    { background: var(--red); }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+.unsaved-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--amber);
+  background: var(--amber-bg);
+  border: 1px solid var(--amber-dim);
+  border-radius: 4px;
+  padding: 2px 8px;
+  display: none;
+}
+
+.btn-deploy {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 16px;
+  background: var(--amber);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  cursor: pointer;
+  transition: background 0.18s;
+  font-family: inherit;
+}
+.btn-deploy:hover { background: #d4920a; }
+.btn-deploy:disabled { opacity: 0.45; cursor: not-allowed; }
+.deploy-spinner { display: none; width: 12px; height: 12px; border: 2px solid rgba(0,0,0,0.3); border-top-color: #000; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.btn-icon-sm {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: color 0.15s;
+  line-height: 1;
+}
+.btn-icon-sm:hover { color: var(--subtle); }
+
+/* ── TABS ── */
+.tab-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+  display: flex;
+}
+.tab {
+  padding: 13px 18px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--subtle);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: inherit;
+  margin-bottom: -1px;
+}
+.tab:hover { color: var(--white); }
+.tab.on { color: var(--amber); border-bottom-color: var(--amber); }
+
+/* ── BODY ── */
+.admin-body {
+  flex: 1;
+  padding: 2rem 1.5rem;
+  max-width: 1180px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── SECTION ── */
+.section { margin-bottom: 2.5rem; }
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+.section-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--white);
+  line-height: 1;
+}
+.section-sub { font-size: 12px; color: var(--subtle); margin-top: 3px; }
+
+/* ── MARGIN TOOLBAR ── */
+.margin-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 10px 16px;
+  background: var(--amber-bg);
+  border: 1px solid var(--amber-dim);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+.margin-bar-label { font-size: 12px; font-weight: 600; color: var(--text); white-space: nowrap; }
+.margin-slider { flex: 1; accent-color: var(--amber); cursor: pointer; height: 4px; }
+.margin-val {
+  font-family: 'Barlow Condensed', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--amber);
+  min-width: 56px;
+  text-align: right;
+}
+.btn-apply {
+  padding: 6px 14px;
+  background: var(--amber);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.btn-apply:hover { background: #d4920a; }
+
+/* ── TABLE ── */
+.ptable {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.ptable th {
+  background: var(--surface);
+  padding: 9px 14px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--subtle);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.ptable td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.ptable tr:last-child td { border-bottom: none; }
+.ptable tbody tr:hover td { background: rgba(255,255,255,0.015); }
+
+.group-header td {
+  padding: 7px 14px 3px;
+  background: #0f0f0f;
+  border-bottom: 1px solid var(--border);
+}
+.group-label-text {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--amber);
+}
+
+.row-name { color: var(--white); font-weight: 600; font-size: 13px; }
+.row-meta { font-size: 11px; color: var(--subtle); margin-top: 1px; }
+
+.num-field {
+  width: 100px;
+  padding: 5px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--white);
+  font-size: 13px;
+  font-family: 'Courier New', monospace;
+  text-align: right;
+  transition: border-color 0.15s, background 0.15s;
+  -moz-appearance: textfield;
+}
+.num-field::-webkit-outer-spin-button,
+.num-field::-webkit-inner-spin-button { -webkit-appearance: none; }
+.num-field:focus { outline: none; border-color: var(--amber); }
+.num-field.dirty { border-color: var(--amber-dim); background: var(--amber-bg); }
+
+.arrow-sep { color: var(--border); font-size: 16px; padding: 0 2px; user-select: none; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+  min-width: 62px;
+  white-space: nowrap;
+}
+.badge.hi   { background: var(--green-bg);  color: var(--green);  }
+.badge.mid  { background: var(--yellow-bg); color: var(--yellow); }
+.badge.lo   { background: var(--red-bg);    color: var(--red);    }
+.badge.zero { background: var(--border);    color: var(--muted);  }
+
+.gross-text { font-family: 'Courier New', monospace; font-size: 13px; }
+
+.btn-rm {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 4px 7px;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.btn-rm:hover { color: var(--red); }
+
+/* ── SETTINGS ── */
+.settings-wrap { max-width: 580px; }
+.settings-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.75rem;
+  margin-bottom: 1.25rem;
+}
+.settings-card-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--white);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.form-row { margin-bottom: 1rem; }
+.form-lbl { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--subtle); margin-bottom: 5px; }
+.form-ctrl {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--white);
+  font-size: 13px;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+.form-ctrl:focus { outline: none; border-color: var(--amber); }
+.form-hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.form-hint code { background: var(--surface); padding: 1px 4px; border-radius: 3px; color: var(--subtle); }
+.btn-sm {
+  padding: 8px 18px;
+  background: var(--amber);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.btn-sm:hover { background: #d4920a; }
+.btn-ghost {
+  padding: 8px 18px;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.btn-ghost:hover { border-color: var(--border-hi); color: var(--white); }
+.btn-danger {
+  padding: 8px 18px;
+  background: transparent;
+  color: var(--red);
+  border: 1px solid rgba(224,85,85,0.25);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.btn-danger:hover { background: var(--red-bg); }
+.inline-result { font-size: 11px; margin-left: 10px; }
+
+/* ── TAB CONTENT ── */
+.pane { display: none; }
+.pane.on { display: block; }
+
+/* ── TOAST ── */
+#toast {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  padding: 11px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  max-width: 340px;
+  z-index: 9999;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.28s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+}
+#toast.show { transform: translateY(0); opacity: 1; }
+#toast.success { background: var(--green-bg);  border: 1px solid var(--green);  color: var(--green); }
+#toast.error   { background: var(--red-bg);    border: 1px solid var(--red);    color: var(--red); }
+#toast.info    { background: var(--amber-bg);  border: 1px solid var(--amber);  color: var(--amber); }
+
+/* ── ADD BTN ── */
+.btn-add-row {
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--subtle);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.btn-add-row:hover { border-color: var(--amber); color: var(--amber); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ LOCK ═══════════ -->
+<div id="lock-screen">
+  <div class="lock-card">
+    <div class="lock-wordmark">IsoWatt</div>
+    <div class="lock-sub">Price Manager · Admin</div>
+    <input id="pw-input" type="password" class="lock-input" placeholder="Admin password" autocomplete="off">
+    <div id="pw-err" class="lock-error">Incorrect password.</div>
+    <button class="btn-full" onclick="tryLogin()">Unlock →</button>
+    <div class="lock-hint">Default password: <code>isowatt</code> — change in Settings</div>
+  </div>
+</div>
+
+<!-- ═══════════ ADMIN ═══════════ -->
+<div id="admin">
+
+  <header class="admin-header">
+    <div class="header-left">
+      <span class="wordmark">IsoWatt</span>
+      <span class="admin-chip">Price Manager</span>
+    </div>
+    <div class="header-right">
+      <div class="status-pill">
+        <div class="s-dot" id="s-dot"></div>
+        <span id="s-text">Ready</span>
+      </div>
+      <span class="unsaved-badge" id="unsaved-badge">● Unsaved</span>
+      <button class="btn-deploy" id="deploy-btn" onclick="deploy()">
+        <div class="deploy-spinner" id="deploy-spinner"></div>
+        <span id="deploy-label">↑ Deploy</span>
+      </button>
+      <button class="btn-icon-sm" title="Log out" onclick="logout()">⏻</button>
+    </div>
+  </header>
+
+  <nav class="tab-bar">
+    <button class="tab on" onclick="showPane('prebuilt',this)">Prebuilt Products</button>
+    <button class="tab" onclick="showPane('configurator',this)">Configurator</button>
+    <button class="tab" onclick="showPane('settings',this)">Settings</button>
+  </nav>
+
+  <div class="admin-body">
+
+    <!-- ── PREBUILT ── -->
+    <div class="pane on" id="pane-prebuilt">
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <div class="section-title">Prebuilt Products</div>
+            <div class="section-sub">Starting prices shown on the Products page — customers see these</div>
+          </div>
+          <button class="btn-add-row" onclick="addPrebuilt()">+ Add Product</button>
+        </div>
+        <div class="margin-bar">
+          <span class="margin-bar-label">Set all margins to:</span>
+          <input type="range" class="margin-slider" id="pb-slider" min="5" max="80" value="45"
+                 oninput="document.getElementById('pb-val').textContent=this.value+'%'">
+          <span class="margin-val" id="pb-val">45%</span>
+          <button class="btn-apply" onclick="bulkMargin('prebuilt','pb-slider')">Apply to All</button>
+        </div>
+        <table class="ptable">
+          <thead>
+            <tr>
+              <th style="width:220px">Product</th>
+              <th style="width:110px">COGS ($)</th>
+              <th style="width:16px"></th>
+              <th style="width:110px">Sell Price ($)</th>
+              <th style="width:80px">Margin</th>
+              <th style="width:90px">Gross Profit</th>
+              <th style="width:36px"></th>
+            </tr>
+          </thead>
+          <tbody id="pb-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── CONFIGURATOR ── -->
+    <div class="pane" id="pane-configurator">
+
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <div class="section-title">Base Models</div>
+            <div class="section-sub">Foundation price for each unit type in the configurator</div>
+          </div>
+        </div>
+        <div class="margin-bar">
+          <span class="margin-bar-label">Set all margins to:</span>
+          <input type="range" class="margin-slider" id="cfg-slider" min="5" max="80" value="45"
+                 oninput="document.getElementById('cfg-val').textContent=this.value+'%'">
+          <span class="margin-val" id="cfg-val">45%</span>
+          <button class="btn-apply" onclick="bulkMargin('config','cfg-slider')">Apply to All</button>
+        </div>
+        <table class="ptable">
+          <thead>
+            <tr>
+              <th style="width:220px">Model</th>
+              <th style="width:110px">COGS ($)</th>
+              <th style="width:16px"></th>
+              <th style="width:110px">Sell Price ($)</th>
+              <th style="width:80px">Margin</th>
+              <th style="width:90px">Gross Profit</th>
+            </tr>
+          </thead>
+          <tbody id="base-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <div class="section-title">Add-Ons & Options</div>
+            <div class="section-sub">Individual option pricing inside the configurator tool</div>
+          </div>
+          <button class="btn-add-row" onclick="addOption()">+ Add Option</button>
+        </div>
+        <table class="ptable">
+          <thead>
+            <tr>
+              <th style="width:220px">Option</th>
+              <th style="width:110px">COGS ($)</th>
+              <th style="width:16px"></th>
+              <th style="width:110px">Sell Price ($)</th>
+              <th style="width:80px">Margin</th>
+              <th style="width:90px">Gross Profit</th>
+              <th style="width:36px"></th>
+            </tr>
+          </thead>
+          <tbody id="addon-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── SETTINGS ── -->
+    <div class="pane" id="pane-settings">
+      <div class="settings-wrap">
+
+        <div class="settings-card">
+          <div class="settings-card-title">GitHub Integration</div>
+          <p style="font-size:12px;color:var(--subtle);margin-bottom:1.25rem;line-height:1.6;">
+            When you click Deploy, prices.json is committed to your repo. Vercel auto-redeploys in ~30–60 seconds and customers see updated prices on next page load.
+          </p>
+          <div class="form-row">
+            <label class="form-lbl">Personal Access Token (PAT)</label>
+            <input type="password" id="gh-pat" class="form-ctrl" placeholder="ghp_xxxxxxxxxxxxxxxx" autocomplete="off">
+            <div class="form-hint">Needs <code>repo</code> write scope. GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic).</div>
+          </div>
+          <div class="form-row">
+            <label class="form-lbl">Repository</label>
+            <input type="text" id="gh-repo" class="form-ctrl" placeholder="lukb655/isowatt.rep" value="lukb655/isowatt.rep">
+          </div>
+          <div class="form-row">
+            <label class="form-lbl">Branch</label>
+            <input type="text" id="gh-branch" class="form-ctrl" placeholder="main" value="main">
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <button class="btn-sm" onclick="saveGHSettings()">Save &amp; Test</button>
+            <span id="gh-result" class="inline-result"></span>
+          </div>
+        </div>
+
+        <div class="settings-card">
+          <div class="settings-card-title">Admin Password</div>
+          <div class="form-row">
+            <label class="form-lbl">New Password</label>
+            <input type="password" id="new-pw" class="form-ctrl" placeholder="Enter new password" autocomplete="new-password">
+          </div>
+          <div class="form-row">
+            <label class="form-lbl">Confirm Password</label>
+            <input type="password" id="confirm-pw" class="form-ctrl" placeholder="Confirm new password" autocomplete="new-password">
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button class="btn-sm" onclick="changePw()">Update Password</button>
+            <span id="pw-result" class="inline-result"></span>
+          </div>
+        </div>
+
+        <div class="settings-card">
+          <div class="settings-card-title">Data Management</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn-ghost" onclick="exportCSV()">Export CSV</button>
+            <button class="btn-ghost" onclick="refreshFromGitHub()">↻ Refresh from GitHub</button>
+            <button class="btn-danger" onclick="resetDefaults()">Reset to Defaults</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /admin-body -->
+</div><!-- /admin -->
+
+<div id="toast"></div>
+
+<script>
+// ───────────────────────────────────────────────────
+// DEFAULTS (used when prices.json not yet on GitHub)
+// ───────────────────────────────────────────────────
+const DEFAULTS = {
+  meta: { version: '1.0.0', lastUpdated: new Date().toISOString(), currency: 'USD' },
+  prebuilt: {
+    'iso-station-plus': { name: 'IsoStation+', badge: 'Flagship', subtitle: 'Premium Portable Power Station', startingPrice: 1289, cogs: 0 },
+    'iso-point-plus':   { name: 'IsoPoint+',   badge: 'Popular',  subtitle: 'Compact Portable Power',         startingPrice: 365,  cogs: 0 }
+  },
+  configurator: {
+    baseModels: {
+      'iso-station': { name: 'IsoStation - 100Ah LiFePO4 (1.2kWh)', capacity: '1.2kWh', leadTime: '2-3 weeks', price: 1200, cogs: 0 },
+      'iso-point':   { name: 'IsoPoint - 12Ah LiFePO4 (0.15kWh)',   capacity: '0.15kWh',leadTime: '1-2 weeks', price: 600,  cogs: 0 }
+    },
+    addons: {
+      inverter:   { _label:'AC Inverter',             none:  {label:'None (DC Only)',               price:0,   cogs:0}, '400w':{label:'400W Inverter',price:150,cogs:0}, '600w':{label:'600W Inverter',price:200,cogs:0}, '1000w':{label:'1000W Inverter',price:300,cogs:0}, '2000w':{label:'2000W Inverter',price:400,cogs:0} },
+      charger:    { _label:'Wall Charger',             standard:{label:'Standard 10A',price:50,cogs:0}, fast:{label:'Fast 20A',price:100,cogs:0}, none:{label:'No Charger',price:0,cogs:0} },
+      usbc:       { _label:'USB-C Ports (96W)',        '1':{label:'1 Port',price:30,cogs:0}, '2':{label:'2 Ports',price:50,cogs:0}, '4':{label:'4 Ports',price:90,cogs:0} },
+      '12v':      { _label:'12V Outputs',              lighter:{label:'Cigarette Lighter',price:20,cogs:0}, anderson:{label:'Anderson SB50',price:40,cogs:0}, both:{label:'Both',price:60,cogs:0} },
+      monitor:    { _label:'Battery Monitor',          bluetooth:{label:'Bluetooth Display',price:60,cogs:0}, led:{label:'LED Indicator Only',price:20,cogs:0}, none:{label:'None',price:0,cogs:0} },
+      light:      { _label:'LED Work Light',           none:{label:'None',price:0,cogs:0}, integrated:{label:'Integrated (Built-in)',price:35,cogs:0}, external:{label:'External Dimmable',price:60,cogs:0} },
+      protection: { _label:'Protection Package',       standard:{label:'Standard (BMS Only)',price:0,cogs:0}, upgraded:{label:'Upgraded (Fuses + Breakers)',price:75,cogs:0} },
+      transport:  { _label:'Carrying & Transport',     none:{label:'None',price:0,cogs:0}, handle:{label:'Heavy-Duty Handle Kit',price:40,cogs:0}, cart:{label:'Wheeled Transport Cart',price:120,cogs:0} }
+    }
+  }
+};
+
+// ───────────────────────────────────────────────────
+// STATE
+// ───────────────────────────────────────────────────
+let P = null;       // live prices object
+let dirty = false;
+
+// ───────────────────────────────────────────────────
+// AUTH
+// ───────────────────────────────────────────────────
+document.getElementById('pw-input').addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+
+function tryLogin() {
+  const val = document.getElementById('pw-input').value;
+  const stored = localStorage.getItem('iw_pw') || btoa('isowatt');
+  const err = document.getElementById('pw-err');
+  if (btoa(val) === stored) {
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('admin').style.display = 'flex';
+    err.style.display = 'none';
+    init();
+  } else {
+    err.style.display = 'block';
+    const inp = document.getElementById('pw-input');
+    inp.value = '';
+    inp.classList.add('shake');
+    setTimeout(() => inp.classList.remove('shake'), 400);
+    inp.focus();
+  }
+}
+
+function logout() {
+  document.getElementById('admin').style.display = 'none';
+  document.getElementById('lock-screen').style.display = 'flex';
+  document.getElementById('pw-input').value = '';
+}
+
+function changePw() {
+  const a = document.getElementById('new-pw').value;
+  const b = document.getElementById('confirm-pw').value;
+  const r = document.getElementById('pw-result');
+  if (!a) { r.style.color = 'var(--red)'; r.textContent = 'Enter a password.'; return; }
+  if (a !== b) { r.style.color = 'var(--red)'; r.textContent = 'Passwords do not match.'; return; }
+  localStorage.setItem('iw_pw', btoa(a));
+  r.style.color = 'var(--green)'; r.textContent = '✓ Updated.';
+  document.getElementById('new-pw').value = '';
+  document.getElementById('confirm-pw').value = '';
+}
+
+// ───────────────────────────────────────────────────
+// INIT
+// ───────────────────────────────────────────────────
+async function init() {
+  // Restore saved GitHub settings
+  document.getElementById('gh-pat').value    = localStorage.getItem('iw_pat')    || '';
+  document.getElementById('gh-repo').value   = localStorage.getItem('iw_repo')   || 'lukb655/isowatt.rep';
+  document.getElementById('gh-branch').value = localStorage.getItem('iw_branch') || 'main';
+
+  await refreshFromGitHub();
+}
+
+async function refreshFromGitHub() {
+  const pat    = localStorage.getItem('iw_pat');
+  const repo   = localStorage.getItem('iw_repo')   || 'lukb655/isowatt.rep';
+  const branch = localStorage.getItem('iw_branch') || 'main';
+
+  setStatus('pending', 'Loading…');
+
+  if (!pat) {
+    P = deepClone(DEFAULTS);
+    render();
+    setStatus('warn', 'No token — enter in Settings');
+    showToast('Add your GitHub token in Settings to enable live sync.', 'info');
+    return;
+  }
+
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${repo}/contents/prices.json?ref=${branch}`,
+      { headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if (res.status === 404) {
+      P = deepClone(DEFAULTS);
+      render();
+      setStatus('warn', 'prices.json not found — will create on deploy');
+      showToast('prices.json not in repo yet. Click Deploy to create it.', 'info');
+      return;
+    }
+    if (!res.ok) throw new Error(`GitHub ${res.status}`);
+    const data = await res.json();
+    P = JSON.parse(atob(data.content.replace(/\n/g, '')));
+    render();
+    setStatus('ok', `Synced ${new Date().toLocaleTimeString()}`);
+  } catch (err) {
+    P = deepClone(DEFAULTS);
+    render();
+    setStatus('error', 'GitHub error');
+    showToast('Could not load from GitHub: ' + err.message, 'error');
+  }
+}
+
+// ───────────────────────────────────────────────────
+// RENDER
+// ───────────────────────────────────────────────────
+function render() { renderPrebuilt(); renderBaseModels(); renderAddons(); }
+
+function renderPrebuilt() {
+  const tbody = document.getElementById('pb-tbody');
+  tbody.innerHTML = '';
+  Object.entries(P.prebuilt).forEach(([id, p]) => {
+    tbody.appendChild(buildProductRow(id, p, 'pb'));
+  });
+}
+
+function renderBaseModels() {
+  const tbody = document.getElementById('base-tbody');
+  tbody.innerHTML = '';
+  Object.entries(P.configurator.baseModels).forEach(([id, m]) => {
+    const pseudo = { name: m.name, startingPrice: m.price, cogs: m.cogs || 0, badge: m.capacity, subtitle: m.leadTime };
+    tbody.appendChild(buildProductRow(id, pseudo, 'base', false));
+  });
+}
+
+function renderAddons() {
+  const tbody = document.getElementById('addon-tbody');
+  tbody.innerHTML = '';
+  Object.entries(P.configurator.addons).forEach(([groupKey, group]) => {
+    const hrow = document.createElement('tr');
+    hrow.className = 'group-header';
+    hrow.innerHTML = `<td colspan="7"><span class="group-label-text">${group._label || groupKey}</span></td>`;
+    tbody.appendChild(hrow);
+
+    Object.entries(group).forEach(([optKey, opt]) => {
+      if (optKey === '_label') return;
+      tbody.appendChild(buildAddonRow(groupKey, optKey, opt));
+    });
+  });
+}
+
+// Build a product row (prebuilt or base model)
+function buildProductRow(id, p, scope, removable = (scope === 'pb')) {
+  const sell = p.startingPrice || 0;
+  const cogs = p.cogs || 0;
+  const { pct, cls } = calcMargin(sell, cogs);
+  const gross = sell - cogs;
+
+  const tr = document.createElement('tr');
+  tr.dataset.id = id;
+  tr.dataset.scope = scope;
+  tr.innerHTML = `
+    <td>
+      <div class="row-name">${p.name}</div>
+      ${p.badge || p.subtitle ? `<div class="row-meta">${[p.badge, p.subtitle].filter(Boolean).join(' · ')}</div>` : ''}
+    </td>
+    <td>
+      <input type="number" class="num-field" value="${cogs}" min="0" step="1"
+             data-field="cogs" data-id="${id}" data-scope="${scope}"
+             oninput="onFieldChange(this)">
+    </td>
+    <td class="arrow-sep">→</td>
+    <td>
+      <input type="number" class="num-field" value="${sell}" min="0" step="1"
+             data-field="sell" data-id="${id}" data-scope="${scope}"
+             oninput="onFieldChange(this)">
+    </td>
+    <td><span class="badge ${cls}" data-margin="${id}-${scope}">${pct}</span></td>
+    <td><span class="gross-text" data-gross="${id}-${scope}">${fmtGross(sell, cogs)}</span></td>
+    <td>${removable ? `<button class="btn-rm" onclick="removePrebuilt('${id}')" title="Remove">✕</button>` : ''}</td>
+  `;
+  return tr;
+}
+
+function buildAddonRow(groupKey, optKey, opt) {
+  const sell = opt.price || 0;
+  const cogs = opt.cogs  || 0;
+  const { pct, cls } = calcMargin(sell, cogs);
+  const uid = `${groupKey}-${optKey}`;
+
+  const tr = document.createElement('tr');
+  tr.dataset.group = groupKey;
+  tr.dataset.opt   = optKey;
+  tr.innerHTML = `
+    <td><div class="row-name">${opt.label}</div></td>
+    <td>
+      <input type="number" class="num-field" value="${cogs}" min="0" step="1"
+             data-field="cogs" data-group="${groupKey}" data-opt="${optKey}"
+             oninput="onAddonChange(this)">
+    </td>
+    <td class="arrow-sep">→</td>
+    <td>
+      <input type="number" class="num-field" value="${sell}" min="0" step="1"
+             data-field="sell" data-group="${groupKey}" data-opt="${optKey}"
+             oninput="onAddonChange(this)">
+    </td>
+    <td><span class="badge ${cls}" data-margin="${uid}">${pct}</span></td>
+    <td><span class="gross-text" data-gross="${uid}">${fmtGross(sell, cogs)}</span></td>
+    <td><button class="btn-rm" onclick="removeOption('${groupKey}','${optKey}')" title="Remove">✕</button></td>
+  `;
+  return tr;
+}
+
+// ───────────────────────────────────────────────────
+// CHANGE HANDLERS
+// ───────────────────────────────────────────────────
+function onFieldChange(input) {
+  const id    = input.dataset.id;
+  const scope = input.dataset.scope;
+  const field = input.dataset.field;
+  const val   = parseFloat(input.value) || 0;
+
+  const row = input.closest('tr');
+  const cogsEl = row.querySelector('[data-field="cogs"]');
+  const sellEl = row.querySelector('[data-field="sell"]');
+  const cogs   = parseFloat(cogsEl.value) || 0;
+  const sell   = parseFloat(sellEl.value) || 0;
+
+  if (scope === 'pb') {
+    if (field === 'cogs') P.prebuilt[id].cogs = val;
+    else P.prebuilt[id].startingPrice = val;
+  } else {
+    if (field === 'cogs') P.configurator.baseModels[id].cogs = val;
+    else P.configurator.baseModels[id].price = val;
+  }
+
+  updateRowCalc(id + '-' + scope, sell, cogs);
+  input.classList.add('dirty');
+  markDirty();
+}
+
+function onAddonChange(input) {
+  const groupKey = input.dataset.group;
+  const optKey   = input.dataset.opt;
+  const field    = input.dataset.field;
+  const val      = parseFloat(input.value) || 0;
+
+  const row  = input.closest('tr');
+  const cogs = parseFloat(row.querySelector('[data-field="cogs"]').value) || 0;
+  const sell = parseFloat(row.querySelector('[data-field="sell"]').value) || 0;
+
+  if (field === 'cogs') P.configurator.addons[groupKey][optKey].cogs  = val;
+  else                   P.configurator.addons[groupKey][optKey].price = val;
+
+  updateRowCalc(groupKey + '-' + optKey, sell, cogs);
+  input.classList.add('dirty');
+  markDirty();
+}
+
+function updateRowCalc(uid, sell, cogs) {
+  const mEl = document.querySelector(`[data-margin="${uid}"]`);
+  const gEl = document.querySelector(`[data-gross="${uid}"]`);
+  if (!mEl || !gEl) return;
+  const { pct, cls } = calcMargin(sell, cogs);
+  mEl.textContent = pct;
+  mEl.className = 'badge ' + cls;
+  gEl.textContent = fmtGross(sell, cogs);
+}
+
+// ───────────────────────────────────────────────────
+// BULK MARGIN
+// ───────────────────────────────────────────────────
+function bulkMargin(scope, sliderId) {
+  const pct = parseFloat(document.getElementById(sliderId).value) / 100;
+
+  if (scope === 'prebuilt') {
+    Object.values(P.prebuilt).forEach(p => {
+      if (p.cogs > 0) p.startingPrice = Math.ceil(p.cogs / (1 - pct));
+    });
+    renderPrebuilt();
+  } else {
+    Object.values(P.configurator.baseModels).forEach(m => {
+      if (m.cogs > 0) m.price = Math.ceil(m.cogs / (1 - pct));
+    });
+    Object.values(P.configurator.addons).forEach(group => {
+      Object.entries(group).forEach(([k, opt]) => {
+        if (k === '_label') return;
+        if (opt.cogs > 0) opt.price = Math.ceil(opt.cogs / (1 - pct));
+      });
+    });
+    renderBaseModels();
+    renderAddons();
+  }
+
+  markDirty();
+  showToast(`${Math.round(pct * 100)}% margin applied.`, 'success');
+}
+
+// ───────────────────────────────────────────────────
+// ADD / REMOVE
+// ───────────────────────────────────────────────────
+function addPrebuilt() {
+  const name = prompt('Product name (e.g. IsoStation Pro):');
+  if (!name?.trim()) return;
+  const id = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  P.prebuilt[id] = { name: name.trim(), badge: '', subtitle: '', startingPrice: 0, cogs: 0 };
+  renderPrebuilt();
+  markDirty();
+}
+
+function removePrebuilt(id) {
+  if (Object.keys(P.prebuilt).length <= 1) { showToast('Cannot remove the last product.', 'error'); return; }
+  if (!confirm(`Remove "${P.prebuilt[id].name}"?`)) return;
+  delete P.prebuilt[id];
+  renderPrebuilt();
+  markDirty();
+}
+
+function addOption() {
+  const groupKey = prompt('Category key (existing: inverter, charger, usbc, 12v, monitor, light, protection, transport)\nOr enter a new category name:');
+  if (!groupKey?.trim()) return;
+  const label = prompt('Option label (e.g. "1500W Inverter"):');
+  if (!label?.trim()) return;
+
+  const key = groupKey.trim().toLowerCase().replace(/\s+/g, '-');
+  if (!P.configurator.addons[key]) {
+    const catLabel = prompt('Display name for this category (e.g. "Solar Input"):') || key;
+    P.configurator.addons[key] = { _label: catLabel.trim() };
+  }
+  const optKey = Date.now().toString(36);
+  P.configurator.addons[key][optKey] = { label: label.trim(), price: 0, cogs: 0 };
+  renderAddons();
+  markDirty();
+}
+
+function removeOption(groupKey, optKey) {
+  const group = P.configurator.addons[groupKey];
+  const realKeys = Object.keys(group).filter(k => k !== '_label');
+  if (realKeys.length <= 1) {
+    if (!confirm(`Remove the entire "${group._label || groupKey}" category?`)) return;
+    delete P.configurator.addons[groupKey];
+  } else {
+    if (!confirm(`Remove "${group[optKey].label}"?`)) return;
+    delete P.configurator.addons[groupKey][optKey];
+  }
+  renderAddons();
+  markDirty();
+}
+
+// ───────────────────────────────────────────────────
+// DIRTY / DEPLOY
+// ───────────────────────────────────────────────────
+function markDirty() {
+  dirty = true;
+  document.getElementById('unsaved-badge').style.display = 'inline-block';
+}
+
+function clearDirty() {
+  dirty = false;
+  document.getElementById('unsaved-badge').style.display = 'none';
+  document.querySelectorAll('.num-field.dirty').forEach(el => el.classList.remove('dirty'));
+}
+
+async function deploy() {
+  const pat    = localStorage.getItem('iw_pat');
+  const repo   = localStorage.getItem('iw_repo')   || 'lukb655/isowatt.rep';
+  const branch = localStorage.getItem('iw_branch') || 'main';
+
+  if (!pat) {
+    showToast('Add your GitHub token in Settings first.', 'error');
+    showPane('settings', document.querySelector('.tab:last-child'));
+    return;
+  }
+
+  const btn     = document.getElementById('deploy-btn');
+  const spinner = document.getElementById('deploy-spinner');
+  const lbl     = document.getElementById('deploy-label');
+
+  btn.disabled    = true;
+  spinner.style.display = 'block';
+  lbl.textContent = 'Deploying…';
+  setStatus('active', 'Deploying…');
+
+  try {
+    P.meta.lastUpdated = new Date().toISOString();
+    const json    = JSON.stringify(P, null, 2);
+    const encoded = btoa(unescape(encodeURIComponent(json)));
+
+    // Get current SHA if file exists
+    let sha = null;
+    const getRes = await fetch(
+      `https://api.github.com/repos/${repo}/contents/prices.json?ref=${branch}`,
+      { headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if (getRes.ok) sha = (await getRes.json()).sha;
+
+    const body = {
+      message: `pricing: update prices.json — ${new Date().toLocaleDateString('en-US')}`,
+      content: encoded,
+      branch
+    };
+    if (sha) body.sha = sha;
+
+    const putRes = await fetch(
+      `https://api.github.com/repos/${repo}/contents/prices.json`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `token ${pat}`,
+          Accept: 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      }
+    );
+
+    if (!putRes.ok) {
+      const e = await putRes.json();
+      throw new Error(e.message || putRes.statusText);
+    }
+
+    clearDirty();
+    setStatus('ok', `Deployed ${new Date().toLocaleTimeString()}`);
+    showToast('✓ Pushed to GitHub. Vercel rebuilding (~30–60s).', 'success');
+
+  } catch (err) {
+    setStatus('error', 'Deploy failed');
+    showToast('Deploy failed: ' + err.message, 'error');
+  } finally {
+    btn.disabled          = false;
+    spinner.style.display = 'none';
+    lbl.textContent       = '↑ Deploy';
+  }
+}
+
+// ───────────────────────────────────────────────────
+// SETTINGS
+// ───────────────────────────────────────────────────
+async function saveGHSettings() {
+  const pat    = document.getElementById('gh-pat').value.trim();
+  const repo   = document.getElementById('gh-repo').value.trim();
+  const branch = document.getElementById('gh-branch').value.trim();
+  const result = document.getElementById('gh-result');
+
+  if (!pat) { result.style.color = 'var(--red)'; result.textContent = 'Token required.'; return; }
+  result.style.color = 'var(--subtle)'; result.textContent = 'Testing…';
+
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${repo}/contents/prices.json?ref=${branch}`,
+      { headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if (res.status === 401) throw new Error('Invalid token');
+    // 404 = repo ok, file not found — fine for first run
+    if (!res.ok && res.status !== 404) throw new Error(`HTTP ${res.status}`);
+
+    localStorage.setItem('iw_pat',    pat);
+    localStorage.setItem('iw_repo',   repo);
+    localStorage.setItem('iw_branch', branch);
+
+    result.style.color = 'var(--green)';
+    result.textContent = res.status === 404
+      ? '✓ Connected (prices.json will be created on first deploy)'
+      : '✓ Connected & ready';
+
+    await refreshFromGitHub();
+  } catch (err) {
+    result.style.color = 'var(--red)';
+    result.textContent = '✗ ' + err.message;
+  }
+}
+
+// ───────────────────────────────────────────────────
+// EXPORT
+// ───────────────────────────────────────────────────
+function exportCSV() {
+  const rows = [['Category', 'Name', 'COGS', 'Sell Price', 'Gross Profit', 'Margin %']];
+
+  Object.values(P.prebuilt).forEach(p => {
+    const g = (p.startingPrice || 0) - (p.cogs || 0);
+    const m = p.startingPrice > 0 ? (g / p.startingPrice * 100).toFixed(1) : '';
+    rows.push(['Prebuilt', p.name, p.cogs || 0, p.startingPrice || 0, g, m]);
+  });
+
+  Object.values(P.configurator.baseModels).forEach(m => {
+    const g = (m.price || 0) - (m.cogs || 0);
+    const pct = m.price > 0 ? (g / m.price * 100).toFixed(1) : '';
+    rows.push(['Base Model', m.name, m.cogs || 0, m.price || 0, g, pct]);
+  });
+
+  Object.entries(P.configurator.addons).forEach(([gk, group]) => {
+    Object.entries(group).forEach(([ok, opt]) => {
+      if (ok === '_label') return;
+      const g   = (opt.price || 0) - (opt.cogs || 0);
+      const pct = opt.price > 0 ? (g / opt.price * 100).toFixed(1) : '';
+      rows.push([group._label || gk, opt.label, opt.cogs || 0, opt.price || 0, g, pct]);
+    });
+  });
+
+  const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+  const a   = document.createElement('a');
+  a.href    = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  a.download = `isowatt-prices-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+function resetDefaults() {
+  if (!confirm('Reset all prices and COGS to defaults? This does not deploy — you must click Deploy after.')) return;
+  P = deepClone(DEFAULTS);
+  render();
+  markDirty();
+  showToast('Reset to defaults. Click Deploy to publish.', 'info');
+}
+
+// ───────────────────────────────────────────────────
+// UI HELPERS
+// ───────────────────────────────────────────────────
+function showPane(id, btn) {
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('pane-' + id).classList.add('on');
+  if (btn) btn.classList.add('on');
+}
+
+function setStatus(state, text) {
+  const dot = document.getElementById('s-dot');
+  dot.className = 's-dot';
+  if (state === 'pending') dot.className = 's-dot pending';
+  else if (state === 'active') dot.className = 's-dot active';
+  else if (state === 'error' || state === 'warn') dot.className = 's-dot error';
+  document.getElementById('s-text').textContent = text;
+}
+
+let toastTimer;
+function showToast(msg, type = 'info') {
+  const t = document.getElementById('toast');
+  clearTimeout(toastTimer);
+  t.textContent = msg;
+  t.className   = `toast ${type} show`;
+  toastTimer    = setTimeout(() => t.className = `toast ${type}`, 3500);
+}
+
+function calcMargin(sell, cogs) {
+  if (sell <= 0) return { pct: '—', cls: 'zero' };
+  const m = (sell - cogs) / sell * 100;
+  const pct = m.toFixed(1) + '%';
+  const cls = m >= 45 ? 'hi' : m >= 25 ? 'mid' : 'lo';
+  return { pct, cls };
+}
+
+function fmtGross(sell, cogs) {
+  if (sell <= 0 && cogs <= 0) return '—';
+  const g = sell - cogs;
+  return (g < 0 ? '-$' : '$') + Math.abs(g).toLocaleString();
+}
+
+function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
+</script>
+</body>
+</html>

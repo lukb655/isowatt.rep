@@ -303,48 +303,124 @@ Build to order · LiFePO4 Power Systems
 </footer>
 
 <script>
-const BASE_MODELS = {
-  'iso-station': { name: 'IsoStation', capacity: '1.2kWh', basePrice: 1200, leadTime: '2-3 weeks' },
-  'iso-point': { name: 'IsoPoint', capacity: '0.15kWh', basePrice: 600, leadTime: '1-2 weeks' }
+// ── Dynamic pricing from prices.json ──────────────────────────
+let LIVE = null; // loaded from prices.json
+
+const FALLBACK = {
+  baseModels: {
+    'iso-station': { name: 'IsoStation', capacity: '1.2kWh', price: 1200, leadTime: '2-3 weeks' },
+    'iso-point':   { name: 'IsoPoint',   capacity: '0.15kWh', price: 600,  leadTime: '1-2 weeks' }
+  },
+  addons: {
+    inverter:   { none: 0, '400w': 150, '600w': 200, '1000w': 300, '2000w': 400 },
+    charger:    { standard: 50, fast: 100, none: 0 },
+    usbc:       { '1': 30, '2': 50, '4': 90 },
+    '12v':      { lighter: 20, anderson: 40, both: 60 },
+    monitor:    { bluetooth: 60, led: 20, none: 0 },
+    light:      { none: 0, integrated: 35, external: 60 },
+    protection: { standard: 0, upgraded: 75 },
+    transport:  { none: 0, handle: 40, cart: 120 }
+  }
 };
 
-const PRICES = {
-  inverter: { 'none': 0, '400w': 150, '600w': 200, '1000w': 300, '2000w': 400 },
-  charger: { 'standard': 50, 'fast': 100, 'none': 0 },
-  usbc: { '1': 30, '2': 50, '4': 90 },
-  '12v': { 'lighter': 20, 'anderson': 40, 'both': 60 },
-  monitor: { 'bluetooth': 60, 'led': 20, 'none': 0 },
-  light: { 'none': 0, 'integrated': 35, 'external': 60 },
-  protection: { 'standard': 0, 'upgraded': 75 },
-  transport: { 'none': 0, 'handle': 40, 'cart': 120 }
-};
-
-function updateConfig() {
-  const base = BASE_MODELS[document.getElementById('baseModel').value];
-  const total = base.basePrice +
-    PRICES.inverter[document.getElementById('inverter').value] +
-    PRICES.charger[document.getElementById('charger').value] +
-    PRICES.usbc[document.getElementById('usbc').value] +
-    PRICES['12v'][document.getElementById('12v').value] +
-    PRICES.monitor[document.getElementById('monitor').value] +
-    PRICES.light[document.getElementById('light').value] +
-    PRICES.protection[document.getElementById('protection').value] +
-    PRICES.transport[document.getElementById('transport').value];
-
-  document.getElementById('price-base').textContent = '$' + base.basePrice;
-  document.getElementById('price-inverter').textContent = '$' + PRICES.inverter[document.getElementById('inverter').value];
-  document.getElementById('price-charger').textContent = '$' + PRICES.charger[document.getElementById('charger').value];
-  document.getElementById('price-ports').textContent = '$' + (PRICES.usbc[document.getElementById('usbc').value] + PRICES['12v'][document.getElementById('12v').value] + PRICES.monitor[document.getElementById('monitor').value]);
-  document.getElementById('price-accessories').textContent = '$' + (PRICES.light[document.getElementById('light').value] + PRICES.protection[document.getElementById('protection').value] + PRICES.transport[document.getElementById('transport').value]);
-  document.getElementById('price-total').textContent = '$' + total.toLocaleString();
-
-  document.getElementById('summary-config').textContent = base.name + ' - Custom';
-  document.getElementById('summary-capacity').textContent = base.capacity;
-  document.getElementById('summary-lead').textContent = base.leadTime;
-  document.getElementById('summary-deposit').textContent = '$' + Math.floor(total / 2).toLocaleString();
+// Normalise live prices into the flat shape updateConfig() needs
+function getAddonPrice(groupKey, optKey) {
+  if (LIVE) {
+    const opt = LIVE.configurator?.addons?.[groupKey]?.[optKey];
+    if (opt !== undefined) return typeof opt === 'number' ? opt : (opt.price ?? 0);
+  }
+  return FALLBACK.addons[groupKey]?.[optKey] ?? 0;
 }
 
-updateConfig();
+function getBaseModel(id) {
+  if (LIVE) {
+    const m = LIVE.configurator?.baseModels?.[id];
+    if (m) return { name: m.name, capacity: m.capacity, price: m.price, leadTime: m.leadTime };
+  }
+  return FALLBACK.baseModels[id] || {};
+}
+
+// Update select option labels with live prices
+function refreshOptionLabels() {
+  if (!LIVE) return;
+  const addons = LIVE.configurator?.addons || {};
+
+  const selectMap = [
+    ['inverter',   'inverter'],
+    ['charger',    'charger'],
+    ['usbc',       'usbc'],
+    ['12v',        '12v'],
+    ['monitor',    'monitor'],
+    ['light',      'light'],
+    ['protection', 'protection'],
+    ['transport',  'transport']
+  ];
+
+  selectMap.forEach(([selId, groupKey]) => {
+    const sel   = document.getElementById(selId);
+    const group = addons[groupKey];
+    if (!sel || !group) return;
+    Array.from(sel.options).forEach(opt => {
+      const entry = group[opt.value];
+      if (!entry) return;
+      const label = typeof entry === 'object' ? entry.label : opt.value;
+      const price = typeof entry === 'object' ? entry.price : entry;
+      opt.textContent = price > 0 ? `${label} — $${price}` : label;
+    });
+  });
+
+  // Base model select
+  const baseSelect = document.getElementById('baseModel');
+  if (baseSelect) {
+    Array.from(baseSelect.options).forEach(opt => {
+      const m = LIVE.configurator?.baseModels?.[opt.value];
+      if (m) opt.textContent = m.name;
+    });
+  }
+}
+
+function updateConfig() {
+  const baseId = document.getElementById('baseModel').value;
+  const base   = getBaseModel(baseId);
+  const bPrice = base.price || 0;
+
+  const inv  = getAddonPrice('inverter',   document.getElementById('inverter').value);
+  const chg  = getAddonPrice('charger',    document.getElementById('charger').value);
+  const usbc = getAddonPrice('usbc',       document.getElementById('usbc').value);
+  const v12  = getAddonPrice('12v',        document.getElementById('12v').value);
+  const mon  = getAddonPrice('monitor',    document.getElementById('monitor').value);
+  const lgt  = getAddonPrice('light',      document.getElementById('light').value);
+  const prot = getAddonPrice('protection', document.getElementById('protection').value);
+  const trns = getAddonPrice('transport',  document.getElementById('transport').value);
+
+  const portsTotal = usbc + v12 + mon;
+  const accTotal   = lgt + prot + trns;
+  const total      = bPrice + inv + chg + portsTotal + accTotal;
+
+  document.getElementById('price-base').textContent        = '$' + bPrice.toLocaleString();
+  document.getElementById('price-inverter').textContent    = '$' + inv;
+  document.getElementById('price-charger').textContent     = '$' + chg;
+  document.getElementById('price-ports').textContent       = '$' + portsTotal;
+  document.getElementById('price-accessories').textContent = '$' + accTotal;
+  document.getElementById('price-total').textContent       = '$' + total.toLocaleString();
+
+  document.getElementById('summary-config').textContent    = (base.name || 'Custom') + ' — Custom';
+  document.getElementById('summary-capacity').textContent  = base.capacity || '—';
+  document.getElementById('summary-lead').textContent      = base.leadTime || '—';
+  document.getElementById('summary-deposit').textContent   = '$' + Math.floor(total / 2).toLocaleString();
+}
+
+// Boot: load prices.json, fall back to hardcoded defaults
+(async () => {
+  try {
+    const res = await fetch('./prices.json?v=' + Date.now());
+    if (res.ok) {
+      LIVE = await res.json();
+      refreshOptionLabels();
+    }
+  } catch (_) { /* use FALLBACK */ }
+  updateConfig();
+})();
 </script>
 </body>
 </html>

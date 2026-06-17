@@ -164,7 +164,7 @@
 <div class="pricing-section">
 <div class="price-display">
 <span class="price-label">Starting Price</span>
-<span class="price-amount">$1,289</span>
+<span class="price-amount" id="price-isostation-plus">$1,289</span>
 <span class="price-note">50% deposit to reserve</span>
 </div>
 <button class="cta-button">Reserve Your IsoStation+</button>
@@ -222,7 +222,7 @@
 <div class="pricing-section">
 <div class="price-display">
 <span class="price-label">Starting Price</span>
-<span class="price-amount">$365</span>
+<span class="price-amount" id="price-isopoint-plus">$365</span>
 <span class="price-note">50% deposit to reserve</span>
 </div>
 <button class="cta-button">Reserve Your IsoPoint+</button>
@@ -409,5 +409,27 @@ function init3D() {
 
 init3D();
 </script>
+
+<script>
+// Dynamic prices from prices.json — updated via admin.html
+(async () => {
+  try {
+    const res = await fetch('./prices.json?v=' + Date.now());
+    if (!res.ok) return;
+    const p = await res.json();
+    const station = p?.prebuilt?.['iso-station-plus'];
+    const point   = p?.prebuilt?.['iso-point-plus'];
+    if (station?.startingPrice) {
+      const el = document.getElementById('price-isostation-plus');
+      if (el) el.textContent = '$' + station.startingPrice.toLocaleString();
+    }
+    if (point?.startingPrice) {
+      const el = document.getElementById('price-isopoint-plus');
+      if (el) el.textContent = '$' + point.startingPrice.toLocaleString();
+    }
+  } catch (_) { /* keep static fallback */ }
+})();
+</script>
+
 </body>
 </html>
