@@ -591,30 +591,39 @@ async function submitQuote() {
         type:    'Custom Build Inquiry',
         subject: 'Custom Build Quote — ' + spec.baseModel + ' · ' + spec.total,
         message: specText,
-        spec:    spec   // structured spec for email formatting
+        spec:    spec
       })
     });
     const data = await res.json().catch(() => ({}));
 
     if (res.ok && data.ok) {
-      statusEl.style.display  = 'block';
+      statusEl.style.display    = 'block';
       statusEl.style.background = 'rgba(61,219,138,0.08)';
-      statusEl.style.border   = '1px solid #3ddb8a';
-      statusEl.style.color    = '#3ddb8a';
-      statusEl.textContent    = '✓ Sent! I\'ll review your build and reply within 24 hours.';
-      btn.textContent = '✓ Sent';
+      statusEl.style.border     = '1px solid #3ddb8a';
+      statusEl.style.color      = '#3ddb8a';
+      statusEl.textContent      = '✓ Sent! I\'ll review your build and reply within 24 hours.';
+      document.getElementById('quote-btn-label').textContent = '✓ Sent';
     } else {
       throw new Error(data.error || 'Send failed.');
     }
   } catch(err) {
+    // API failed — fall back to mailto so the quote still goes through
     btn.disabled = false;
     document.getElementById('quote-spinner').style.display = 'none';
     document.getElementById('quote-btn-label').textContent = 'Send Quote Request →';
-    statusEl.style.display  = 'block';
-    statusEl.style.background = 'rgba(232,64,64,0.1)';
-    statusEl.style.border   = '1px solid #e84040';
-    statusEl.style.color    = '#e84040';
-    statusEl.textContent    = err.message || 'Error — email hello@isowatt.shop directly.';
+
+    const mailSubject = encodeURIComponent('Custom Build Quote — ' + spec.baseModel + ' · ' + spec.total);
+    const mailBody    = encodeURIComponent(
+      'Name: ' + name + '\nEmail: ' + email + '\n\n' + specText +
+      (notes ? '\n\nNotes: ' + notes : '')
+    );
+    const mailtoLink = 'mailto:luke@isowatt.shop?subject=' + mailSubject + '&body=' + mailBody;
+
+    statusEl.style.display    = 'block';
+    statusEl.style.background = 'rgba(240,165,0,0.08)';
+    statusEl.style.border     = '1px solid rgba(240,165,0,0.4)';
+    statusEl.style.color      = '#f0a500';
+    statusEl.innerHTML        = 'Direct send unavailable — <a href="' + mailtoLink + '" style="color:#f0a500;font-weight:700;">click here to send via your email app →</a>';
   }
 }
 </script>
