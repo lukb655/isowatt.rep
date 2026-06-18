@@ -456,6 +456,7 @@ init3D();
 
 <script>
 // Stripe payment link wiring — links loaded from prices.json
+// Supports both old key names (isoStationPlusDepositLink) and new (isoStationPlusLink)
 let _stripeLinks = {};
 (async () => {
   try {
@@ -463,12 +464,13 @@ let _stripeLinks = {};
     if (res.ok) {
       const p = await res.json();
       _stripeLinks = p.stripe || {};
-      // Update reserve button labels if links are live
-      if (_stripeLinks.isoStationPlusLink) {
+      const stationLink = _stripeLinks.isoStationPlusLink || _stripeLinks.isoStationPlusDepositLink;
+      const pointLink   = _stripeLinks.isoPointPlusLink   || _stripeLinks.isoPointPlusDepositLink;
+      if (stationLink) {
         const btn = document.getElementById('reserve-station');
         if (btn) btn.textContent = 'Buy Now — IsoStation+';
       }
-      if (_stripeLinks.isoPointPlusLink) {
+      if (pointLink) {
         const btn = document.getElementById('reserve-point');
         if (btn) btn.textContent = 'Buy Now — IsoPoint+';
       }
@@ -478,14 +480,13 @@ let _stripeLinks = {};
 
 function reserveProduct(productId) {
   const linkMap = {
-    'iso-station-plus': _stripeLinks.isoStationPlusLink,
-    'iso-point-plus':   _stripeLinks.isoPointPlusLink
+    'iso-station-plus': _stripeLinks.isoStationPlusLink || _stripeLinks.isoStationPlusDepositLink,
+    'iso-point-plus':   _stripeLinks.isoPointPlusLink   || _stripeLinks.isoPointPlusDepositLink
   };
   const link = linkMap[productId];
   if (link) {
     window.location.href = link;
   } else {
-    // Fallback: contact page until Stripe is set up
     window.location.href = 'contact.html';
   }
 }
