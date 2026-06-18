@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-18T01:26:29.810Z",
+    "lastUpdated": "2026-06-18T01:29:39.035Z",
     "currency": "USD"
   },
   "stripe": {
@@ -86,12 +86,7 @@
           "price": 40,
           "cogs": 0
         },
-        "_label": "USB-C Ports (96W Fast Charge)",
-        "mqiti8m9": {
-          "label": "None",
-          "price": 0,
-          "cogs": 0
-        }
+        "_label": "USB-C Ports (96W Fast Charge)"
       },
       "12v": {
         "_label": "12V Outputs",
@@ -109,29 +104,6 @@
           "label": "Both",
           "price": 30,
           "cogs": 0
-        },
-        "mqithyu6": {
-          "label": "None",
-          "price": 0,
-          "cogs": 0
-        }
-      },
-      "monitor": {
-        "_label": "Battery Monitor",
-        "none": {
-          "label": "None",
-          "price": 0,
-          "cogs": 0
-        },
-        "mqisszrx": {
-          "label": "Volt Monitor Only",
-          "price": 10,
-          "cogs": 0
-        },
-        "mqistded": {
-          "label": "Volt + Temperature Monitor",
-          "price": 20,
-          "cogs": 0
         }
       },
       "light": {
@@ -146,9 +118,14 @@
           "price": 80,
           "cogs": 0
         },
-        "external": {
-          "label": "External Dimmable",
-          "price": 30,
+        "mqitn8h2": {
+          "label": "External All-Sides",
+          "price": 50,
+          "cogs": 0
+        },
+        "mqitnlot": {
+          "label": "External 1-Side",
+          "price": 20,
           "cogs": 0
         }
       }
