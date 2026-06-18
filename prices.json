@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-18T00:43:15.552Z",
+    "lastUpdated": "2026-06-18T01:25:07.534Z",
     "currency": "USD"
   },
   "stripe": {
@@ -91,7 +91,12 @@
           "price": 40,
           "cogs": 0
         },
-        "_label": "USB-C Ports (96W Fast Charge)"
+        "_label": "USB-C Ports (96W Fast Charge)",
+        "mqiti8m9": {
+          "label": "None",
+          "price": 0,
+          "cogs": 0
+        }
       },
       "12v": {
         "_label": "12V Outputs",
@@ -109,6 +114,11 @@
           "label": "Both",
           "price": 30,
           "cogs": 0
+        },
+        "mqithyu6": {
+          "label": "None",
+          "price": 0,
+          "cogs": 0
         }
       },
       "monitor": {
@@ -116,6 +126,16 @@
         "none": {
           "label": "None",
           "price": 0,
+          "cogs": 0
+        },
+        "mqisszrx": {
+          "label": "Volt Monitor Only",
+          "price": 10,
+          "cogs": 0
+        },
+        "mqistded": {
+          "label": "Volt + Temperature Monitor",
+          "price": 20,
           "cogs": 0
         }
       },
