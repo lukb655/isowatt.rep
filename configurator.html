@@ -4,125 +4,150 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Design your custom IsoWatt power station. Build your configuration with our interactive configurator.">
-<title>IsoWatt Configurator - Design Your System</title>
+<title>IsoWatt Configurator — Design Your System</title>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" type="image/png" href="./IW_LOGO_FAV.png">
 <style>
-.config-container { max-width: 1000px; margin: 0 auto; }
-.config-section {
+/* ── Layout ─────────────────────────────────────────────── */
+.config-wrap   { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem,4vw,2rem) 4rem; }
+
+/* ── Config sections (match admin card style) ───────────── */
+.cfg-section {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 2rem;
-  margin-bottom: 2rem;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
 }
-.section-title {
-  font-size: 18px;
+.cfg-section-title {
+  font-size: 11px;
   font-weight: 700;
-  color: var(--white);
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid var(--amber);
-}
-.config-group { margin-bottom: 1.5rem; }
-.config-label {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--subtle);
-  margin-bottom: 8px;
+  letter-spacing: 0.12em;
+  color: var(--amber);
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
 }
-.config-description {
+.cfg-group { margin-bottom: 0; }
+.cfg-label {
+  display: block;
   font-size: 12px;
-  color: var(--muted);
-  margin-top: 4px;
+  font-weight: 600;
+  color: var(--subtle);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
-select, input[type="number"] {
+.cfg-select {
   width: 100%;
-  padding: 10px;
+  padding: 10px 12px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 6px;
   color: var(--text);
   font-size: 14px;
   font-family: inherit;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
 }
-select:focus, input:focus { outline: none; border-color: var(--amber); }
-.price-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  font-size: 14px;
-  border-bottom: 1px solid var(--border);
-}
-.price-item .amount {
-  color: var(--amber);
-  font-weight: 600;
-  font-family: 'Courier New', monospace;
-}
-.price-item.total {
-  padding: 12px 0;
-  border-top: 2px solid var(--border);
-  border-bottom: none;
-  font-size: 18px;
-}
-.price-item.total .label { color: var(--white); font-weight: 700; }
-.summary-grid {
+.cfg-select:focus { outline: none; border-color: var(--amber); }
+
+/* ── Two-column layout for addon groups ─────────────────── */
+.addon-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  margin-bottom: 2rem;
 }
-.summary-item {
-  padding: 1rem;
+@media (max-width: 600px) { .addon-grid { grid-template-columns: 1fr; } }
+
+/* ── Order Summary card ──────────────────────────────────── */
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+}
+.summary-row:last-child { border-bottom: none; }
+.summary-row .s-label { color: var(--subtle); }
+.summary-row .s-val   { color: var(--amber); font-weight: 600; font-family: 'Courier New', monospace; }
+.summary-row.total-row {
+  padding: 12px 0 4px;
+  border-top: 2px solid var(--border);
+  border-bottom: none;
+  font-size: 22px;
+}
+.summary-row.total-row .s-label { color: var(--white); font-weight: 700; }
+.summary-row.total-row .s-val   { font-weight: 800; }
+
+.summary-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+.meta-chip {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 6px;
+  padding: 0.75rem 1rem;
 }
-.summary-item .label {
-  font-size: 12px;
-  text-transform: uppercase;
-  color: var(--subtle);
-  margin-bottom: 4px;
-}
-.summary-item .value { font-size: 16px; font-weight: 600; color: var(--white); }
-.cta-primary {
+.meta-chip .mc-label { font-size: 11px; text-transform: uppercase; color: var(--subtle); letter-spacing: 0.07em; margin-bottom: 3px; }
+.meta-chip .mc-val   { font-size: 15px; font-weight: 600; color: var(--white); }
+
+/* ── CTA buttons ─────────────────────────────────────────── */
+.cta-reserve {
   width: 100%;
   padding: 16px;
   background: var(--amber);
   color: #000;
   border: none;
   border-radius: 8px;
-  font-weight: 700;
-  font-size: 16px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 17px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   cursor: pointer;
+  transition: background 0.15s;
 }
-.cta-primary:hover { background: #f0b520; }
+.cta-reserve:hover { background: #f0b520; }
 .cta-secondary {
   display: inline-block;
-  padding: 12px 24px;
+  margin-top: 12px;
+  padding: 10px 20px;
   background: transparent;
   color: var(--amber);
-  border: 2px solid var(--amber);
+  border: 1.5px solid var(--amber);
   border-radius: 6px;
   font-weight: 600;
-  cursor: pointer;
+  font-size: 13px;
   text-decoration: none;
+  cursor: pointer;
 }
 .cta-secondary:hover { background: var(--amber-bg); }
-@keyframes spin { to { transform: rotate(360deg); } }
-@media (max-width: 768px) {
-  .config-section { padding: 1.5rem; }
-  .summary-grid { grid-template-columns: 1fr; }
+
+/* ── Loading state ────────────────────────────────────────── */
+.cfg-loading {
+  text-align: center;
+  padding: 3rem;
+  color: var(--subtle);
+  font-size: 14px;
 }
+
+/* ── Modal ────────────────────────────────────────────────── */
+@keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
+
+<!-- ── Nav ──────────────────────────────────────────────── -->
 <nav class="nav">
   <a href="index.html" class="wordmark">
     <span class="iso">Iso</span><span class="watt">Watt</span>
@@ -133,7 +158,7 @@ select:focus, input:focus { outline: none; border-color: var(--amber); }
     <li><a href="products.html">Products</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="contact.html">Contact</a></li>
-    <li><a href="configurator.html" class="nav-cta active">Configure →</a></li>
+    <li><a href="configurator.html" class="nav-cta">Configure →</a></li>
   </ul>
   <button class="nav-burger" id="nav-burger" onclick="toggleMobileMenu()" aria-label="Open menu">
     <span></span><span></span><span></span>
@@ -144,141 +169,55 @@ select:focus, input:focus { outline: none; border-color: var(--amber); }
   <a href="products.html">Products</a>
   <a href="about.html">About</a>
   <a href="contact.html">Contact</a>
-  <a href="configurator.html" class="amber active">Configure →</a>
+  <a href="configurator.html" class="amber">Configure →</a>
 </div>
 <script>function toggleMobileMenu(){var m=document.getElementById('mobile-menu');m.classList.toggle('open');}</script>
 
-<div style="padding-top:var(--nav-h);min-height:40vh;display:flex;align-items:center;background:var(--black);padding:4rem 2rem;">
-<div class="container">
-<p class="eyebrow">Build Your Configuration</p>
-<h1 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(48px,9vw,96px);font-weight:900;text-transform:uppercase;letter-spacing:0.02em;line-height:0.9;color:var(--white);margin-bottom:1rem;">Design Your System.</h1>
-<p style="font-size:17px;color:var(--subtle);max-width:480px;line-height:1.7;">Start with a base model and customize every component to match your exact needs.</p>
-</div>
+<!-- ── Hero ─────────────────────────────────────────────── -->
+<div style="padding-top:var(--nav-h);background:var(--black);padding:4rem clamp(1rem,4vw,2rem);">
+  <div class="container">
+    <p class="eyebrow">Build Your Configuration</p>
+    <h1 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(48px,9vw,96px);font-weight:900;text-transform:uppercase;letter-spacing:0.02em;line-height:0.9;color:var(--white);margin-bottom:1rem;">Design Your System.</h1>
+    <p style="font-size:17px;color:var(--subtle);max-width:480px;line-height:1.7;">Every option priced live. Submit your config and I'll confirm the build and send an invoice.</p>
+  </div>
 </div>
 
-<div class="page-width config-container" style="padding:0 2rem;margin:0 auto;">
+<!-- ── Configurator ──────────────────────────────────────── -->
+<div class="config-wrap" style="padding-top:2rem;">
 
-<!-- Step 1: Base Model -->
-<section class="config-section">
-<div class="section-title">Step 1: Choose Your Base Model</div>
-<div class="config-group">
-<label class="config-label">Base Model</label>
-<select id="baseModel" onchange="updateConfig()">
-<option value="iso-station">IsoStation - 100Ah LiFePO4 (1.2kWh)</option>
-<option value="iso-point">IsoPoint - 25Ah LiFePO4 (0.3kWh)</option>
-</select>
-<p class="config-description">Select the core battery and enclosure for your system.</p>
-</div>
-</section>
+  <!-- Loading placeholder until JS builds the form -->
+  <div class="cfg-loading" id="cfg-loading">Loading configuration…</div>
 
-<!-- Step 2: Power & Charging -->
-<section class="config-section">
-<div class="section-title">Step 2: Power & Inverter</div>
-<div class="config-group">
-<label class="config-label">AC Inverter</label>
-<select id="inverter" onchange="updateConfig()">
-<option value="none">None (DC Only)</option>
-<option value="400w">400W Inverter</option>
-<option value="600w">600W Inverter</option>
-<option value="1000w">1000W Inverter</option>
-<option value="2000w">2000W Inverter</option>
-</select>
-<p class="config-description">Choose AC power output or keep DC-only for longer battery life.</p>
-</div>
-<div class="config-group">
-<label class="config-label">Wall Charger</label>
-<select id="charger" onchange="updateConfig()">
-<option value="standard">Standard 10A</option>
-<option value="fast">Fast 20A</option>
-<option value="none">No Charger</option>
-</select>
-</div>
-</section>
+  <!-- Base Model — always first -->
+  <section class="cfg-section" id="section-base" style="display:none;">
+    <div class="cfg-section-title">Base Model</div>
+    <div class="cfg-group">
+      <select class="cfg-select" id="select-base" onchange="updateConfig()"></select>
+    </div>
+  </section>
 
-<!-- Step 3: Ports & Outputs -->
-<section class="config-section">
-<div class="section-title">Step 3: Ports & Connectivity</div>
-<div class="config-group">
-<label class="config-label">USB-C Ports (96W Fast Charge)</label>
-<select id="usbc" onchange="updateConfig()">
-<option value="1">1 Port</option>
-<option value="2">2 Ports</option>
-<option value="4">4 Ports</option>
-</select>
-</div>
-<div class="config-group">
-<label class="config-label">12V Outputs</label>
-<select id="12v" onchange="updateConfig()">
-<option value="lighter">Cigarette Lighter Socket</option>
-<option value="anderson">Anderson SB50</option>
-<option value="both">Both</option>
-</select>
-</div>
-<div class="config-group">
-<label class="config-label">Battery Monitor</label>
-<select id="monitor" onchange="updateConfig()">
-<option value="bluetooth">Bluetooth Display</option>
-<option value="led">LED Indicator Only</option>
-<option value="none">None</option>
-</select>
-</div>
-</section>
+  <!-- Addon sections — built dynamically by JS -->
+  <div class="addon-grid" id="addon-sections"></div>
 
-<!-- Step 4: Accessories -->
-<section class="config-section">
-<div class="section-title">Step 4: Add-Ons & Accessories</div>
-<div class="config-group">
-<label class="config-label">LED Work Light</label>
-<select id="light" onchange="updateConfig()">
-<option value="none">None</option>
-<option value="integrated">Integrated (Built-in)</option>
-<option value="external">External Dimmable</option>
-</select>
-</div>
-<div class="config-group">
-<label class="config-label">Protection Package</label>
-<select id="protection" onchange="updateConfig()">
-<option value="standard">Standard (BMS Only)</option>
-<option value="upgraded">Upgraded (Fuses + Breakers)</option>
-</select>
-</div>
-<div class="config-group">
-<label class="config-label">Carrying & Transport</label>
-<select id="transport" onchange="updateConfig()">
-<option value="none">None</option>
-<option value="handle">Heavy-Duty Handle Kit</option>
-<option value="cart">Wheeled Transport Cart</option>
-</select>
-</div>
-</section>
+  <!-- Order Summary — always last -->
+  <section class="cfg-section" id="section-summary" style="display:none;">
+    <div class="cfg-section-title">Order Summary</div>
 
-<!-- Summary & Pricing -->
-<section class="config-section">
-<div class="section-title">Order Summary</div>
-<div class="summary-grid">
-<div class="summary-item"><div class="label">Configuration</div><div class="value" id="summary-config">IsoStation Custom</div></div>
-<div class="summary-item"><div class="label">Total Capacity</div><div class="value" id="summary-capacity">1.2kWh</div></div>
-<div class="summary-item"><div class="label">Lead Time</div><div class="value" id="summary-lead">2-3 weeks</div></div>
-<div class="summary-item"><div class="label">Est. Invoice</div><div class="value" id="summary-deposit">—</div></div>
-</div>
-<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:2rem;">
-<div style="margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border);"><strong style="font-size:14px;">Pricing Breakdown</strong></div>
-<div id="pricing-breakdown">
-<div class="price-item"><span class="label">Base Model</span><span class="amount" id="price-base">—</span></div>
-<div class="price-item"><span class="label">Inverter</span><span class="amount" id="price-inverter">—</span></div>
-<div class="price-item"><span class="label">Charger</span><span class="amount" id="price-charger">—</span></div>
-<div class="price-item"><span class="label">Ports & Connectivity</span><span class="amount" id="price-ports">—</span></div>
-<div class="price-item"><span class="label">Accessories</span><span class="amount" id="price-accessories">—</span></div>
-<div class="price-item total"><span class="label">Total Price</span><span class="amount" id="price-total">—</span></div>
-</div>
-</div>
-<p style="font-size:12px;color:var(--muted);margin-bottom:1.5rem;">Submit your config and I'll confirm the build and send an invoice.</p>
-<button class="cta-primary" id="reserve-config-btn" onclick="reserveConfig()">Request This Build</button>
-<div style="margin-top:1rem;text-align:center;"><a href="products.html" class="cta-secondary">← View Prebuilt Options</a></div>
-</section>
+    <div class="summary-meta">
+      <div class="meta-chip"><div class="mc-label">Capacity</div><div class="mc-val" id="summary-capacity">—</div></div>
+      <div class="meta-chip"><div class="mc-label">Lead Time</div><div class="mc-val" id="summary-lead">—</div></div>
+    </div>
+
+    <div id="summary-breakdown" style="margin-bottom:1.5rem;"></div>
+
+    <p style="font-size:12px;color:var(--muted);margin-bottom:1.25rem;">No payment now. Submit your config and I'll confirm the build, then send a Stripe invoice.</p>
+    <button class="cta-reserve" onclick="reserveConfig()">Request This Build →</button>
+    <div style="text-align:center;"><a href="products.html" class="cta-secondary">← View Prebuilt Options</a></div>
+  </section>
 
 </div>
 
+<!-- ── Footer ───────────────────────────────────────────── -->
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-col">
@@ -304,239 +243,248 @@ select:focus, input:focus { outline: none; border-color: var(--amber); }
   </div>
 </footer>
 
-<!-- ═══════════════════════════════════════════════
-     PRICING ENGINE — reads from prices.json
-     Falls back to hardcoded values if fetch fails
-     ═══════════════════════════════════════════════ -->
+<!-- ── Quote Modal ──────────────────────────────────────── -->
+<div id="quote-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.78);z-index:500;align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;width:100%;max-width:420px;position:relative;max-height:90vh;overflow-y:auto;">
+    <button onclick="closeQuoteModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:var(--subtle);font-size:22px;cursor:pointer;line-height:1;">×</button>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:var(--white);margin-bottom:4px;">Request This Build</div>
+    <div style="font-size:13px;color:var(--subtle);margin-bottom:1.25rem;">I'll review your spec and reply within 24 hours. No payment now.</div>
+
+    <div id="quote-spec-preview" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.9rem;font-size:12px;color:var(--subtle);margin-bottom:1.25rem;line-height:1.9;"></div>
+
+    <div style="margin-bottom:1rem;">
+      <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--subtle);margin-bottom:6px;">Your Name *</label>
+      <input type="text" id="quote-name" placeholder="Jane Smith"
+        style="width:100%;box-sizing:border-box;padding:10px 12px;background:var(--black);border:1px solid var(--border);border-radius:6px;color:var(--white);font-size:14px;font-family:'Barlow',sans-serif;">
+    </div>
+    <div style="margin-bottom:1rem;">
+      <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--subtle);margin-bottom:6px;">Email Address *</label>
+      <input type="email" id="quote-email" placeholder="jane@example.com"
+        style="width:100%;box-sizing:border-box;padding:10px 12px;background:var(--black);border:1px solid var(--border);border-radius:6px;color:var(--white);font-size:14px;font-family:'Barlow',sans-serif;">
+    </div>
+    <div style="margin-bottom:1.25rem;">
+      <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--subtle);margin-bottom:6px;">Notes (optional)</label>
+      <textarea id="quote-notes" rows="3" placeholder="Use case, timeline, special requirements…"
+        style="width:100%;box-sizing:border-box;padding:10px 12px;background:var(--black);border:1px solid var(--border);border-radius:6px;color:var(--white);font-size:14px;font-family:'Barlow',sans-serif;resize:vertical;"></textarea>
+    </div>
+
+    <div id="quote-status" style="display:none;margin-bottom:1rem;padding:10px 14px;border-radius:6px;font-size:13px;font-weight:600;"></div>
+
+    <button id="quote-submit-btn" onclick="submitQuote()"
+      style="width:100%;padding:13px;background:var(--amber);color:#000;border:none;border-radius:7px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <span id="quote-spinner" style="display:none;width:14px;height:14px;border:2px solid rgba(0,0,0,0.3);border-top-color:#000;border-radius:50%;animation:spin 0.7s linear infinite;"></span>
+      <span id="quote-btn-label">Send Quote Request →</span>
+    </button>
+    <p style="font-size:11px;color:var(--muted);margin-top:10px;text-align:center;">No payment now. I'll confirm the build and send a Stripe invoice to lock in your slot.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     CONFIGURATOR ENGINE
+     Reads prices.json and builds everything dynamically.
+     Adding/removing a category in Admin → auto-appears here.
+     ══════════════════════════════════════════════════════════ -->
 <script>
-// Fallback prices (used if prices.json can't be fetched)
+// ── Fallback data (used if prices.json fetch fails) ──────────
 const FALLBACK = {
   baseModels: {
     'iso-station': { name: 'IsoStation - 100Ah LiFePO4 (1.2kWh)', capacity: '1.2kWh', price: 900,  leadTime: '2-3 weeks' },
     'iso-point':   { name: 'IsoPoint - 25Ah LiFePO4 (0.3kWh)',    capacity: '0.3kWh', price: 450,  leadTime: '1-2 weeks' }
   },
   addons: {
-    inverter:   { none: 0, '400w': 150, '600w': 200, '1000w': 300, '2000w': 400 },
-    charger:    { standard: 50, fast: 100, none: 0 },
-    usbc:       { '1': 30, '2': 50, '4': 90 },
-    '12v':      { lighter: 20, anderson: 40, both: 60 },
-    monitor:    { bluetooth: 60, led: 20, none: 0 },
-    light:      { none: 0, integrated: 35, external: 60 },
-    protection: { standard: 0, upgraded: 75 },
-    transport:  { none: 0, handle: 40, cart: 120 }
+    inverter:   { _label: 'AC Inverter',               none: { label: 'None (DC Only)', price: 0 }, '400w': { label: '400W Inverter', price: 150 }, '600w': { label: '600W Inverter', price: 200 }, '1000w': { label: '1000W Inverter', price: 300 }, '2000w': { label: '2000W Inverter', price: 400 } },
+    charger:    { _label: 'Wall Charger',               standard: { label: 'Standard 10A', price: 50 }, fast: { label: 'Fast 20A', price: 100 }, none: { label: 'No Charger', price: 0 } },
+    usbc:       { _label: 'USB-C Ports (96W)',          '1': { label: '1 Port', price: 30 }, '2': { label: '2 Ports', price: 50 }, '4': { label: '4 Ports', price: 90 } },
+    '12v':      { _label: '12V Outputs',                lighter: { label: 'Cigarette Lighter', price: 20 }, anderson: { label: 'Anderson SB50', price: 40 }, both: { label: 'Both', price: 60 } },
+    monitor:    { _label: 'Battery Monitor',            bluetooth: { label: 'Bluetooth Display', price: 60 }, led: { label: 'LED Indicator', price: 20 }, none: { label: 'None', price: 0 } },
+    light:      { _label: 'LED Work Light',             none: { label: 'None', price: 0 }, integrated: { label: 'Integrated', price: 35 }, external: { label: 'External Dimmable', price: 60 } },
+    protection: { _label: 'Protection Package',         standard: { label: 'Standard (BMS Only)', price: 0 }, upgraded: { label: 'Upgraded (Fuses + Breakers)', price: 75 } },
+    transport:  { _label: 'Carrying & Transport',       none: { label: 'None', price: 0 }, handle: { label: 'Handle Kit', price: 40 }, cart: { label: 'Wheeled Cart', price: 120 } }
   }
 };
 
-let LIVE = null; // populated from prices.json on load
+let CFG = null; // set from prices.json
+
+// ── Helpers ──────────────────────────────────────────────────
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function getBaseModels() { return CFG?.configurator?.baseModels || FALLBACK.baseModels; }
+function getAddons()     { return CFG?.configurator?.addons     || FALLBACK.addons; }
 
 function getBaseModel(id) {
-  const m = LIVE?.configurator?.baseModels?.[id];
-  if (m) return { name: m.name, capacity: m.capacity, price: m.price, leadTime: m.leadTime };
-  return FALLBACK.baseModels[id] || { name: id, capacity: '—', price: 0, leadTime: '—' };
+  const m = getBaseModels()[id];
+  return m ? { name: m.name, capacity: m.capacity, price: m.price || 0, leadTime: m.leadTime } : { name: id, capacity: '—', price: 0, leadTime: '—' };
 }
 
-function getAddonPrice(groupKey, optKey) {
-  const entry = LIVE?.configurator?.addons?.[groupKey]?.[optKey];
-  if (entry !== undefined) return typeof entry === 'object' ? (entry.price ?? 0) : entry;
-  return FALLBACK.addons[groupKey]?.[optKey] ?? 0;
+function getAddonEntry(groupKey, optKey) {
+  const entry = getAddons()[groupKey]?.[optKey];
+  if (!entry) return { label: optKey, price: 0 };
+  return typeof entry === 'object' ? { label: entry.label || optKey, price: entry.price || 0 } : { label: optKey, price: entry };
 }
 
-function getAddonLabel(groupKey, optKey) {
-  const entry = LIVE?.configurator?.addons?.[groupKey]?.[optKey];
-  if (entry && typeof entry === 'object' && entry.label) return entry.label;
-  return null; // keep existing option text
-}
+// ── Build the configurator DOM from data ─────────────────────
+function buildConfigurator() {
+  const baseModels = getBaseModels();
+  const addons     = getAddons();
 
-// Update dropdown labels + base model names from live data
-function refreshOptionLabels() {
-  if (!LIVE) return;
-
-  // Base model dropdown
-  const baseSelect = document.getElementById('baseModel');
-  if (baseSelect) {
-    Array.from(baseSelect.options).forEach(opt => {
-      const m = LIVE.configurator?.baseModels?.[opt.value];
-      if (m?.name) opt.textContent = m.name;
-    });
-  }
-
-  // Addon dropdowns
-  const addonSelects = [
-    ['inverter',   'inverter'],
-    ['charger',    'charger'],
-    ['usbc',       'usbc'],
-    ['12v',        '12v'],
-    ['monitor',    'monitor'],
-    ['light',      'light'],
-    ['protection', 'protection'],
-    ['transport',  'transport']
-  ];
-
-  addonSelects.forEach(([selId, groupKey]) => {
-    const sel   = document.getElementById(selId);
-    const group = LIVE.configurator?.addons?.[groupKey];
-    if (!sel || !group) return;
-    Array.from(sel.options).forEach(opt => {
-      const entry = group[opt.value];
-      if (!entry || opt.value === '_label') return;
-      const label = typeof entry === 'object' ? entry.label : String(opt.value);
-      const price = typeof entry === 'object' ? (entry.price ?? 0) : entry;
-      opt.textContent = price > 0 ? `${label} — $${price}` : label;
-    });
+  // Base model select
+  const baseSelect = document.getElementById('select-base');
+  baseSelect.innerHTML = '';
+  Object.entries(baseModels).forEach(([id, m]) => {
+    const o = document.createElement('option');
+    o.value = id;
+    o.textContent = m.name;
+    baseSelect.appendChild(o);
   });
+  document.getElementById('section-base').style.display = '';
+
+  // Addon sections — one card per group
+  const container = document.getElementById('addon-sections');
+  container.innerHTML = '';
+  Object.entries(addons).forEach(([groupKey, group]) => {
+    const opts = Object.entries(group).filter(([k]) => k !== '_label');
+    if (opts.length === 0) return;
+    const label = group._label || groupKey;
+
+    const sec = document.createElement('section');
+    sec.className = 'cfg-section';
+
+    const optionsHtml = opts.map(([optKey, opt]) => {
+      const entry = typeof opt === 'object' ? opt : { label: optKey, price: opt };
+      const lbl   = entry.label || optKey;
+      const price = entry.price || 0;
+      return `<option value="${esc(optKey)}">${esc(lbl)}${price > 0 ? ' — $' + price : ''}</option>`;
+    }).join('');
+
+    sec.innerHTML = `
+      <div class="cfg-section-title">${esc(label)}</div>
+      <div class="cfg-group">
+        <select class="cfg-select" data-group="${esc(groupKey)}" onchange="updateConfig()">${optionsHtml}</select>
+      </div>`;
+    container.appendChild(sec);
+  });
+
+  // Show summary, hide loader
+  document.getElementById('section-summary').style.display = '';
+  document.getElementById('cfg-loading').style.display = 'none';
+
+  updateConfig();
 }
 
+// ── Recalculate totals whenever any select changes ───────────
 function updateConfig() {
-  const baseId = document.getElementById('baseModel').value;
+  const baseId = document.getElementById('select-base').value;
   const base   = getBaseModel(baseId);
+  let   total  = base.price || 0;
 
-  const inv  = getAddonPrice('inverter',   document.getElementById('inverter').value);
-  const chg  = getAddonPrice('charger',    document.getElementById('charger').value);
-  const usbc = getAddonPrice('usbc',       document.getElementById('usbc').value);
-  const v12  = getAddonPrice('12v',        document.getElementById('12v').value);
-  const mon  = getAddonPrice('monitor',    document.getElementById('monitor').value);
-  const lgt  = getAddonPrice('light',      document.getElementById('light').value);
-  const prot = getAddonPrice('protection', document.getElementById('protection').value);
-  const trns = getAddonPrice('transport',  document.getElementById('transport').value);
+  // Collect addon prices — works for any number of groups
+  const lines = [];
+  document.querySelectorAll('select[data-group]').forEach(sel => {
+    const groupKey = sel.dataset.group;
+    const optKey   = sel.value;
+    const entry    = getAddonEntry(groupKey, optKey);
+    const group    = getAddons()[groupKey];
+    const groupLbl = group?._label || groupKey;
+    if (entry.price > 0) {
+      lines.push({ label: groupLbl + ': ' + entry.label, price: entry.price });
+      total += entry.price;
+    }
+  });
 
-  const portsTotal = usbc + v12 + mon;
-  const accTotal   = lgt + prot + trns;
-  const total      = (base.price || 0) + inv + chg + portsTotal + accTotal;
-
-  document.getElementById('price-base').textContent        = '$' + (base.price || 0).toLocaleString();
-  document.getElementById('price-inverter').textContent    = '$' + inv;
-  document.getElementById('price-charger').textContent     = '$' + chg;
-  document.getElementById('price-ports').textContent       = '$' + portsTotal;
-  document.getElementById('price-accessories').textContent = '$' + accTotal;
-  document.getElementById('price-total').textContent       = '$' + total.toLocaleString();
-
-  document.getElementById('summary-config').textContent   = (base.name || 'Custom').split(' -')[0] + ' — Custom';
+  // Summary meta chips
   document.getElementById('summary-capacity').textContent = base.capacity || '—';
-  document.getElementById('summary-lead').textContent     = base.leadTime || '—';
-  document.getElementById('summary-deposit').textContent  = '$' + total.toLocaleString();
+  document.getElementById('summary-lead').textContent     = base.leadTime  || '—';
+
+  // Pricing breakdown
+  const bd = document.getElementById('summary-breakdown');
+  let html = `<div class="summary-row"><span class="s-label">Base Model — ${esc(base.name ? base.name.split(' -')[0] : baseId)}</span><span class="s-val">$${(base.price||0).toLocaleString()}</span></div>`;
+  lines.forEach(l => {
+    html += `<div class="summary-row"><span class="s-label">${esc(l.label)}</span><span class="s-val">+$${l.price.toLocaleString()}</span></div>`;
+  });
+  html += `<div class="summary-row total-row"><span class="s-label">Total</span><span class="s-val">$${total.toLocaleString()}</span></div>`;
+  bd.innerHTML = html;
 }
 
-// Boot: fetch live prices, fall back gracefully
+// ── Fetch prices.json and boot ───────────────────────────────
 (async () => {
   try {
     const res = await fetch('./prices.json?v=' + Date.now());
-    if (res.ok) {
-      LIVE = await res.json();
-      refreshOptionLabels();
-    }
+    if (res.ok) CFG = await res.json();
   } catch (_) { /* use FALLBACK */ }
-  updateConfig();
+  buildConfigurator();
 })();
 </script>
 
-<!-- ═══════════════════════════════════════════════
-     QUOTE REQUEST MODAL
-     ═══════════════════════════════════════════════ -->
-<div id="quote-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;align-items:center;justify-content:center;padding:1rem;">
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;width:100%;max-width:420px;position:relative;max-height:90vh;overflow-y:auto;">
-    <button onclick="closeQuoteModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:var(--subtle);font-size:20px;cursor:pointer;line-height:1;">×</button>
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:var(--white);margin-bottom:4px;">Request This Build</div>
-    <div style="font-size:13px;color:var(--subtle);margin-bottom:1.5rem;">I'll review your spec and send a quote within 24 hours. No payment now.</div>
-
-    <div id="quote-spec-preview" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1rem;font-size:12px;color:var(--subtle);margin-bottom:1.25rem;line-height:1.8;"></div>
-
-    <div style="margin-bottom:1rem;">
-      <label style="display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--subtle);margin-bottom:6px;">Your Name *</label>
-      <input type="text" id="quote-name" placeholder="Jane Smith" style="width:100%;box-sizing:border-box;padding:10px 13px;background:var(--black);border:1px solid var(--border);border-radius:6px;color:var(--white);font-size:14px;font-family:'Barlow',sans-serif;">
-    </div>
-    <div style="margin-bottom:1rem;">
-      <label style="display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--subtle);margin-bottom:6px;">Email Address *</label>
-      <input type="email" id="quote-email" placeholder="jane@example.com" style="width:100%;box-sizing:border-box;padding:10px 13px;background:var(--black);border:1px solid var(--border);border-radius:6px;color:var(--white);font-size:14px;font-family:'Barlow',sans-serif;">
-    </div>
-    <div style="margin-bottom:1.25rem;">
-      <label style="display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--subtle);margin-bottom:6px;">Notes (optional)</label>
-      <textarea id="quote-notes" rows="3" placeholder="Use case, timeline, any special requirements..." style="width:100%;box-sizing:border-box;padding:10px 13px;background:var(--black);border:1px solid var(--border);border-radius:6px;color:var(--white);font-size:14px;font-family:'Barlow',sans-serif;resize:vertical;"></textarea>
-    </div>
-
-    <div id="quote-status" style="display:none;margin-bottom:1rem;padding:10px 14px;border-radius:6px;font-size:13px;font-weight:600;"></div>
-
-    <button id="quote-submit-btn" onclick="submitQuote()" style="width:100%;padding:13px;background:var(--amber);color:#000;border:none;border-radius:7px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-      <span id="quote-spinner" style="display:none;width:14px;height:14px;border:2px solid rgba(0,0,0,0.3);border-top-color:#000;border-radius:50%;animation:spin 0.7s linear infinite;"></span>
-      <span id="quote-btn-label">Send Quote Request →</span>
-    </button>
-    <p style="font-size:11px;color:var(--muted);margin-top:10px;text-align:center;">No payment now. I'll confirm the build and send a Stripe invoice.</p>
-  </div>
-</div>
-
+<!-- ══════════════════════════════════════════════════════════
+     QUOTE MODAL LOGIC
+     ══════════════════════════════════════════════════════════ -->
 <script>
-let _configStripe = {};
+let _cfgStripe = {};
 (async () => {
   try {
-    const res = await fetch('./prices.json?v=' + Date.now());
-    if (res.ok) { const p = await res.json(); _configStripe = p.stripe || {}; }
+    const r = await fetch('./prices.json?v=' + Date.now());
+    if (r.ok) { const p = await r.json(); _cfgStripe = p.stripe || {}; }
   } catch(_) {}
 })();
 
 function collectSpec() {
-  const sel = id => document.getElementById(id);
-  const txt = id => sel(id)?.options?.[sel(id)?.selectedIndex]?.text || '—';
-  return {
-    baseModel:  txt('baseModel'),
-    inverter:   txt('inverter'),
-    charger:    txt('charger'),
-    usbc:       txt('usbc'),
-    outputs12v: txt('12v'),
-    monitor:    txt('monitor'),
-    light:      txt('light'),
-    protection: txt('protection'),
-    transport:  txt('transport'),
-    total:      document.getElementById('price-total')?.textContent || '—',
-    deposit:    document.getElementById('summary-deposit')?.textContent || '—',
-    capacity:   document.getElementById('summary-capacity')?.textContent || '—',
-    leadTime:   document.getElementById('summary-lead')?.textContent || '—',
-  };
+  const baseId  = document.getElementById('select-base').value;
+  const base    = getBaseModel(baseId);
+  const addons  = getAddons();
+  const spec    = { baseModel: base.name, capacity: base.capacity, leadTime: base.leadTime, options: {}, total: '$0' };
+
+  document.querySelectorAll('select[data-group]').forEach(sel => {
+    const gk    = sel.dataset.group;
+    const entry = getAddonEntry(gk, sel.value);
+    const lbl   = addons[gk]?._label || gk;
+    spec.options[lbl] = entry.label + (entry.price > 0 ? ' (+$' + entry.price + ')' : '');
+  });
+
+  // Get total from breakdown
+  const totalEl = document.querySelector('.summary-row.total-row .s-val');
+  spec.total = totalEl ? totalEl.textContent : '—';
+  return spec;
 }
 
 function reserveConfig() {
   const spec = collectSpec();
-  document.getElementById('quote-spec-preview').innerHTML =
-    `<strong style="color:var(--white);">${spec.baseModel}</strong><br>` +
-    `Inverter: ${spec.inverter} · Charger: ${spec.charger}<br>` +
-    `USB-C: ${spec.usbc} · 12V: ${spec.outputs12v}<br>` +
-    `Monitor: ${spec.monitor} · Light: ${spec.light}<br>` +
-    `Protection: ${spec.protection} · Transport: ${spec.transport}<br>` +
-    `<strong style="color:var(--amber);">Total: ${spec.total}</strong> · Lead time: ${spec.leadTime}`;
+  let previewHtml = `<strong style="color:var(--white);">${esc(spec.baseModel)}</strong><br>`;
+  Object.entries(spec.options).forEach(([k, v]) => {
+    previewHtml += `${esc(k)}: ${esc(v)}<br>`;
+  });
+  previewHtml += `<strong style="color:var(--amber);">Total: ${esc(spec.total)}</strong> · Lead time: ${esc(spec.leadTime)}`;
 
-  document.getElementById('quote-status').style.display = 'none';
-  document.getElementById('quote-submit-btn').disabled = false;
-  document.getElementById('quote-btn-label').textContent = 'Send Quote Request →';
-  document.getElementById('quote-spinner').style.display = 'none';
+  document.getElementById('quote-spec-preview').innerHTML = previewHtml;
+  document.getElementById('quote-status').style.display   = 'none';
+  document.getElementById('quote-submit-btn').disabled    = false;
+  document.getElementById('quote-btn-label').textContent  = 'Send Quote Request →';
+  document.getElementById('quote-spinner').style.display  = 'none';
   document.getElementById('quote-name').value  = '';
   document.getElementById('quote-email').value = '';
   document.getElementById('quote-notes').value = '';
-
-  const overlay = document.getElementById('quote-overlay');
-  overlay.style.display = 'flex';
+  document.getElementById('quote-overlay').style.display  = 'flex';
 }
 
-function closeQuoteModal() {
-  document.getElementById('quote-overlay').style.display = 'none';
-}
+function closeQuoteModal() { document.getElementById('quote-overlay').style.display = 'none'; }
 document.getElementById('quote-overlay').addEventListener('click', function(e) {
-  if (e.target === document.getElementById('quote-overlay')) closeQuoteModal();
+  if (e.target === this) closeQuoteModal();
 });
 
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
 async function submitQuote() {
-  const name  = document.getElementById('quote-name').value.trim();
-  const email = document.getElementById('quote-email').value.trim();
-  const notes = document.getElementById('quote-notes').value.trim();
+  const name    = document.getElementById('quote-name').value.trim();
+  const email   = document.getElementById('quote-email').value.trim();
+  const notes   = document.getElementById('quote-notes').value.trim();
   const statusEl = document.getElementById('quote-status');
 
-  if (!name || !email) {
-    statusEl.style.cssText = 'display:block;background:rgba(232,64,64,0.1);border:1px solid #e84040;color:#e84040;margin-bottom:1rem;padding:10px 14px;border-radius:6px;font-size:13px;font-weight:600;';
-    statusEl.textContent = 'Please enter your name and email.';
-    return;
-  }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    statusEl.style.cssText = 'display:block;background:rgba(232,64,64,0.1);border:1px solid #e84040;color:#e84040;margin-bottom:1rem;padding:10px 14px;border-radius:6px;font-size:13px;font-weight:600;';
-    statusEl.textContent = 'Please enter a valid email address.';
-    return;
-  }
+  const showErr = msg => {
+    statusEl.style.cssText = 'display:block;background:rgba(232,64,64,0.1);border:1px solid #e84040;color:#e84040;padding:10px 14px;border-radius:6px;font-size:13px;font-weight:600;margin-bottom:1rem;';
+    statusEl.textContent = msg;
+  };
+
+  if (!name || !email) return showErr('Please enter your name and email.');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showErr('Please enter a valid email address.');
 
   const btn = document.getElementById('quote-submit-btn');
   btn.disabled = true;
@@ -545,40 +493,32 @@ async function submitQuote() {
   statusEl.style.display = 'none';
 
   const spec = collectSpec();
-  const specText = [
-    'Base Model: '     + spec.baseModel,
-    'Inverter: '       + spec.inverter,
-    'Charger: '        + spec.charger,
-    'USB-C Ports: '    + spec.usbc,
-    '12V Outputs: '    + spec.outputs12v,
-    'Battery Monitor: '+ spec.monitor,
-    'LED Light: '      + spec.light,
-    'Protection: '     + spec.protection,
-    'Transport: '      + spec.transport,
-    '',
-    'Quote Total: '    + spec.total,
-    'Capacity: '       + spec.capacity,
-    'Lead Time: '      + spec.leadTime,
-    notes ? '\nNotes: ' + notes : ''
-  ].filter(Boolean).join('\n');
+  const specLines = [`Base Model: ${spec.baseModel}`, `Capacity: ${spec.capacity}`, `Lead Time: ${spec.leadTime}`, ''];
+  Object.entries(spec.options).forEach(([k, v]) => specLines.push(`${k}: ${v}`));
+  specLines.push('', `Quote Total: ${spec.total}`);
+  if (notes) specLines.push('', `Notes: ${notes}`);
+  const specText = specLines.join('\n');
+
+  // Build flat spec object for email template
+  const specFlat = { baseModel: spec.baseModel, total: spec.total, capacity: spec.capacity, leadTime: spec.leadTime };
+  Object.assign(specFlat, spec.options);
 
   try {
     const res = await fetch('/api/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name,
-        email,
+        name, email,
         type:    'Custom Build Inquiry',
         subject: 'Custom Build Quote — ' + spec.baseModel + ' · ' + spec.total,
         message: specText,
-        spec:    spec
+        spec:    specFlat
       })
     });
     const data = await res.json().catch(() => ({}));
 
     if (res.ok && data.ok) {
-      statusEl.style.cssText = 'display:block;background:rgba(61,219,138,0.08);border:1px solid #3ddb8a;color:#3ddb8a;margin-bottom:1rem;padding:10px 14px;border-radius:6px;font-size:13px;font-weight:600;';
+      statusEl.style.cssText = 'display:block;background:rgba(61,219,138,0.08);border:1px solid #3ddb8a;color:#3ddb8a;padding:10px 14px;border-radius:6px;font-size:13px;font-weight:600;margin-bottom:1rem;';
       statusEl.textContent = "✓ Sent! I'll review your build and reply within 24 hours.";
       document.getElementById('quote-spinner').style.display = 'none';
       document.getElementById('quote-btn-label').textContent = '✓ Sent';
@@ -590,12 +530,12 @@ async function submitQuote() {
     document.getElementById('quote-spinner').style.display = 'none';
     document.getElementById('quote-btn-label').textContent = 'Send Quote Request →';
 
-    const mailSubject = encodeURIComponent('Custom Build Quote — ' + spec.baseModel + ' · ' + spec.total);
-    const mailBody    = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\n' + specText);
-    const mailtoLink  = 'mailto:luke@isowatt.shop?subject=' + mailSubject + '&body=' + mailBody;
+    const subj = encodeURIComponent('Custom Build Quote — ' + spec.baseModel + ' · ' + spec.total);
+    const body = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\n' + specText);
+    const mailto = 'mailto:luke@isowatt.shop?subject=' + subj + '&body=' + body;
 
-    statusEl.style.cssText = 'display:block;background:rgba(240,165,0,0.08);border:1px solid rgba(240,165,0,0.4);color:#f0a500;margin-bottom:1rem;padding:10px 14px;border-radius:6px;font-size:13px;font-weight:600;';
-    statusEl.innerHTML = 'Direct send unavailable — <a href="' + mailtoLink + '" style="color:#f0a500;font-weight:700;">click here to send via your email app →</a>';
+    statusEl.style.cssText = 'display:block;background:rgba(240,165,0,0.08);border:1px solid rgba(240,165,0,0.4);color:#f0a500;padding:10px 14px;border-radius:6px;font-size:13px;font-weight:600;margin-bottom:1rem;';
+    statusEl.innerHTML = 'Direct send unavailable. <a href="' + mailto + '" style="color:#f0a500;font-weight:700;">Send via email app →</a>';
   }
 }
 </script>
