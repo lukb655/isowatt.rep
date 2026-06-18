@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-18T01:25:07.534Z",
+    "lastUpdated": "2026-06-18T01:26:29.810Z",
     "currency": "USD"
   },
   "stripe": {
@@ -68,11 +68,6 @@
           "label": "Fast 20A",
           "price": 60,
           "cogs": 45
-        },
-        "none": {
-          "label": "No Charger",
-          "price": 0,
-          "cogs": 0
         }
       },
       "usbc": {
