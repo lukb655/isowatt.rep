@@ -444,7 +444,7 @@ margin-bottom: 1rem;
 <div class="card-spec"><span class="cs-label">Enclosure</span><span class="cs-val">Apache 4800</span></div>
 </div>
 <div class="card-price">
-<span class="price">From $1,289</span>
+<span class="price" id="index-price-station">From $1,289</span>
 <span class="price-note">Full price<br>at purchase</span>
 </div>
 <span class="card-cta">View Details ↗</span>
@@ -462,7 +462,7 @@ margin-bottom: 1rem;
 <div class="card-spec"><span class="cs-label">Enclosure</span><span class="cs-val">Apache 2800</span></div>
 </div>
 <div class="card-price">
-<span class="price">From $365</span>
+<span class="price" id="index-price-point">From $365</span>
 <span class="price-note">Full price<br>at purchase</span>
 </div>
 <span class="card-cta">View Details ↗</span>
@@ -550,5 +550,26 @@ margin-bottom: 1rem;
     <span class="amber">Consumer Grade. Industrial Power.</span>
   </div>
 </footer>
+
+<script>
+// Dynamic prices from prices.json — updated via admin.html
+(async () => {
+  try {
+    const res = await fetch('./prices.json?v=' + Date.now());
+    if (!res.ok) return;
+    const p = await res.json();
+    const station = p?.prebuilt?.['iso-station-plus'];
+    const point   = p?.prebuilt?.['iso-point-plus'];
+    if (station?.startingPrice) {
+      const el = document.getElementById('index-price-station');
+      if (el) el.textContent = 'From $' + station.startingPrice.toLocaleString();
+    }
+    if (point?.startingPrice) {
+      const el = document.getElementById('index-price-point');
+      if (el) el.textContent = 'From $' + point.startingPrice.toLocaleString();
+    }
+  } catch (_) { /* keep static fallback */ }
+})();
+</script>
 </body>
 </html>
