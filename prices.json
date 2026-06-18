@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-18T00:06:52.243Z",
+    "lastUpdated": "2026-06-18T00:14:47.475Z",
     "currency": "USD"
   },
   "stripe": {
@@ -15,14 +15,14 @@
       "name": "IsoStation+",
       "badge": "Flagship",
       "subtitle": "Premium Portable Power Station",
-      "startingPrice": 1289,
+      "startingPrice": 899.99,
       "cogs": 0
     },
     "iso-point-plus": {
       "name": "IsoPoint+",
       "badge": "Popular",
       "subtitle": "Compact Portable Power",
-      "startingPrice": 365,
+      "startingPrice": 419.99,
       "cogs": 0
     }
   },
