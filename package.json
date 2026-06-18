@@ -1,0 +1,14 @@
+{
+  "name": "isowatt-rep",
+  "version": "1.0.0",
+  "description": "IsoWatt - Portable LiFePO4 power stations",
+  "scripts": {
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/analytics": "^1.1.1"
+  }
+}
