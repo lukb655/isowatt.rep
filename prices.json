@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-18T00:14:47.475Z",
+    "lastUpdated": "2026-06-18T00:29:53.229Z",
     "currency": "USD"
   },
   "stripe": {
@@ -32,15 +32,15 @@
         "name": "IsoStation - 100Ah LiFePO4 (1.2kWh)",
         "capacity": "1.2kWh",
         "leadTime": "2-3 weeks",
-        "price": 900,
-        "cogs": 520
+        "price": 500,
+        "cogs": 250
       },
       "iso-point": {
         "name": "IsoPoint - 12Ah LiFePO4 (0.15kWh)",
         "capacity": "0.15kWh",
         "leadTime": "1-2 weeks",
-        "price": 450,
-        "cogs": 300
+        "price": 350,
+        "cogs": 200
       }
     },
     "addons": {
@@ -51,38 +51,23 @@
           "price": 0,
           "cogs": 0
         },
-        "400w": {
-          "label": "400W Inverter",
-          "price": 150,
-          "cogs": 0
-        },
-        "600w": {
-          "label": "600W Inverter",
-          "price": 200,
-          "cogs": 0
-        },
-        "1000w": {
-          "label": "1000W Inverter",
-          "price": 300,
-          "cogs": 0
-        },
-        "2000w": {
-          "label": "2000W Inverter",
-          "price": 400,
-          "cogs": 0
+        "mqir61n6": {
+          "label": "300W Inverter",
+          "price": 50,
+          "cogs": 20
         }
       },
       "charger": {
         "_label": "Wall Charger",
         "standard": {
           "label": "Standard 10A",
-          "price": 50,
-          "cogs": 0
+          "price": 30,
+          "cogs": 20
         },
         "fast": {
           "label": "Fast 20A",
-          "price": 100,
-          "cogs": 0
+          "price": 60,
+          "cogs": 45
         },
         "none": {
           "label": "No Charger",
@@ -93,17 +78,17 @@
       "usbc": {
         "1": {
           "label": "1 Port",
-          "price": 30,
+          "price": 15,
           "cogs": 0
         },
         "2": {
           "label": "2 Ports",
-          "price": 50,
+          "price": 25,
           "cogs": 0
         },
         "4": {
           "label": "4 Ports",
-          "price": 90,
+          "price": 40,
           "cogs": 0
         },
         "_label": "USB-C Ports (96W Fast Charge)"
@@ -112,32 +97,22 @@
         "_label": "12V Outputs",
         "lighter": {
           "label": "Cigarette Lighter Socket",
-          "price": 20,
+          "price": 10,
           "cogs": 0
         },
         "anderson": {
           "label": "Anderson SB50",
-          "price": 40,
+          "price": 25,
           "cogs": 0
         },
         "both": {
           "label": "Both",
-          "price": 60,
+          "price": 30,
           "cogs": 0
         }
       },
       "monitor": {
         "_label": "Battery Monitor",
-        "bluetooth": {
-          "label": "Bluetooth Display",
-          "price": 60,
-          "cogs": 0
-        },
-        "led": {
-          "label": "LED Indicator Only",
-          "price": 20,
-          "cogs": 0
-        },
         "none": {
           "label": "None",
           "price": 0,
@@ -153,43 +128,12 @@
         },
         "integrated": {
           "label": "Integrated (Built-in)",
-          "price": 35,
+          "price": 80,
           "cogs": 0
         },
         "external": {
           "label": "External Dimmable",
-          "price": 60,
-          "cogs": 0
-        }
-      },
-      "protection": {
-        "_label": "Protection Package",
-        "standard": {
-          "label": "Standard (BMS Only)",
-          "price": 0,
-          "cogs": 0
-        },
-        "upgraded": {
-          "label": "Upgraded (Fuses + Breakers)",
-          "price": 75,
-          "cogs": 0
-        }
-      },
-      "transport": {
-        "_label": "Carrying & Transport",
-        "none": {
-          "label": "None",
-          "price": 0,
-          "cogs": 0
-        },
-        "handle": {
-          "label": "Heavy-Duty Handle Kit",
-          "price": 40,
-          "cogs": 0
-        },
-        "cart": {
-          "label": "Wheeled Transport Cart",
-          "price": 120,
+          "price": 30,
           "cogs": 0
         }
       }
