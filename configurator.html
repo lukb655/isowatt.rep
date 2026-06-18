@@ -69,10 +69,7 @@ select:focus, input:focus { outline: none; border-color: var(--amber); }
   border-bottom: none;
   font-size: 18px;
 }
-.price-item.total .label {
-  color: var(--white);
-  font-weight: 700;
-}
+.price-item.total .label { color: var(--white); font-weight: 700; }
 .summary-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -91,11 +88,7 @@ select:focus, input:focus { outline: none; border-color: var(--amber); }
   color: var(--subtle);
   margin-bottom: 4px;
 }
-.summary-item .value {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--white);
-}
+.summary-item .value { font-size: 16px; font-weight: 600; color: var(--white); }
 .cta-primary {
   width: 100%;
   padding: 16px;
@@ -122,6 +115,7 @@ select:focus, input:focus { outline: none; border-color: var(--amber); }
   text-decoration: none;
 }
 .cta-secondary:hover { background: var(--amber-bg); }
+@keyframes spin { to { transform: rotate(360deg); } }
 @media (max-width: 768px) {
   .config-section { padding: 1.5rem; }
   .summary-grid { grid-template-columns: 1fr; }
@@ -136,10 +130,10 @@ select:focus, input:focus { outline: none; border-color: var(--amber); }
   </a>
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li>
-    <li><a href="products.html" class="active">Products</a></li>
+    <li><a href="products.html">Products</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="contact.html">Contact</a></li>
-    <li><a href="configurator.html" class="nav-cta">Configure →</a></li>
+    <li><a href="configurator.html" class="nav-cta active">Configure →</a></li>
   </ul>
   <button class="nav-burger" id="nav-burger" onclick="toggleMobileMenu()" aria-label="Open menu">
     <span></span><span></span><span></span>
@@ -147,14 +141,14 @@ select:focus, input:focus { outline: none; border-color: var(--amber); }
 </nav>
 <div class="mobile-menu" id="mobile-menu">
   <a href="index.html">Home</a>
-  <a href="products.html" class="active">Products</a>
+  <a href="products.html">Products</a>
   <a href="about.html">About</a>
   <a href="contact.html">Contact</a>
-  <a href="configurator.html" class="amber">Configure →</a>
+  <a href="configurator.html" class="amber active">Configure →</a>
 </div>
 <script>function toggleMobileMenu(){var m=document.getElementById('mobile-menu');m.classList.toggle('open');}</script>
 
-<div style="padding-top:var(--nav-h)" style="min-height:40vh;display:flex;align-items:center;background:var(--black);padding:4rem 2rem;">
+<div style="padding-top:var(--nav-h);min-height:40vh;display:flex;align-items:center;background:var(--black);padding:4rem 2rem;">
 <div class="container">
 <p class="eyebrow">Build Your Configuration</p>
 <h1 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(48px,9vw,96px);font-weight:900;text-transform:uppercase;letter-spacing:0.02em;line-height:0.9;color:var(--white);margin-bottom:1rem;">Design Your System.</h1>
@@ -183,21 +177,20 @@ select:focus, input:focus { outline: none; border-color: var(--amber); }
 <div class="config-group">
 <label class="config-label">AC Inverter</label>
 <select id="inverter" onchange="updateConfig()">
-<option value="none">None (DC Only) - $0</option>
-<option value="400w">400W Inverter - $150</option>
-<option value="600w">600W Inverter - $200</option>
-<option value="1000w">1000W Inverter - $300</option>
-<option value="2000w">2000W Inverter - $400</option>
+<option value="none">None (DC Only)</option>
+<option value="400w">400W Inverter</option>
+<option value="600w">600W Inverter</option>
+<option value="1000w">1000W Inverter</option>
+<option value="2000w">2000W Inverter</option>
 </select>
 <p class="config-description">Choose AC power output or keep DC-only for longer battery life.</p>
 </div>
-
 <div class="config-group">
 <label class="config-label">Wall Charger</label>
 <select id="charger" onchange="updateConfig()">
-<option value="standard">Standard 10A - $50</option>
-<option value="fast">Fast 20A - $100</option>
-<option value="none">No Charger - $0</option>
+<option value="standard">Standard 10A</option>
+<option value="fast">Fast 20A</option>
+<option value="none">No Charger</option>
 </select>
 </div>
 </section>
@@ -205,31 +198,28 @@ select:focus, input:focus { outline: none; border-color: var(--amber); }
 <!-- Step 3: Ports & Outputs -->
 <section class="config-section">
 <div class="section-title">Step 3: Ports & Connectivity</div>
-
 <div class="config-group">
 <label class="config-label">USB-C Ports (96W Fast Charge)</label>
 <select id="usbc" onchange="updateConfig()">
-<option value="1">1 Port - $30</option>
-<option value="2">2 Ports - $50</option>
-<option value="4">4 Ports - $90</option>
+<option value="1">1 Port</option>
+<option value="2">2 Ports</option>
+<option value="4">4 Ports</option>
 </select>
 </div>
-
 <div class="config-group">
 <label class="config-label">12V Outputs</label>
 <select id="12v" onchange="updateConfig()">
-<option value="lighter">Cigarette Lighter Socket - $20</option>
-<option value="anderson">Anderson SB50 - $40</option>
-<option value="both">Both - $60</option>
+<option value="lighter">Cigarette Lighter Socket</option>
+<option value="anderson">Anderson SB50</option>
+<option value="both">Both</option>
 </select>
 </div>
-
 <div class="config-group">
 <label class="config-label">Battery Monitor</label>
 <select id="monitor" onchange="updateConfig()">
-<option value="bluetooth">Bluetooth Display - $60</option>
-<option value="led">LED Indicator Only - $20</option>
-<option value="none">None - $0</option>
+<option value="bluetooth">Bluetooth Display</option>
+<option value="led">LED Indicator Only</option>
+<option value="none">None</option>
 </select>
 </div>
 </section>
@@ -237,30 +227,27 @@ select:focus, input:focus { outline: none; border-color: var(--amber); }
 <!-- Step 4: Accessories -->
 <section class="config-section">
 <div class="section-title">Step 4: Add-Ons & Accessories</div>
-
 <div class="config-group">
 <label class="config-label">LED Work Light</label>
 <select id="light" onchange="updateConfig()">
-<option value="none">None - $0</option>
-<option value="integrated">Integrated (Built-in) - $35</option>
-<option value="external">External Dimmable - $60</option>
+<option value="none">None</option>
+<option value="integrated">Integrated (Built-in)</option>
+<option value="external">External Dimmable</option>
 </select>
 </div>
-
 <div class="config-group">
 <label class="config-label">Protection Package</label>
 <select id="protection" onchange="updateConfig()">
-<option value="standard">Standard (BMS Only) - $0</option>
-<option value="upgraded">Upgraded (Fuses + Breakers) - $75</option>
+<option value="standard">Standard (BMS Only)</option>
+<option value="upgraded">Upgraded (Fuses + Breakers)</option>
 </select>
 </div>
-
 <div class="config-group">
 <label class="config-label">Carrying & Transport</label>
 <select id="transport" onchange="updateConfig()">
-<option value="none">None - $0</option>
-<option value="handle">Heavy-Duty Handle Kit - $40</option>
-<option value="cart">Wheeled Transport Cart - $120</option>
+<option value="none">None</option>
+<option value="handle">Heavy-Duty Handle Kit</option>
+<option value="cart">Wheeled Transport Cart</option>
 </select>
 </div>
 </section>
@@ -268,28 +255,25 @@ select:focus, input:focus { outline: none; border-color: var(--amber); }
 <!-- Summary & Pricing -->
 <section class="config-section">
 <div class="section-title">Order Summary</div>
-
 <div class="summary-grid">
 <div class="summary-item"><div class="label">Configuration</div><div class="value" id="summary-config">IsoStation Custom</div></div>
 <div class="summary-item"><div class="label">Total Capacity</div><div class="value" id="summary-capacity">1.2kWh</div></div>
 <div class="summary-item"><div class="label">Lead Time</div><div class="value" id="summary-lead">2-3 weeks</div></div>
-<div class="summary-item"><div class="label">Deposit Required</div><div class="value" id="summary-deposit">$0</div></div>
+<div class="summary-item"><div class="label">Est. Invoice</div><div class="value" id="summary-deposit">—</div></div>
 </div>
-
 <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:2rem;">
 <div style="margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border);"><strong style="font-size:14px;">Pricing Breakdown</strong></div>
 <div id="pricing-breakdown">
-<div class="price-item"><span class="label">Base Model</span><span class="amount" id="price-base">$1,200</span></div>
-<div class="price-item"><span class="label">Inverter</span><span class="amount" id="price-inverter">$0</span></div>
-<div class="price-item"><span class="label">Charger</span><span class="amount" id="price-charger">$50</span></div>
-<div class="price-item"><span class="label">Ports & Connectivity</span><span class="amount" id="price-ports">$130</span></div>
-<div class="price-item"><span class="label">Accessories</span><span class="amount" id="price-accessories">$95</span></div>
-<div class="price-item total"><span class="label">Total Price</span><span class="amount" id="price-total">$1,475</span></div>
+<div class="price-item"><span class="label">Base Model</span><span class="amount" id="price-base">—</span></div>
+<div class="price-item"><span class="label">Inverter</span><span class="amount" id="price-inverter">—</span></div>
+<div class="price-item"><span class="label">Charger</span><span class="amount" id="price-charger">—</span></div>
+<div class="price-item"><span class="label">Ports & Connectivity</span><span class="amount" id="price-ports">—</span></div>
+<div class="price-item"><span class="label">Accessories</span><span class="amount" id="price-accessories">—</span></div>
+<div class="price-item total"><span class="label">Total Price</span><span class="amount" id="price-total">—</span></div>
 </div>
 </div>
-
 <p style="font-size:12px;color:var(--muted);margin-bottom:1.5rem;">Submit your config and I'll confirm the build and send an invoice.</p>
-<button class="cta-primary" id="reserve-config-btn" onclick="reserveConfig()">Reserve This Build</button>
+<button class="cta-primary" id="reserve-config-btn" onclick="reserveConfig()">Request This Build</button>
 <div style="margin-top:1rem;text-align:center;"><a href="products.html" class="cta-secondary">← View Prebuilt Options</a></div>
 </section>
 
@@ -320,14 +304,16 @@ select:focus, input:focus { outline: none; border-color: var(--amber); }
   </div>
 </footer>
 
+<!-- ═══════════════════════════════════════════════
+     PRICING ENGINE — reads from prices.json
+     Falls back to hardcoded values if fetch fails
+     ═══════════════════════════════════════════════ -->
 <script>
-// ── Dynamic pricing from prices.json ──────────────────────────
-let LIVE = null; // loaded from prices.json
-
+// Fallback prices (used if prices.json can't be fetched)
 const FALLBACK = {
   baseModels: {
-    'iso-station': { name: 'IsoStation', capacity: '1.2kWh', price: 1200, leadTime: '2-3 weeks' },
-    'iso-point':   { name: 'IsoPoint',   capacity: '0.3kWh',  price: 600,  leadTime: '1-2 weeks' }
+    'iso-station': { name: 'IsoStation - 100Ah LiFePO4 (1.2kWh)', capacity: '1.2kWh', price: 900,  leadTime: '2-3 weeks' },
+    'iso-point':   { name: 'IsoPoint - 25Ah LiFePO4 (0.3kWh)',    capacity: '0.3kWh', price: 450,  leadTime: '1-2 weeks' }
   },
   addons: {
     inverter:   { none: 0, '400w': 150, '600w': 200, '1000w': 300, '2000w': 400 },
@@ -341,29 +327,41 @@ const FALLBACK = {
   }
 };
 
-// Normalise live prices into the flat shape updateConfig() needs
+let LIVE = null; // populated from prices.json on load
+
+function getBaseModel(id) {
+  const m = LIVE?.configurator?.baseModels?.[id];
+  if (m) return { name: m.name, capacity: m.capacity, price: m.price, leadTime: m.leadTime };
+  return FALLBACK.baseModels[id] || { name: id, capacity: '—', price: 0, leadTime: '—' };
+}
+
 function getAddonPrice(groupKey, optKey) {
-  if (LIVE) {
-    const opt = LIVE.configurator?.addons?.[groupKey]?.[optKey];
-    if (opt !== undefined) return typeof opt === 'number' ? opt : (opt.price ?? 0);
-  }
+  const entry = LIVE?.configurator?.addons?.[groupKey]?.[optKey];
+  if (entry !== undefined) return typeof entry === 'object' ? (entry.price ?? 0) : entry;
   return FALLBACK.addons[groupKey]?.[optKey] ?? 0;
 }
 
-function getBaseModel(id) {
-  if (LIVE) {
-    const m = LIVE.configurator?.baseModels?.[id];
-    if (m) return { name: m.name, capacity: m.capacity, price: m.price, leadTime: m.leadTime };
-  }
-  return FALLBACK.baseModels[id] || {};
+function getAddonLabel(groupKey, optKey) {
+  const entry = LIVE?.configurator?.addons?.[groupKey]?.[optKey];
+  if (entry && typeof entry === 'object' && entry.label) return entry.label;
+  return null; // keep existing option text
 }
 
-// Update select option labels with live prices
+// Update dropdown labels + base model names from live data
 function refreshOptionLabels() {
   if (!LIVE) return;
-  const addons = LIVE.configurator?.addons || {};
 
-  const selectMap = [
+  // Base model dropdown
+  const baseSelect = document.getElementById('baseModel');
+  if (baseSelect) {
+    Array.from(baseSelect.options).forEach(opt => {
+      const m = LIVE.configurator?.baseModels?.[opt.value];
+      if (m?.name) opt.textContent = m.name;
+    });
+  }
+
+  // Addon dropdowns
+  const addonSelects = [
     ['inverter',   'inverter'],
     ['charger',    'charger'],
     ['usbc',       'usbc'],
@@ -374,33 +372,23 @@ function refreshOptionLabels() {
     ['transport',  'transport']
   ];
 
-  selectMap.forEach(([selId, groupKey]) => {
+  addonSelects.forEach(([selId, groupKey]) => {
     const sel   = document.getElementById(selId);
-    const group = addons[groupKey];
+    const group = LIVE.configurator?.addons?.[groupKey];
     if (!sel || !group) return;
     Array.from(sel.options).forEach(opt => {
       const entry = group[opt.value];
-      if (!entry) return;
-      const label = typeof entry === 'object' ? entry.label : opt.value;
-      const price = typeof entry === 'object' ? entry.price : entry;
+      if (!entry || opt.value === '_label') return;
+      const label = typeof entry === 'object' ? entry.label : String(opt.value);
+      const price = typeof entry === 'object' ? (entry.price ?? 0) : entry;
       opt.textContent = price > 0 ? `${label} — $${price}` : label;
     });
   });
-
-  // Base model select
-  const baseSelect = document.getElementById('baseModel');
-  if (baseSelect) {
-    Array.from(baseSelect.options).forEach(opt => {
-      const m = LIVE.configurator?.baseModels?.[opt.value];
-      if (m) opt.textContent = m.name;
-    });
-  }
 }
 
 function updateConfig() {
   const baseId = document.getElementById('baseModel').value;
   const base   = getBaseModel(baseId);
-  const bPrice = base.price || 0;
 
   const inv  = getAddonPrice('inverter',   document.getElementById('inverter').value);
   const chg  = getAddonPrice('charger',    document.getElementById('charger').value);
@@ -413,22 +401,22 @@ function updateConfig() {
 
   const portsTotal = usbc + v12 + mon;
   const accTotal   = lgt + prot + trns;
-  const total      = bPrice + inv + chg + portsTotal + accTotal;
+  const total      = (base.price || 0) + inv + chg + portsTotal + accTotal;
 
-  document.getElementById('price-base').textContent        = '$' + bPrice.toLocaleString();
+  document.getElementById('price-base').textContent        = '$' + (base.price || 0).toLocaleString();
   document.getElementById('price-inverter').textContent    = '$' + inv;
   document.getElementById('price-charger').textContent     = '$' + chg;
   document.getElementById('price-ports').textContent       = '$' + portsTotal;
   document.getElementById('price-accessories').textContent = '$' + accTotal;
   document.getElementById('price-total').textContent       = '$' + total.toLocaleString();
 
-  document.getElementById('summary-config').textContent    = (base.name || 'Custom') + ' — Custom';
-  document.getElementById('summary-capacity').textContent  = base.capacity || '—';
-  document.getElementById('summary-lead').textContent      = base.leadTime || '—';
-  document.getElementById('summary-deposit').textContent   = '$' + Math.floor(total / 2).toLocaleString();
+  document.getElementById('summary-config').textContent   = (base.name || 'Custom').split(' -')[0] + ' — Custom';
+  document.getElementById('summary-capacity').textContent = base.capacity || '—';
+  document.getElementById('summary-lead').textContent     = base.leadTime || '—';
+  document.getElementById('summary-deposit').textContent  = '$' + total.toLocaleString();
 }
 
-// Boot: load prices.json, fall back to hardcoded defaults
+// Boot: fetch live prices, fall back gracefully
 (async () => {
   try {
     const res = await fetch('./prices.json?v=' + Date.now());
@@ -441,12 +429,14 @@ function updateConfig() {
 })();
 </script>
 
-<!-- Quote Request Modal -->
+<!-- ═══════════════════════════════════════════════
+     QUOTE REQUEST MODAL
+     ═══════════════════════════════════════════════ -->
 <div id="quote-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;align-items:center;justify-content:center;padding:1rem;">
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;width:100%;max-width:420px;position:relative;">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;width:100%;max-width:420px;position:relative;max-height:90vh;overflow-y:auto;">
     <button onclick="closeQuoteModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:var(--subtle);font-size:20px;cursor:pointer;line-height:1;">×</button>
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:var(--white);margin-bottom:4px;">Request This Build</div>
-    <div style="font-size:13px;color:var(--subtle);margin-bottom:1.5rem;">I'll review your spec and send a quote within 24 hours.</div>
+    <div style="font-size:13px;color:var(--subtle);margin-bottom:1.5rem;">I'll review your spec and send a quote within 24 hours. No payment now.</div>
 
     <div id="quote-spec-preview" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1rem;font-size:12px;color:var(--subtle);margin-bottom:1.25rem;line-height:1.8;"></div>
 
@@ -482,7 +472,6 @@ let _configStripe = {};
   } catch(_) {}
 })();
 
-// Collect the full spec from the page selects
 function collectSpec() {
   const sel = id => document.getElementById(id);
   const txt = id => sel(id)?.options?.[sel(id)?.selectedIndex]?.text || '—';
@@ -496,29 +485,28 @@ function collectSpec() {
     light:      txt('light'),
     protection: txt('protection'),
     transport:  txt('transport'),
-    total:      sel('price-total')?.textContent || '—',
-    deposit:    sel('summary-deposit')?.textContent || '—',
-    capacity:   sel('summary-capacity')?.textContent || '—',
-    leadTime:   sel('summary-lead')?.textContent || '—',
+    total:      document.getElementById('price-total')?.textContent || '—',
+    deposit:    document.getElementById('summary-deposit')?.textContent || '—',
+    capacity:   document.getElementById('summary-capacity')?.textContent || '—',
+    leadTime:   document.getElementById('summary-lead')?.textContent || '—',
   };
 }
 
 function reserveConfig() {
   const spec = collectSpec();
-  // Populate the spec preview in the modal
   document.getElementById('quote-spec-preview').innerHTML =
     `<strong style="color:var(--white);">${spec.baseModel}</strong><br>` +
     `Inverter: ${spec.inverter} · Charger: ${spec.charger}<br>` +
     `USB-C: ${spec.usbc} · 12V: ${spec.outputs12v}<br>` +
     `Monitor: ${spec.monitor} · Light: ${spec.light}<br>` +
     `Protection: ${spec.protection} · Transport: ${spec.transport}<br>` +
-    `<strong style="color:var(--amber);">Total: ${spec.total}</strong> · Deposit: ${spec.deposit} · Lead time: ${spec.leadTime}`;
+    `<strong style="color:var(--amber);">Total: ${spec.total}</strong> · Lead time: ${spec.leadTime}`;
 
-  // Reset modal state
   document.getElementById('quote-status').style.display = 'none';
   document.getElementById('quote-submit-btn').disabled = false;
   document.getElementById('quote-btn-label').textContent = 'Send Quote Request →';
-  document.getElementById('quote-name').value = '';
+  document.getElementById('quote-spinner').style.display = 'none';
+  document.getElementById('quote-name').value  = '';
   document.getElementById('quote-email').value = '';
   document.getElementById('quote-notes').value = '';
 
@@ -529,7 +517,7 @@ function reserveConfig() {
 function closeQuoteModal() {
   document.getElementById('quote-overlay').style.display = 'none';
 }
-document.getElementById('quote-overlay').addEventListener('click', e => {
+document.getElementById('quote-overlay').addEventListener('click', function(e) {
   if (e.target === document.getElementById('quote-overlay')) closeQuoteModal();
 });
 
@@ -540,18 +528,12 @@ async function submitQuote() {
   const statusEl = document.getElementById('quote-status');
 
   if (!name || !email) {
-    statusEl.style.display = 'block';
-    statusEl.style.background = 'rgba(232,64,64,0.1)';
-    statusEl.style.border = '1px solid #e84040';
-    statusEl.style.color = '#e84040';
+    statusEl.style.cssText = 'display:block;background:rgba(232,64,64,0.1);border:1px solid #e84040;color:#e84040;margin-bottom:1rem;padding:10px 14px;border-radius:6px;font-size:13px;font-weight:600;';
     statusEl.textContent = 'Please enter your name and email.';
     return;
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    statusEl.style.display = 'block';
-    statusEl.style.background = 'rgba(232,64,64,0.1)';
-    statusEl.style.border = '1px solid #e84040';
-    statusEl.style.color = '#e84040';
+    statusEl.style.cssText = 'display:block;background:rgba(232,64,64,0.1);border:1px solid #e84040;color:#e84040;margin-bottom:1rem;padding:10px 14px;border-radius:6px;font-size:13px;font-weight:600;';
     statusEl.textContent = 'Please enter a valid email address.';
     return;
   }
@@ -564,22 +546,21 @@ async function submitQuote() {
 
   const spec = collectSpec();
   const specText = [
-    'Base Model: '    + spec.baseModel,
-    'Inverter: '      + spec.inverter,
-    'Charger: '       + spec.charger,
-    'USB-C Ports: '   + spec.usbc,
-    '12V Outputs: '   + spec.outputs12v,
+    'Base Model: '     + spec.baseModel,
+    'Inverter: '       + spec.inverter,
+    'Charger: '        + spec.charger,
+    'USB-C Ports: '    + spec.usbc,
+    '12V Outputs: '    + spec.outputs12v,
     'Battery Monitor: '+ spec.monitor,
-    'LED Light: '     + spec.light,
-    'Protection: '    + spec.protection,
-    'Transport: '     + spec.transport,
+    'LED Light: '      + spec.light,
+    'Protection: '     + spec.protection,
+    'Transport: '      + spec.transport,
     '',
-    'Quote Total: '   + spec.total,
-    'Deposit (50%): ' + spec.deposit,
-    'Capacity: '      + spec.capacity,
-    'Lead Time: '     + spec.leadTime,
+    'Quote Total: '    + spec.total,
+    'Capacity: '       + spec.capacity,
+    'Lead Time: '      + spec.leadTime,
     notes ? '\nNotes: ' + notes : ''
-  ].join('\n');
+  ].filter(Boolean).join('\n');
 
   try {
     const res = await fetch('/api/contact', {
@@ -597,33 +578,24 @@ async function submitQuote() {
     const data = await res.json().catch(() => ({}));
 
     if (res.ok && data.ok) {
-      statusEl.style.display    = 'block';
-      statusEl.style.background = 'rgba(61,219,138,0.08)';
-      statusEl.style.border     = '1px solid #3ddb8a';
-      statusEl.style.color      = '#3ddb8a';
-      statusEl.textContent      = '✓ Sent! I\'ll review your build and reply within 24 hours.';
+      statusEl.style.cssText = 'display:block;background:rgba(61,219,138,0.08);border:1px solid #3ddb8a;color:#3ddb8a;margin-bottom:1rem;padding:10px 14px;border-radius:6px;font-size:13px;font-weight:600;';
+      statusEl.textContent = "✓ Sent! I'll review your build and reply within 24 hours.";
+      document.getElementById('quote-spinner').style.display = 'none';
       document.getElementById('quote-btn-label').textContent = '✓ Sent';
     } else {
       throw new Error(data.error || 'Send failed.');
     }
   } catch(err) {
-    // API failed — fall back to mailto so the quote still goes through
     btn.disabled = false;
     document.getElementById('quote-spinner').style.display = 'none';
     document.getElementById('quote-btn-label').textContent = 'Send Quote Request →';
 
     const mailSubject = encodeURIComponent('Custom Build Quote — ' + spec.baseModel + ' · ' + spec.total);
-    const mailBody    = encodeURIComponent(
-      'Name: ' + name + '\nEmail: ' + email + '\n\n' + specText +
-      (notes ? '\n\nNotes: ' + notes : '')
-    );
-    const mailtoLink = 'mailto:luke@isowatt.shop?subject=' + mailSubject + '&body=' + mailBody;
+    const mailBody    = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\n' + specText);
+    const mailtoLink  = 'mailto:luke@isowatt.shop?subject=' + mailSubject + '&body=' + mailBody;
 
-    statusEl.style.display    = 'block';
-    statusEl.style.background = 'rgba(240,165,0,0.08)';
-    statusEl.style.border     = '1px solid rgba(240,165,0,0.4)';
-    statusEl.style.color      = '#f0a500';
-    statusEl.innerHTML        = 'Direct send unavailable — <a href="' + mailtoLink + '" style="color:#f0a500;font-weight:700;">click here to send via your email app →</a>';
+    statusEl.style.cssText = 'display:block;background:rgba(240,165,0,0.08);border:1px solid rgba(240,165,0,0.4);color:#f0a500;margin-bottom:1rem;padding:10px 14px;border-radius:6px;font-size:13px;font-weight:600;';
+    statusEl.innerHTML = 'Direct send unavailable — <a href="' + mailtoLink + '" style="color:#f0a500;font-weight:700;">click here to send via your email app →</a>';
   }
 }
 </script>
