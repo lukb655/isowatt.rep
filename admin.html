@@ -1331,8 +1331,9 @@ function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
 // ── STRIPE LINKS ──
 function loadStripeLinks() {
   if (!P.stripe) P.stripe = {};
-  document.getElementById('stripe-station').value = P.stripe.isoStationPlusLink     || '';
-  document.getElementById('stripe-point').value   = P.stripe.isoPointPlusLink       || '';
+  // Fall back to old key names (isoStationPlusDepositLink) for backward compatibility
+  document.getElementById('stripe-station').value = P.stripe.isoStationPlusLink || P.stripe.isoStationPlusDepositLink || '';
+  document.getElementById('stripe-point').value   = P.stripe.isoPointPlusLink   || P.stripe.isoPointPlusDepositLink   || '';
   document.getElementById('stripe-custom').value  = P.stripe.customBuildContactLink || 'contact.html';
 }
 
@@ -1341,6 +1342,9 @@ function saveStripeLinks() {
   P.stripe.isoStationPlusLink      = document.getElementById('stripe-station').value.trim();
   P.stripe.isoPointPlusLink        = document.getElementById('stripe-point').value.trim();
   P.stripe.customBuildContactLink  = document.getElementById('stripe-custom').value.trim() || 'contact.html';
+  // Clear old key names so they don't shadow the new ones
+  delete P.stripe.isoStationPlusDepositLink;
+  delete P.stripe.isoPointPlusDepositLink;
   const r = document.getElementById('stripe-result');
   r.style.color = 'var(--green)';
   r.textContent = '✓ Saved — click Deploy to push to site.';
