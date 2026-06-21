@@ -1,0 +1,23 @@
+{
+  "name": "isowatt",
+  "version": "1.0.0",
+  "description": "IsoWatt - Portable LiFePO4 power stations built by hand in Bellefonte, PA",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukb655/isowatt.rep.git"
+  },
+  "keywords": ["isowatt", "power-station", "lifepo4"],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lukb655/isowatt.rep/issues"
+  },
+  "homepage": "https://github.com/lukb655/isowatt.rep#readme",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
+}

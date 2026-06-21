@@ -7,6 +7,10 @@
 <title>IsoWatt Configurator — Design Your System</title>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" type="image/png" href="./IW_LOGO_FAV.png">
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 <style>
 /* ── Layout ─────────────────────────────────────────────── */
 .config-wrap   { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem,4vw,2rem) 4rem; }
@@ -305,7 +309,7 @@ const FALLBACK = {
 
 let CFG = null; // set from prices.json
 
-// ── Helpers ──────────────────────────────────────────────────
+// ���─ Helpers ──────────────────────────────────────────────────
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 function getBaseModels() { return CFG?.configurator?.baseModels || FALLBACK.baseModels; }
