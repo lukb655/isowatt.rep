@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-29T01:54:48.771Z",
+    "lastUpdated": "2026-06-29T01:55:52.482Z",
     "currency": "USD"
   },
   "configurator": {
@@ -39,13 +39,13 @@
         },
         "mqyjuov0": {
           "label": "300W Inverter",
-          "price": 110,
-          "cogs": 60
+          "price": 39,
+          "cogs": 21
         },
         "mqyjuvq7": {
           "label": "500W Inverter",
-          "price": 137,
-          "cogs": 75,
+          "price": 55,
+          "cogs": 30,
           "models": [
             "iso-station",
             "isopack---50ah-lifepo4-06kwh"
@@ -53,8 +53,8 @@
         },
         "mqyjv4he": {
           "label": "1000W Inverter",
-          "price": 146,
-          "cogs": 80,
+          "price": 64,
+          "cogs": 35,
           "models": [
             "iso-station",
             "isopack---50ah-lifepo4-06kwh"
@@ -62,18 +62,26 @@
         },
         "mqyjvch3": {
           "label": "1600W Inverter",
-          "price": 155,
-          "cogs": 85,
+          "price": 68,
+          "cogs": 37,
           "models": [
             "iso-station"
           ]
         },
         "mqyjvk3m": {
           "label": "2200W Inverter",
-          "price": 257,
-          "cogs": 141,
+          "price": 171,
+          "cogs": 94,
           "models": [
             "iso-station"
+          ]
+        },
+        "mqyjvsun": {
+          "label": "150W Inverter",
+          "price": 19,
+          "cogs": 10,
+          "models": [
+            "iso-point"
           ]
         }
       },
@@ -109,7 +117,7 @@
         },
         "mqyk9w8z": {
           "label": "Both",
-          "price": 13,
+          "price": 14,
           "cogs": 7,
           "models": [
             "iso-station",
