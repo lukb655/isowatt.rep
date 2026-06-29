@@ -1,30 +1,8 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-18T01:29:39.035Z",
+    "lastUpdated": "2026-06-28T00:00:00Z",
     "currency": "USD"
-  },
-  "stripe": {
-    "isoStationPlusDepositLink": "https://buy.stripe.com/7sY3cvft52UYbLtfHpaR202",
-    "isoPointPlusDepositLink": "https://buy.stripe.com/7sY28r3Kn9jm9Dl0MvaR201",
-    "customBuildContactLink": "",
-    "finalPaymentLink": ""
-  },
-  "prebuilt": {
-    "iso-station-plus": {
-      "name": "IsoStation+",
-      "badge": "Flagship",
-      "subtitle": "Premium Portable Power Station",
-      "startingPrice": 899.99,
-      "cogs": 0
-    },
-    "iso-point-plus": {
-      "name": "IsoPoint+",
-      "badge": "Popular",
-      "subtitle": "Compact Portable Power",
-      "startingPrice": 419.99,
-      "cogs": 0
-    }
   },
   "configurator": {
     "baseModels": {
@@ -32,102 +10,66 @@
         "name": "IsoStation - 100Ah LiFePO4 (1.2kWh)",
         "capacity": "1.2kWh",
         "leadTime": "2-3 weeks",
-        "price": 500,
-        "cogs": 250
+        "price": 1200,
+        "cogs": 0
       },
       "iso-point": {
-        "name": "IsoPoint - 12Ah LiFePO4 (0.15kWh)",
-        "capacity": "0.15kWh",
+        "name": "IsoPoint - 25Ah LiFePO4 (0.3kWh)",
+        "capacity": "0.3kWh",
         "leadTime": "1-2 weeks",
-        "price": 350,
-        "cogs": 200
+        "price": 600,
+        "cogs": 0
       }
     },
     "addons": {
       "inverter": {
         "_label": "AC Inverter",
-        "none": {
-          "label": "None (DC Only)",
-          "price": 0,
-          "cogs": 0
-        },
-        "mqir61n6": {
-          "label": "300W Inverter",
-          "price": 50,
-          "cogs": 20
-        }
+        "none":  { "label": "None (DC Only)",             "price": 0,   "cogs": 0 },
+        "400w":  { "label": "400W Inverter",              "price": 150, "cogs": 0 },
+        "600w":  { "label": "600W Inverter",              "price": 200, "cogs": 0 },
+        "1000w": { "label": "1000W Inverter",             "price": 300, "cogs": 0 },
+        "2000w": { "label": "2000W Inverter",             "price": 400, "cogs": 0 }
       },
       "charger": {
         "_label": "Wall Charger",
-        "standard": {
-          "label": "Standard 10A",
-          "price": 30,
-          "cogs": 20
-        },
-        "fast": {
-          "label": "Fast 20A",
-          "price": 60,
-          "cogs": 45
-        }
+        "standard": { "label": "Standard 10A",            "price": 50,  "cogs": 0 },
+        "fast":     { "label": "Fast 20A",                "price": 100, "cogs": 0 },
+        "none":     { "label": "No Charger",              "price": 0,   "cogs": 0 }
       },
       "usbc": {
-        "1": {
-          "label": "1 Port",
-          "price": 15,
-          "cogs": 0
-        },
-        "2": {
-          "label": "2 Ports",
-          "price": 25,
-          "cogs": 0
-        },
-        "4": {
-          "label": "4 Ports",
-          "price": 40,
-          "cogs": 0
-        },
-        "_label": "USB-C Ports (96W Fast Charge)"
+        "_label": "USB-C Ports (96W Fast Charge)",
+        "1": { "label": "1 Port",   "price": 30, "cogs": 0 },
+        "2": { "label": "2 Ports",  "price": 50, "cogs": 0 },
+        "4": { "label": "4 Ports",  "price": 90, "cogs": 0 }
       },
       "12v": {
         "_label": "12V Outputs",
-        "lighter": {
-          "label": "Cigarette Lighter Socket",
-          "price": 10,
-          "cogs": 0
-        },
-        "anderson": {
-          "label": "Anderson SB50",
-          "price": 25,
-          "cogs": 0
-        },
-        "both": {
-          "label": "Both",
-          "price": 30,
-          "cogs": 0
-        }
+        "lighter":  { "label": "Cigarette Lighter Socket", "price": 20, "cogs": 0 },
+        "anderson": { "label": "Anderson SB50",            "price": 40, "cogs": 0 },
+        "both":     { "label": "Both",                     "price": 60, "cogs": 0 }
+      },
+      "monitor": {
+        "_label": "Battery Monitor",
+        "bluetooth": { "label": "Bluetooth Display",  "price": 60, "cogs": 0 },
+        "led":       { "label": "LED Indicator Only", "price": 20, "cogs": 0 },
+        "none":      { "label": "None",               "price": 0,  "cogs": 0 }
       },
       "light": {
         "_label": "LED Work Light",
-        "none": {
-          "label": "None",
-          "price": 0,
-          "cogs": 0
-        },
-        "integrated": {
-          "label": "Integrated (Built-in)",
-          "price": 80,
-          "cogs": 0
-        },
-        "mqitn8h2": {
-          "label": "External All-Sides",
-          "price": 50,
-          "cogs": 0
-        },
-        "mqitnlot": {
-          "label": "External 1-Side",
-          "price": 20,
-          "cogs": 0
-        }
+        "none":       { "label": "None",                   "price": 0,  "cogs": 0 },
+        "integrated": { "label": "Integrated (Built-in)",  "price": 35, "cogs": 0 },
+        "external":   { "label": "External Dimmable",      "price": 60, "cogs": 0 }
+      },
+      "protection": {
+        "_label": "Protection Package",
+        "standard": { "label": "Standard (BMS Only)",        "price": 0,  "cogs": 0 },
+        "upgraded":  { "label": "Upgraded (Fuses + Breakers)","price": 75, "cogs": 0 }
+      },
+      "transport": {
+        "_label": "Carrying & Transport",
+        "none":   { "label": "None",                    "price": 0,   "cogs": 0 },
+        "handle": { "label": "Heavy-Duty Handle Kit",   "price": 40,  "cogs": 0 },
+        "cart":   { "label": "Wheeled Transport Cart",  "price": 120, "cogs": 0 }
       }
     }
   }

@@ -570,49 +570,14 @@ body {
   </header>
 
   <nav class="tab-bar">
-    <button class="tab on" onclick="showPane('prebuilt',this)">Prebuilt Products</button>
-    <button class="tab" onclick="showPane('configurator',this)">Configurator</button>
+    <button class="tab on" onclick="showPane('configurator',this)">Configurator</button>
     <button class="tab" onclick="showPane('settings',this)">Settings</button>
   </nav>
 
   <div class="admin-body">
 
-    <!-- ── PREBUILT ── -->
-    <div class="pane on" id="pane-prebuilt">
-      <div class="section">
-        <div class="section-head">
-          <div>
-            <div class="section-title">Prebuilt Products</div>
-            <div class="section-sub">Starting prices shown on the Products page — customers see these</div>
-          </div>
-          <button class="btn-add-row" onclick="addPrebuilt()">+ Add Product</button>
-        </div>
-        <div class="margin-bar">
-          <span class="margin-bar-label">Set all margins to:</span>
-          <input type="range" class="margin-slider" id="pb-slider" min="5" max="80" value="45"
-                 oninput="document.getElementById('pb-val').textContent=this.value+'%'">
-          <span class="margin-val" id="pb-val">45%</span>
-          <button class="btn-apply" onclick="bulkMargin('prebuilt','pb-slider')">Apply to All</button>
-        </div>
-        <table class="ptable">
-          <thead>
-            <tr>
-              <th style="width:220px">Product</th>
-              <th style="width:110px">COGS ($)</th>
-              <th style="width:16px"></th>
-              <th style="width:110px">Sell Price ($)</th>
-              <th style="width:80px">Margin</th>
-              <th style="width:90px">Gross Profit</th>
-              <th style="width:36px"></th>
-            </tr>
-          </thead>
-          <tbody id="pb-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
     <!-- ── CONFIGURATOR ── -->
-    <div class="pane" id="pane-configurator">
+    <div class="pane on" id="pane-configurator">
 
       <div class="section">
         <div class="section-head">
@@ -671,30 +636,6 @@ body {
     <!-- ── SETTINGS ── -->
     <div class="pane" id="pane-settings">
       <div class="settings-wrap">
-
-        <div class="settings-card">
-          <div class="settings-card-title">Stripe Payment Links</div>
-          <p style="font-size:12px;color:var(--subtle);margin-bottom:1.25rem;line-height:1.6;">
-            Paste full-price Stripe Payment Link URLs for each prebuilt product. These wire to the Buy Now buttons on your site. Create links in <strong style="color:var(--text);">Stripe Dashboard → Payment Links</strong>. Custom orders are invoiced via Stripe — no link needed.
-          </p>
-          <div class="form-row">
-            <label class="form-lbl">IsoStation+ — Full Price Payment Link</label>
-            <input type="url" id="stripe-station" class="form-ctrl" placeholder="https://buy.stripe.com/...">
-            <div class="form-hint">Create a $1,289 product in Stripe → Payment Link → paste here. Enable Klarna/Affirm in Stripe settings to offer BNPL at checkout.</div>
-          </div>
-          <div class="form-row">
-            <label class="form-lbl">IsoPoint+ — Full Price Payment Link</label>
-            <input type="url" id="stripe-point" class="form-ctrl" placeholder="https://buy.stripe.com/...">
-            <div class="form-hint">Create a $365 product → Payment Link → paste here.</div>
-          </div>
-          <div class="form-row">
-            <label class="form-lbl">Custom Build — Contact / Quote Page URL</label>
-            <input type="url" id="stripe-custom" class="form-ctrl" placeholder="contact.html">
-            <div class="form-hint">Where the configurator "Request This Build" button falls back if email fails. Default: contact.html. Custom orders are invoiced manually via Stripe Dashboard → Customers → Create Invoice.</div>
-          </div>
-          <button class="btn-sm" onclick="saveStripeLinks()">Save Links</button>
-          <span id="stripe-result" class="inline-result"></span>
-        </div>
 
         <div class="settings-card">
           <div class="settings-card-title">GitHub Integration</div>
@@ -759,10 +700,6 @@ body {
 // ───────────────────────────────────────────────────
 const DEFAULTS = {
   meta: { version: '1.0.0', lastUpdated: new Date().toISOString(), currency: 'USD' },
-  prebuilt: {
-    'iso-station-plus': { name: 'IsoStation+', badge: 'Flagship', subtitle: 'Premium Portable Power Station', startingPrice: 1289, cogs: 0 },
-    'iso-point-plus':   { name: 'IsoPoint+',   badge: 'Popular',  subtitle: 'Compact Portable Power',         startingPrice: 365,  cogs: 0 }
-  },
   configurator: {
     baseModels: {
       'iso-station': { name: 'IsoStation - 100Ah LiFePO4 (1.2kWh)', capacity: '1.2kWh', leadTime: '2-3 weeks', price: 1200, cogs: 0 },
@@ -864,7 +801,6 @@ async function refreshFromGitHub() {
     if (res.status === 404) {
       P = deepClone(DEFAULTS);
       render();
-      loadStripeLinks();
       setStatus('warn', 'prices.json not found — will create on deploy');
       showToast('prices.json not in repo yet. Click Deploy to create it.', 'info');
       return;
@@ -873,7 +809,6 @@ async function refreshFromGitHub() {
     const data = await res.json();
     P = JSON.parse(atob(data.content.replace(/\n/g, '')));
     render();
-    loadStripeLinks();
     setStatus('ok', `Synced ${new Date().toLocaleTimeString()}`);
   } catch (err) {
     P = deepClone(DEFAULTS);
@@ -886,15 +821,7 @@ async function refreshFromGitHub() {
 // ───────────────────────────────────────────────────
 // RENDER
 // ───────────────────────────────────────────────────
-function render() { renderPrebuilt(); renderBaseModels(); renderAddons(); }
-
-function renderPrebuilt() {
-  const tbody = document.getElementById('pb-tbody');
-  tbody.innerHTML = '';
-  Object.entries(P.prebuilt).forEach(([id, p]) => {
-    tbody.appendChild(buildProductRow(id, p, 'pb'));
-  });
-}
+function render() { renderBaseModels(); renderAddons(); }
 
 function renderBaseModels() {
   const tbody = document.getElementById('base-tbody');
@@ -998,13 +925,8 @@ function onFieldChange(input) {
   const cogs   = parseFloat(cogsEl.value) || 0;
   const sell   = parseFloat(sellEl.value) || 0;
 
-  if (scope === 'pb') {
-    if (field === 'cogs') P.prebuilt[id].cogs = val;
-    else P.prebuilt[id].startingPrice = val;
-  } else {
-    if (field === 'cogs') P.configurator.baseModels[id].cogs = val;
-    else P.configurator.baseModels[id].price = val;
-  }
+  if (field === 'cogs') P.configurator.baseModels[id].cogs = val;
+  else P.configurator.baseModels[id].price = val;
 
   updateRowCalc(id + '-' + scope, sell, cogs);
   input.classList.add('dirty');
@@ -1045,24 +967,17 @@ function updateRowCalc(uid, sell, cogs) {
 function bulkMargin(scope, sliderId) {
   const pct = parseFloat(document.getElementById(sliderId).value) / 100;
 
-  if (scope === 'prebuilt') {
-    Object.values(P.prebuilt).forEach(p => {
-      if (p.cogs > 0) p.startingPrice = Math.ceil(p.cogs / (1 - pct));
+  Object.values(P.configurator.baseModels).forEach(m => {
+    if (m.cogs > 0) m.price = Math.ceil(m.cogs / (1 - pct));
+  });
+  Object.values(P.configurator.addons).forEach(group => {
+    Object.entries(group).forEach(([k, opt]) => {
+      if (k === '_label') return;
+      if (opt.cogs > 0) opt.price = Math.ceil(opt.cogs / (1 - pct));
     });
-    renderPrebuilt();
-  } else {
-    Object.values(P.configurator.baseModels).forEach(m => {
-      if (m.cogs > 0) m.price = Math.ceil(m.cogs / (1 - pct));
-    });
-    Object.values(P.configurator.addons).forEach(group => {
-      Object.entries(group).forEach(([k, opt]) => {
-        if (k === '_label') return;
-        if (opt.cogs > 0) opt.price = Math.ceil(opt.cogs / (1 - pct));
-      });
-    });
-    renderBaseModels();
-    renderAddons();
-  }
+  });
+  renderBaseModels();
+  renderAddons();
 
   markDirty();
   showToast(`${Math.round(pct * 100)}% margin applied.`, 'success');
@@ -1071,23 +986,6 @@ function bulkMargin(scope, sliderId) {
 // ───────────────────────────────────────────────────
 // ADD / REMOVE
 // ───────────────────────────────────────────────────
-function addPrebuilt() {
-  const name = prompt('Product name (e.g. IsoStation Pro):');
-  if (!name?.trim()) return;
-  const id = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-  P.prebuilt[id] = { name: name.trim(), badge: '', subtitle: '', startingPrice: 0, cogs: 0 };
-  renderPrebuilt();
-  markDirty();
-}
-
-function removePrebuilt(id) {
-  if (Object.keys(P.prebuilt).length <= 1) { showToast('Cannot remove the last product.', 'error'); return; }
-  if (!confirm(`Remove "${P.prebuilt[id].name}"?`)) return;
-  delete P.prebuilt[id];
-  renderPrebuilt();
-  markDirty();
-}
-
 function addOption() {
   const groupKey = prompt('Category key (existing: inverter, charger, usbc, 12v, monitor, light, protection, transport)\nOr enter a new category name:');
   if (!groupKey?.trim()) return;
@@ -1248,12 +1146,6 @@ async function saveGHSettings() {
 function exportCSV() {
   const rows = [['Category', 'Name', 'COGS', 'Sell Price', 'Gross Profit', 'Margin %']];
 
-  Object.values(P.prebuilt).forEach(p => {
-    const g = (p.startingPrice || 0) - (p.cogs || 0);
-    const m = p.startingPrice > 0 ? (g / p.startingPrice * 100).toFixed(1) : '';
-    rows.push(['Prebuilt', p.name, p.cogs || 0, p.startingPrice || 0, g, m]);
-  });
-
   Object.values(P.configurator.baseModels).forEach(m => {
     const g = (m.price || 0) - (m.cogs || 0);
     const pct = m.price > 0 ? (g / m.price * 100).toFixed(1) : '';
@@ -1328,28 +1220,6 @@ function fmtGross(sell, cogs) {
 
 function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
 
-// ── STRIPE LINKS ──
-function loadStripeLinks() {
-  if (!P.stripe) P.stripe = {};
-  // Fall back to old key names (isoStationPlusDepositLink) for backward compatibility
-  document.getElementById('stripe-station').value = P.stripe.isoStationPlusLink || P.stripe.isoStationPlusDepositLink || '';
-  document.getElementById('stripe-point').value   = P.stripe.isoPointPlusLink   || P.stripe.isoPointPlusDepositLink   || '';
-  document.getElementById('stripe-custom').value  = P.stripe.customBuildContactLink || 'contact.html';
-}
-
-function saveStripeLinks() {
-  if (!P.stripe) P.stripe = {};
-  P.stripe.isoStationPlusLink      = document.getElementById('stripe-station').value.trim();
-  P.stripe.isoPointPlusLink        = document.getElementById('stripe-point').value.trim();
-  P.stripe.customBuildContactLink  = document.getElementById('stripe-custom').value.trim() || 'contact.html';
-  // Clear old key names so they don't shadow the new ones
-  delete P.stripe.isoStationPlusDepositLink;
-  delete P.stripe.isoPointPlusDepositLink;
-  const r = document.getElementById('stripe-result');
-  r.style.color = 'var(--green)';
-  r.textContent = '✓ Saved — click Deploy to push to site.';
-  markDirty();
-}
 </script>
 </body>
 </html>
