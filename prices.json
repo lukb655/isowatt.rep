@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-29T14:11:37.777Z",
+    "lastUpdated": "2026-06-29T14:12:49.458Z",
     "currency": "USD"
   },
   "configurator": {
@@ -24,7 +24,7 @@
         "name": "IsoStation - 100Ah Battery ~ 4800 Enclosure ~ 1.2kWh",
         "capacity": "1.2kWh",
         "leadTime": "2-3 weeks",
-        "price": 450,
+        "price": 400,
         "cogs": 300
       }
     },
