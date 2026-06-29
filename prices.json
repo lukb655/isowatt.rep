@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-29T01:49:30.936Z",
+    "lastUpdated": "2026-06-29T01:50:41.261Z",
     "currency": "USD"
   },
   "configurator": {
@@ -46,7 +46,10 @@
           "label": "500W Inverter",
           "price": 55,
           "cogs": 30,
-          "models": []
+          "models": [
+            "iso-station",
+            "isopack---50ah-lifepo4-06kwh"
+          ]
         },
         "mqyjv4he": {
           "label": "1000W Inverter",
@@ -111,11 +114,6 @@
           "label": "Cigarette Lighter Port",
           "price": 6,
           "cogs": 3
-        },
-        "mqyk79s1": {
-          "label": "Both",
-          "price": 13,
-          "cogs": 7
         }
       },
       "monitor": {
