@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-28T00:00:00Z",
+    "lastUpdated": "2026-06-29T01:04:35.775Z",
     "currency": "USD"
   },
   "configurator": {
@@ -19,57 +19,175 @@
         "leadTime": "1-2 weeks",
         "price": 600,
         "cogs": 0
+      },
+      "isopack---50ah-lifepo4-06kwh": {
+        "name": "IsoPack - 50Ah LiFePO4 (0.6kWh)",
+        "capacity": "0.6kWh",
+        "leadTime": "2-3 weeks",
+        "price": 400,
+        "cogs": 0
       }
     },
     "addons": {
       "inverter": {
         "_label": "AC Inverter",
-        "none":  { "label": "None (DC Only)",             "price": 0,   "cogs": 0, "models": [] },
-        "400w":  { "label": "400W Inverter",              "price": 150, "cogs": 0, "models": [] },
-        "600w":  { "label": "600W Inverter",              "price": 200, "cogs": 0, "models": ["iso-station"] },
-        "1000w": { "label": "1000W Inverter",             "price": 300, "cogs": 0, "models": ["iso-station"] },
-        "2000w": { "label": "2000W Inverter",             "price": 400, "cogs": 0, "models": ["iso-station"] }
+        "none": {
+          "label": "None (DC Only)",
+          "price": 0,
+          "cogs": 0,
+          "models": []
+        },
+        "400w": {
+          "label": "400W Inverter",
+          "price": 150,
+          "cogs": 0,
+          "models": []
+        },
+        "600w": {
+          "label": "600W Inverter",
+          "price": 200,
+          "cogs": 0,
+          "models": [
+            "iso-station"
+          ]
+        },
+        "1000w": {
+          "label": "1000W Inverter",
+          "price": 300,
+          "cogs": 0,
+          "models": [
+            "iso-station"
+          ]
+        },
+        "2000w": {
+          "label": "2000W Inverter",
+          "price": 400,
+          "cogs": 0,
+          "models": [
+            "iso-station"
+          ]
+        }
       },
       "charger": {
         "_label": "Wall Charger",
-        "standard": { "label": "Standard 10A",            "price": 50,  "cogs": 0 },
-        "fast":     { "label": "Fast 20A",                "price": 100, "cogs": 0 },
-        "none":     { "label": "No Charger",              "price": 0,   "cogs": 0 }
+        "standard": {
+          "label": "Standard 10A",
+          "price": 50,
+          "cogs": 0
+        },
+        "fast": {
+          "label": "Fast 20A",
+          "price": 100,
+          "cogs": 0
+        },
+        "none": {
+          "label": "No Charger",
+          "price": 0,
+          "cogs": 0
+        }
       },
       "usbc": {
-        "_label": "USB-C Ports (96W Fast Charge)",
-        "1": { "label": "1 Port",   "price": 30, "cogs": 0 },
-        "2": { "label": "2 Ports",  "price": 50, "cogs": 0 },
-        "4": { "label": "4 Ports",  "price": 90, "cogs": 0 }
+        "1": {
+          "label": "1 Port",
+          "price": 30,
+          "cogs": 0
+        },
+        "2": {
+          "label": "2 Ports",
+          "price": 50,
+          "cogs": 0
+        },
+        "4": {
+          "label": "4 Ports",
+          "price": 90,
+          "cogs": 0
+        },
+        "_label": "USB-C Ports (96W Fast Charge)"
       },
       "12v": {
         "_label": "12V Outputs",
-        "lighter":  { "label": "Cigarette Lighter Socket", "price": 20, "cogs": 0 },
-        "anderson": { "label": "Anderson SB50",            "price": 40, "cogs": 0 },
-        "both":     { "label": "Both",                     "price": 60, "cogs": 0 }
+        "lighter": {
+          "label": "Cigarette Lighter Socket",
+          "price": 20,
+          "cogs": 0
+        },
+        "anderson": {
+          "label": "Anderson SB50",
+          "price": 40,
+          "cogs": 0
+        },
+        "both": {
+          "label": "Both",
+          "price": 60,
+          "cogs": 0
+        }
       },
       "monitor": {
         "_label": "Battery Monitor",
-        "bluetooth": { "label": "Bluetooth Display",  "price": 60, "cogs": 0 },
-        "led":       { "label": "LED Indicator Only", "price": 20, "cogs": 0 },
-        "none":      { "label": "None",               "price": 0,  "cogs": 0 }
+        "bluetooth": {
+          "label": "Bluetooth Display",
+          "price": 60,
+          "cogs": 0
+        },
+        "led": {
+          "label": "LED Indicator Only",
+          "price": 20,
+          "cogs": 0
+        },
+        "none": {
+          "label": "None",
+          "price": 0,
+          "cogs": 0
+        }
       },
       "light": {
         "_label": "LED Work Light",
-        "none":       { "label": "None",                   "price": 0,  "cogs": 0 },
-        "integrated": { "label": "Integrated (Built-in)",  "price": 35, "cogs": 0 },
-        "external":   { "label": "External Dimmable",      "price": 60, "cogs": 0 }
+        "none": {
+          "label": "None",
+          "price": 0,
+          "cogs": 0
+        },
+        "integrated": {
+          "label": "Integrated (Built-in)",
+          "price": 35,
+          "cogs": 0
+        },
+        "external": {
+          "label": "External Dimmable",
+          "price": 60,
+          "cogs": 0
+        }
       },
       "protection": {
         "_label": "Protection Package",
-        "standard": { "label": "Standard (BMS Only)",        "price": 0,  "cogs": 0 },
-        "upgraded":  { "label": "Upgraded (Fuses + Breakers)","price": 75, "cogs": 0 }
+        "standard": {
+          "label": "Standard (BMS Only)",
+          "price": 0,
+          "cogs": 0
+        },
+        "upgraded": {
+          "label": "Upgraded (Fuses + Breakers)",
+          "price": 75,
+          "cogs": 0
+        }
       },
       "transport": {
         "_label": "Carrying & Transport",
-        "none":   { "label": "None",                    "price": 0,   "cogs": 0 },
-        "handle": { "label": "Heavy-Duty Handle Kit",   "price": 40,  "cogs": 0 },
-        "cart":   { "label": "Wheeled Transport Cart",  "price": 120, "cogs": 0 }
+        "none": {
+          "label": "None",
+          "price": 0,
+          "cogs": 0
+        },
+        "handle": {
+          "label": "Heavy-Duty Handle Kit",
+          "price": 40,
+          "cogs": 0
+        },
+        "cart": {
+          "label": "Wheeled Transport Cart",
+          "price": 120,
+          "cogs": 0
+        }
       }
     }
   }
