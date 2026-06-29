@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-29T01:29:40.179Z",
+    "lastUpdated": "2026-06-29T01:46:14.784Z",
     "currency": "USD"
   },
   "configurator": {
@@ -10,22 +10,22 @@
         "name": "IsoStation - 100Ah LiFePO4 (1.2kWh)",
         "capacity": "1.2kWh",
         "leadTime": "2-3 weeks",
-        "price": 500,
-        "cogs": 0
+        "price": 546,
+        "cogs": 300
       },
       "iso-point": {
         "name": "IsoPoint - 25Ah LiFePO4 (0.3kWh)",
         "capacity": "0.3kWh",
         "leadTime": "1-2 weeks",
-        "price": 265,
-        "cogs": 0
+        "price": 337,
+        "cogs": 185
       },
       "isopack---50ah-lifepo4-06kwh": {
         "name": "IsoPack - 50Ah LiFePO4 (0.6kWh)",
         "capacity": "0.6kWh",
         "leadTime": "2-3 weeks",
-        "price": 375,
-        "cogs": 0
+        "price": 419,
+        "cogs": 230
       }
     },
     "addons": {
@@ -37,80 +37,79 @@
           "cogs": 0,
           "models": []
         },
-        "400w": {
-          "label": "400W Inverter",
-          "price": 150,
-          "cogs": 0,
-          "models": []
+        "mqyjuov0": {
+          "label": "300W Inverter",
+          "price": 39,
+          "cogs": 21
         },
-        "600w": {
-          "label": "600W Inverter",
-          "price": 200,
-          "cogs": 0,
-          "models": [
-            "iso-station",
-            "isopack---50ah-lifepo4-06kwh"
-          ]
+        "mqyjuvq7": {
+          "label": "500W Inverter",
+          "price": 55,
+          "cogs": 30
         },
-        "1000w": {
+        "mqyjv4he": {
           "label": "1000W Inverter",
-          "price": 300,
-          "cogs": 0,
-          "models": [
-            "iso-station"
-          ]
+          "price": 64,
+          "cogs": 35
         },
-        "2000w": {
-          "label": "2000W Inverter",
-          "price": 400,
-          "cogs": 0,
-          "models": [
-            "iso-station"
-          ]
+        "mqyjvch3": {
+          "label": "1600W Inverter",
+          "price": 68,
+          "cogs": 37
+        },
+        "mqyjvk3m": {
+          "label": "2200W Inverter",
+          "price": 171,
+          "cogs": 94
+        },
+        "mqyjvsun": {
+          "label": "150W Inverter",
+          "price": 19,
+          "cogs": 10
         }
       },
       "charger": {
         "_label": "Wall Charger",
         "standard": {
           "label": "Standard 10A",
-          "price": 50,
-          "cogs": 0
+          "price": 40,
+          "cogs": 22
         },
         "fast": {
           "label": "Fast 20A",
-          "price": 100,
-          "cogs": 0
+          "price": 82,
+          "cogs": 45
         }
       },
       "12v": {
         "_label": "12V Outputs",
         "anderson": {
           "label": "Anderson SB50",
-          "price": 40,
-          "cogs": 0
+          "price": 10,
+          "cogs": 5
         },
         "mqyj0i1u": {
           "label": "Cigarette Lighter Port",
-          "price": 15,
-          "cogs": 0
+          "price": 6,
+          "cogs": 3
         }
       },
       "monitor": {
         "_label": "Battery Monitor",
         "led": {
           "label": "LED Indicator Only",
-          "price": 5,
-          "cogs": 0
+          "price": 4,
+          "cogs": 2
         },
         "mqyj2zmv": {
           "label": "Voltage Monitor Only",
-          "price": 10,
-          "cogs": 0
+          "price": 6,
+          "cogs": 3
         },
         "mqyj3syz": {
           "label": "Volt + Temp + Alarm Display",
-          "price": 20,
-          "cogs": 0
+          "price": 10,
+          "cogs": 5
         },
         "mqyj4dam": {
           "label": "None",
@@ -127,13 +126,13 @@
         },
         "integrated": {
           "label": "Integrated (Built-in)",
-          "price": 40,
-          "cogs": 0
+          "price": 19,
+          "cogs": 10
         },
         "mqyj4zvs": {
           "label": "External Flood Lights",
-          "price": 35,
-          "cogs": 0
+          "price": 10,
+          "cogs": 5
         }
       },
       "usb": {
@@ -141,17 +140,17 @@
         "mqyjb70w": {
           "label": "2-USB+2-USBC ComboPort x1",
           "price": 10,
-          "cogs": 0
+          "cogs": 5
         },
         "mqyjbmgs": {
           "label": "2-USB+2-USBC ComboPort x2",
-          "price": 18,
-          "cogs": 0
+          "price": 19,
+          "cogs": 10
         },
         "mqyjbvxv": {
           "label": "2-USB+2-USBC ComboPort x3",
-          "price": 25,
-          "cogs": 0
+          "price": 28,
+          "cogs": 15
         }
       }
     }
