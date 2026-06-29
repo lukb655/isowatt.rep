@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-29T01:21:07.782Z",
+    "lastUpdated": "2026-06-29T01:26:10.844Z",
     "currency": "USD"
   },
   "configurator": {
@@ -10,21 +10,21 @@
         "name": "IsoStation - 100Ah LiFePO4 (1.2kWh)",
         "capacity": "1.2kWh",
         "leadTime": "2-3 weeks",
-        "price": 1200,
+        "price": 500,
         "cogs": 0
       },
       "iso-point": {
         "name": "IsoPoint - 25Ah LiFePO4 (0.3kWh)",
         "capacity": "0.3kWh",
         "leadTime": "1-2 weeks",
-        "price": 600,
+        "price": 265,
         "cogs": 0
       },
       "isopack---50ah-lifepo4-06kwh": {
         "name": "IsoPack - 50Ah LiFePO4 (0.6kWh)",
         "capacity": "0.6kWh",
         "leadTime": "2-3 weeks",
-        "price": 400,
+        "price": 375,
         "cogs": 0
       }
     },
@@ -136,16 +136,21 @@
           "cogs": 0
         }
       },
-      "usb-ports": {
+      "usb": {
         "_label": "USB Ports",
-        "mqyis8ww": {
-          "label": "2-QC3 USB + 2 PD USBC Combo Port",
-          "price": 10,
+        "mqyjb70w": {
+          "label": "2-USB+2-USBC ComboPort x1",
+          "price": 0,
           "cogs": 0
         },
-        "mqyj6ijo": {
-          "label": "2-QC3 USB + 1-PD USBC + On/Off Switch Combo Port",
-          "price": 10,
+        "mqyjbmgs": {
+          "label": "2-USB+2-USBC ComboPort x2",
+          "price": 0,
+          "cogs": 0
+        },
+        "mqyjbvxv": {
+          "label": "2-USB+2-USBC ComboPort x3",
+          "price": 0,
           "cogs": 0
         }
       }
