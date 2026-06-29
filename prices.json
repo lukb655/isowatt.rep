@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-29T01:50:41.261Z",
+    "lastUpdated": "2026-06-29T01:52:02.411Z",
     "currency": "USD"
   },
   "configurator": {
@@ -114,6 +114,15 @@
           "label": "Cigarette Lighter Port",
           "price": 6,
           "cogs": 3
+        },
+        "mqyk9w8z": {
+          "label": "Both",
+          "price": 0,
+          "cogs": 7,
+          "models": [
+            "iso-station",
+            "isopack---50ah-lifepo4-06kwh"
+          ]
         }
       },
       "monitor": {
