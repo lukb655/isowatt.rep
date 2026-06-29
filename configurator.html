@@ -141,6 +141,17 @@
   font-size: 14px;
 }
 
+/* ── Subcategory sub-section ─────────────────────────────── */
+.cfg-sub {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+.cfg-sub .cfg-label {
+  color: var(--muted);
+  font-size: 11px;
+}
+
 /* ── Modal ────────────────────────────────────────────────── */
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>
@@ -338,7 +349,7 @@ function buildConfigurator() {
   const container = document.getElementById('addon-sections');
   container.innerHTML = '';
   Object.entries(addons).forEach(([groupKey, group]) => {
-    const opts = Object.entries(group).filter(([k]) => k !== '_label');
+    const opts = Object.entries(group).filter(([k]) => k !== '_label' && k !== '_subcategory');
     if (opts.length === 0) return;
     const label = group._label || groupKey;
 
@@ -353,11 +364,32 @@ function buildConfigurator() {
       return `<option value="${esc(optKey)}" data-models='${models}'>${esc(lbl)}${price > 0 ? ' — $' + price : ''}</option>`;
     }).join('');
 
+    // Build subcategory sub-section if present
+    let subcatHtml = '';
+    if (group._subcategory) {
+      const sub = group._subcategory;
+      const subOpts = Object.entries(sub).filter(([k]) => !k.startsWith('_'));
+      if (subOpts.length > 0) {
+        const subOptionsHtml = subOpts.map(([subKey, subOpt]) => {
+          const lbl = subOpt.label || subKey;
+          const price = subOpt.price || 0;
+          const models = JSON.stringify(subOpt.models || []);
+          const parentOpts = JSON.stringify(subOpt.parentOptions || []);
+          return `<option value="${esc(subKey)}" data-models='${models}' data-parent-opts='${parentOpts}'>${esc(lbl)}${price > 0 ? ' — $' + price : ''}</option>`;
+        }).join('');
+        subcatHtml = `
+          <div class="cfg-sub" id="sub-${esc(groupKey)}" style="display:none;">
+            <label class="cfg-label">${esc(sub._label || 'Options')}</label>
+            <select class="cfg-select" data-group="${esc(groupKey)}" data-is-subcat="true" onchange="updateConfig()">${subOptionsHtml}</select>
+          </div>`;
+      }
+    }
+
     sec.innerHTML = `
       <div class="cfg-section-title">${esc(label)}</div>
       <div class="cfg-group">
-        <select class="cfg-select" data-group="${esc(groupKey)}" onchange="updateConfig()">${optionsHtml}</select>
-      </div>`;
+        <select class="cfg-select" data-group="${esc(groupKey)}" onchange="onAddonSelect(this)">${optionsHtml}</select>
+      </div>${subcatHtml}`;
     container.appendChild(sec);
   });
 
@@ -372,7 +404,7 @@ function buildConfigurator() {
 }
 
 function filterAddons(modelId) {
-  document.querySelectorAll('select[data-group]').forEach(sel => {
+  document.querySelectorAll('select[data-group]:not([data-is-subcat])').forEach(sel => {
     let currentInvalid = false;
     Array.from(sel.options).forEach(o => {
       const models  = JSON.parse(o.getAttribute('data-models') || '[]');
@@ -385,8 +417,45 @@ function filterAddons(modelId) {
       const first = Array.from(sel.options).find(o => !o.hidden);
       if (first) sel.value = first.value;
     }
+    filterSubcat(sel.dataset.group, sel.value, modelId);
   });
   updateConfig();
+}
+
+function onAddonSelect(sel) {
+  filterSubcat(sel.dataset.group, sel.value);
+  updateConfig();
+}
+
+function filterSubcat(groupKey, parentValue, modelId) {
+  modelId = modelId || document.getElementById('select-base').value;
+  const subDiv = document.getElementById('sub-' + groupKey);
+  if (!subDiv) return;
+
+  const group = getAddons()[groupKey];
+  if (!group?._subcategory) return;
+  const sub = group._subcategory;
+
+  const shouldShow = !sub._hideWhenParent || parentValue !== sub._hideWhenParent;
+  subDiv.style.display = shouldShow ? '' : 'none';
+  if (!shouldShow) return;
+
+  const subSel = subDiv.querySelector('select');
+  let currentInvalid = false;
+  Array.from(subSel.options).forEach(o => {
+    const models     = JSON.parse(o.getAttribute('data-models')      || '[]');
+    const parentOpts = JSON.parse(o.getAttribute('data-parent-opts') || '[]');
+    const modelOk  = models.length === 0     || models.includes(modelId);
+    const parentOk = parentOpts.length === 0 || parentOpts.includes(parentValue);
+    const allowed  = modelOk && parentOk;
+    o.hidden   = !allowed;
+    o.disabled = !allowed;
+    if (subSel.value === o.value && !allowed) currentInvalid = true;
+  });
+  if (currentInvalid) {
+    const first = Array.from(subSel.options).find(o => !o.hidden);
+    if (first) subSel.value = first.value;
+  }
 }
 
 // ── Recalculate totals whenever any select changes ───────────
@@ -397,7 +466,7 @@ function updateConfig() {
 
   // Collect addon prices — works for any number of groups
   const lines = [];
-  document.querySelectorAll('select[data-group]').forEach(sel => {
+  document.querySelectorAll('select[data-group]:not([data-is-subcat])').forEach(sel => {
     const groupKey = sel.dataset.group;
     const optKey   = sel.value;
     const entry    = getAddonEntry(groupKey, optKey);
@@ -406,6 +475,20 @@ function updateConfig() {
     if (entry.price > 0) {
       lines.push({ label: groupLbl + ': ' + entry.label, price: entry.price });
       total += entry.price;
+    }
+    // Include visible subcategory price
+    const subDiv = document.getElementById('sub-' + groupKey);
+    if (subDiv && subDiv.style.display !== 'none') {
+      const subSel = subDiv.querySelector('select');
+      const subKey = subSel.value;
+      const sub    = group?._subcategory;
+      if (sub) {
+        const subOpt = sub[subKey];
+        if (subOpt && subOpt.price > 0) {
+          lines.push({ label: (sub._label || 'Options') + ': ' + (subOpt.label || subKey), price: subOpt.price });
+          total += subOpt.price;
+        }
+      }
     }
   });
 
@@ -451,11 +534,23 @@ function collectSpec() {
   const addons  = getAddons();
   const spec    = { baseModel: base.name, capacity: base.capacity, leadTime: base.leadTime, options: {}, total: '$0' };
 
-  document.querySelectorAll('select[data-group]').forEach(sel => {
+  document.querySelectorAll('select[data-group]:not([data-is-subcat])').forEach(sel => {
     const gk    = sel.dataset.group;
     const entry = getAddonEntry(gk, sel.value);
     const lbl   = addons[gk]?._label || gk;
     spec.options[lbl] = entry.label + (entry.price > 0 ? ' (+$' + entry.price + ')' : '');
+    // Include visible subcategory selection
+    const subDiv = document.getElementById('sub-' + gk);
+    if (subDiv && subDiv.style.display !== 'none') {
+      const subSel = subDiv.querySelector('select');
+      const subKey = subSel.value;
+      const sub    = addons[gk]?._subcategory;
+      if (sub) {
+        const subOpt = sub[subKey];
+        const subLbl = sub._label || 'Options';
+        if (subOpt) spec.options[subLbl] = (subOpt.label || subKey) + (subOpt.price > 0 ? ' (+$' + subOpt.price + ')' : '');
+      }
+    }
   });
 
   // Get total from breakdown

@@ -31,6 +31,12 @@
     "addons": {
       "inverter": {
         "_label": "AC Inverter",
+        "_subcategory": {
+          "_label": "AC Outlet Count",
+          "_hideWhenParent": "none",
+          "2": { "label": "2 AC Outlets", "price": 0, "cogs": 0 },
+          "3": { "label": "3 AC Outlets", "price": 5, "cogs": 2, "parentOptions": ["mqyjuvq7", "mqyjv4he", "mqyjvch3", "mqyjvk3m"], "models": ["iso-station"] }
+        },
         "none": {
           "label": "None (DC Only)",
           "price": 0,
@@ -101,6 +107,18 @@
       },
       "12v": {
         "_label": "12V Outputs",
+        "_subcategory": {
+          "_label": "12V Port Quantity",
+          "_hideWhenParent": "none",
+          "1": { "label": "1 Port", "price": 0, "cogs": 0 },
+          "2": { "label": "2 Ports", "price": 5, "cogs": 3, "models": ["iso-station", "isopack---50ah-lifepo4-06kwh"] },
+          "3": { "label": "3 Ports", "price": 10, "cogs": 6, "models": ["iso-station"] }
+        },
+        "none": {
+          "label": "None",
+          "price": 0,
+          "cogs": 0
+        },
         "anderson": {
           "label": "Anderson SB50",
           "price": 10,
@@ -168,6 +186,11 @@
       },
       "usb": {
         "_label": "USB Ports",
+        "none": {
+          "label": "None",
+          "price": 0,
+          "cogs": 0
+        },
         "mqyjb70w": {
           "label": "2-USB+2-USBC ComboPort x1",
           "price": 10,
@@ -176,12 +199,19 @@
         "mqyjbmgs": {
           "label": "2-USB+2-USBC ComboPort x2",
           "price": 19,
-          "cogs": 10
+          "cogs": 10,
+          "models": [
+            "iso-station",
+            "isopack---50ah-lifepo4-06kwh"
+          ]
         },
         "mqyjbvxv": {
           "label": "2-USB+2-USBC ComboPort x3",
           "price": 28,
-          "cogs": 15
+          "cogs": 15,
+          "models": [
+            "iso-station"
+          ]
         }
       }
     }
