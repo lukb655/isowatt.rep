@@ -1462,14 +1462,38 @@ function openMfPopup(e, btn, groupKey, optKey) {
     checksDiv.appendChild(lbl);
   });
 
+  // Position: show offscreen first to measure height, then place
   const popup = document.getElementById('mf-popup');
+  popup.style.visibility = 'hidden';
   popup.style.display = 'block';
-  const rect = btn.getBoundingClientRect();
-  const popW = 220;
+  const rect   = btn.getBoundingClientRect();
+  const popW   = popup.offsetWidth  || 220;
+  const popH   = popup.offsetHeight || 200;
+  const margin = 8;
   let left = rect.left;
-  if (left + popW > window.innerWidth - 12) left = window.innerWidth - popW - 12;
-  popup.style.top  = (rect.bottom + 6) + 'px';
-  popup.style.left = left + 'px';
+  let top  = rect.bottom + 6;
+  if (left + popW > window.innerWidth  - margin) left = window.innerWidth  - popW - margin;
+  if (top  + popH > window.innerHeight - margin) top  = rect.top - popH - 6;
+  popup.style.left       = Math.max(margin, left) + 'px';
+  popup.style.top        = Math.max(margin, top)  + 'px';
+  popup.style.visibility = '';
+
+  // Make popup draggable via its title bar
+  popup.onmousedown = null;
+  const title = popup.querySelector('.mf-title');
+  title.style.cursor = 'grab';
+  title.onmousedown = function(ev) {
+    ev.preventDefault();
+    let ox = ev.clientX - popup.offsetLeft, oy = ev.clientY - popup.offsetTop;
+    function move(mv) {
+      popup.style.left = (mv.clientX - ox) + 'px';
+      popup.style.top  = (mv.clientY - oy) + 'px';
+    }
+    function up() { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up); title.style.cursor = 'grab'; }
+    title.style.cursor = 'grabbing';
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup', up);
+  };
 }
 
 function closeMfPopup() {
