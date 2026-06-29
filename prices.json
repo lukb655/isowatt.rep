@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-29T01:26:10.844Z",
+    "lastUpdated": "2026-06-29T01:29:40.179Z",
     "currency": "USD"
   },
   "configurator": {
@@ -140,17 +140,17 @@
         "_label": "USB Ports",
         "mqyjb70w": {
           "label": "2-USB+2-USBC ComboPort x1",
-          "price": 0,
+          "price": 10,
           "cogs": 0
         },
         "mqyjbmgs": {
           "label": "2-USB+2-USBC ComboPort x2",
-          "price": 0,
+          "price": 18,
           "cogs": 0
         },
         "mqyjbvxv": {
           "label": "2-USB+2-USBC ComboPort x3",
-          "price": 0,
+          "price": 25,
           "cogs": 0
         }
       }
