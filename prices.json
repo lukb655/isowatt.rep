@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-29T01:55:52.482Z",
+    "lastUpdated": "2026-06-29T13:57:30.056Z",
     "currency": "USD"
   },
   "configurator": {
@@ -10,21 +10,21 @@
         "name": "IsoStation - 100Ah LiFePO4 (1.2kWh)",
         "capacity": "1.2kWh",
         "leadTime": "2-3 weeks",
-        "price": 546,
+        "price": 450,
         "cogs": 300
       },
       "iso-point": {
         "name": "IsoPoint - 25Ah LiFePO4 (0.3kWh)",
         "capacity": "0.3kWh",
         "leadTime": "1-2 weeks",
-        "price": 337,
+        "price": 245,
         "cogs": 185
       },
       "isopack---50ah-lifepo4-06kwh": {
         "name": "IsoPack - 50Ah LiFePO4 (0.6kWh)",
         "capacity": "0.6kWh",
         "leadTime": "2-3 weeks",
-        "price": 419,
+        "price": 300,
         "cogs": 230
       }
     },
@@ -39,12 +39,12 @@
         },
         "mqyjuov0": {
           "label": "300W Inverter",
-          "price": 39,
+          "price": 35,
           "cogs": 21
         },
         "mqyjuvq7": {
           "label": "500W Inverter",
-          "price": 55,
+          "price": 45,
           "cogs": 30,
           "models": [
             "iso-station",
@@ -53,7 +53,7 @@
         },
         "mqyjv4he": {
           "label": "1000W Inverter",
-          "price": 64,
+          "price": 50,
           "cogs": 35,
           "models": [
             "iso-station",
@@ -62,7 +62,7 @@
         },
         "mqyjvch3": {
           "label": "1600W Inverter",
-          "price": 68,
+          "price": 65,
           "cogs": 37,
           "models": [
             "iso-station"
@@ -70,7 +70,7 @@
         },
         "mqyjvk3m": {
           "label": "2200W Inverter",
-          "price": 171,
+          "price": 150,
           "cogs": 94,
           "models": [
             "iso-station"
@@ -78,7 +78,7 @@
         },
         "mqyjvsun": {
           "label": "150W Inverter",
-          "price": 19,
+          "price": 20,
           "cogs": 10,
           "models": [
             "iso-point"
@@ -112,7 +112,7 @@
         },
         "mqyj0i1u": {
           "label": "Cigarette Lighter Port",
-          "price": 6,
+          "price": 8,
           "cogs": 3
         },
         "mqyk9w8z": {
