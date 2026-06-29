@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-29T01:05:37.577Z",
+    "lastUpdated": "2026-06-29T01:21:07.782Z",
     "currency": "USD"
   },
   "configurator": {
@@ -48,7 +48,8 @@
           "price": 200,
           "cogs": 0,
           "models": [
-            "iso-station"
+            "iso-station",
+            "isopack---50ah-lifepo4-06kwh"
           ]
         },
         "1000w": {
@@ -81,55 +82,37 @@
           "cogs": 0
         }
       },
-      "usbc": {
-        "1": {
-          "label": "1 Port",
-          "price": 30,
-          "cogs": 0
-        },
-        "2": {
-          "label": "2 Ports",
-          "price": 50,
-          "cogs": 0
-        },
-        "4": {
-          "label": "4 Ports",
-          "price": 90,
-          "cogs": 0
-        },
-        "_label": "USB-C Ports (96W Fast Charge)"
-      },
       "12v": {
         "_label": "12V Outputs",
-        "lighter": {
-          "label": "Cigarette Lighter Socket",
-          "price": 20,
-          "cogs": 0
-        },
         "anderson": {
           "label": "Anderson SB50",
           "price": 40,
           "cogs": 0
         },
-        "both": {
-          "label": "Both",
-          "price": 60,
+        "mqyj0i1u": {
+          "label": "Cigarette Lighter Port",
+          "price": 15,
           "cogs": 0
         }
       },
       "monitor": {
         "_label": "Battery Monitor",
-        "bluetooth": {
-          "label": "Bluetooth Display",
-          "price": 60,
-          "cogs": 0
-        },
         "led": {
           "label": "LED Indicator Only",
+          "price": 5,
+          "cogs": 0
+        },
+        "mqyj2zmv": {
+          "label": "Voltage Monitor Only",
+          "price": 10,
+          "cogs": 0
+        },
+        "mqyj3syz": {
+          "label": "Volt + Temp + Alarm Display",
           "price": 20,
           "cogs": 0
         },
-        "none": {
+        "mqyj4dam": {
           "label": "None",
           "price": 0,
           "cogs": 0
@@ -144,43 +127,25 @@
         },
         "integrated": {
           "label": "Integrated (Built-in)",
-          "price": 35,
-          "cogs": 0
-        },
-        "external": {
-          "label": "External Dimmable",
-          "price": 60,
-          "cogs": 0
-        }
-      },
-      "protection": {
-        "_label": "Protection Package",
-        "standard": {
-          "label": "Standard (BMS Only)",
-          "price": 0,
-          "cogs": 0
-        },
-        "upgraded": {
-          "label": "Upgraded (Fuses + Breakers)",
-          "price": 75,
-          "cogs": 0
-        }
-      },
-      "transport": {
-        "_label": "Carrying & Transport",
-        "none": {
-          "label": "None",
-          "price": 0,
-          "cogs": 0
-        },
-        "handle": {
-          "label": "Heavy-Duty Handle Kit",
           "price": 40,
           "cogs": 0
         },
-        "cart": {
-          "label": "Wheeled Transport Cart",
-          "price": 120,
+        "mqyj4zvs": {
+          "label": "External Flood Lights",
+          "price": 35,
+          "cogs": 0
+        }
+      },
+      "usb-ports": {
+        "_label": "USB Ports",
+        "mqyis8ww": {
+          "label": "2-QC3 USB + 2 PD USBC Combo Port",
+          "price": 10,
+          "cogs": 0
+        },
+        "mqyj6ijo": {
+          "label": "2-QC3 USB + 1-PD USBC + On/Off Switch Combo Port",
+          "price": 10,
           "cogs": 0
         }
       }
