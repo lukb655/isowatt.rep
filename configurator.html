@@ -370,7 +370,6 @@ function buildConfigurator() {
   document.getElementById('cfg-loading').style.display = 'none';
 
   // Wire base model change to filter addons
-  const baseSelect = document.getElementById('select-base');
   baseSelect.addEventListener('change', () => filterAddons(baseSelect.value));
 
   filterAddons(baseSelect.value);
