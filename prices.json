@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-29T01:46:14.784Z",
+    "lastUpdated": "2026-06-29T01:47:34.831Z",
     "currency": "USD"
   },
   "configurator": {
@@ -45,27 +45,41 @@
         "mqyjuvq7": {
           "label": "500W Inverter",
           "price": 55,
-          "cogs": 30
+          "cogs": 30,
+          "models": []
         },
         "mqyjv4he": {
           "label": "1000W Inverter",
           "price": 64,
-          "cogs": 35
+          "cogs": 35,
+          "models": [
+            "iso-station",
+            "isopack---50ah-lifepo4-06kwh"
+          ]
         },
         "mqyjvch3": {
           "label": "1600W Inverter",
           "price": 68,
-          "cogs": 37
+          "cogs": 37,
+          "models": [
+            "iso-station"
+          ]
         },
         "mqyjvk3m": {
           "label": "2200W Inverter",
           "price": 171,
-          "cogs": 94
+          "cogs": 94,
+          "models": [
+            "iso-station"
+          ]
         },
         "mqyjvsun": {
           "label": "150W Inverter",
           "price": 19,
-          "cogs": 10
+          "cogs": 10,
+          "models": [
+            "iso-point"
+          ]
         }
       },
       "charger": {
@@ -78,7 +92,8 @@
         "fast": {
           "label": "Fast 20A",
           "price": 82,
-          "cogs": 45
+          "cogs": 45,
+          "models": []
         }
       },
       "12v": {
@@ -86,7 +101,11 @@
         "anderson": {
           "label": "Anderson SB50",
           "price": 10,
-          "cogs": 5
+          "cogs": 5,
+          "models": [
+            "iso-station",
+            "isopack---50ah-lifepo4-06kwh"
+          ]
         },
         "mqyj0i1u": {
           "label": "Cigarette Lighter Port",
