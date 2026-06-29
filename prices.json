@@ -1,31 +1,31 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-29T13:57:30.056Z",
+    "lastUpdated": "2026-06-29T14:11:37.777Z",
     "currency": "USD"
   },
   "configurator": {
     "baseModels": {
-      "iso-station": {
-        "name": "IsoStation - 100Ah LiFePO4 (1.2kWh)",
+      "isopoint---25ah-battery--2800-enclosure--300wh": {
+        "name": "IsoPoint - 25Ah Battery ~ 2800 Enclosure ~ 300Wh",
+        "capacity": "300Wh",
+        "leadTime": "2-3 Weeks",
+        "price": 245,
+        "cogs": 185
+      },
+      "isopack---50ah-battery--3800-enclosure--600wh": {
+        "name": "IsoPack - 50Ah Battery ~ 3800 Enclosure ~ 600Wh",
+        "capacity": "600Wh",
+        "leadTime": "2-3 weeks",
+        "price": 300,
+        "cogs": 230
+      },
+      "isostation---100ah-battery--4800-enclosure--12kwh": {
+        "name": "IsoStation - 100Ah Battery ~ 4800 Enclosure ~ 1.2kWh",
         "capacity": "1.2kWh",
         "leadTime": "2-3 weeks",
         "price": 450,
         "cogs": 300
-      },
-      "iso-point": {
-        "name": "IsoPoint - 25Ah LiFePO4 (0.3kWh)",
-        "capacity": "0.3kWh",
-        "leadTime": "1-2 weeks",
-        "price": 245,
-        "cogs": 185
-      },
-      "isopack---50ah-lifepo4-06kwh": {
-        "name": "IsoPack - 50Ah LiFePO4 (0.6kWh)",
-        "capacity": "0.6kWh",
-        "leadTime": "2-3 weeks",
-        "price": 300,
-        "cogs": 230
       }
     },
     "addons": {
