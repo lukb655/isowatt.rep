@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-29T01:04:35.775Z",
+    "lastUpdated": "2026-06-29T01:05:37.577Z",
     "currency": "USD"
   },
   "configurator": {
@@ -78,11 +78,6 @@
         "fast": {
           "label": "Fast 20A",
           "price": 100,
-          "cogs": 0
-        },
-        "none": {
-          "label": "No Charger",
-          "price": 0,
           "cogs": 0
         }
       },
