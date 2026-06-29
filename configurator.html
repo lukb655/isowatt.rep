@@ -350,10 +350,11 @@ function buildConfigurator() {
     sec.className = 'cfg-section';
 
     const optionsHtml = opts.map(([optKey, opt]) => {
-      const entry = typeof opt === 'object' ? opt : { label: optKey, price: opt };
-      const lbl   = entry.label || optKey;
-      const price = entry.price || 0;
-      return `<option value="${esc(optKey)}">${esc(lbl)}${price > 0 ? ' — $' + price : ''}</option>`;
+      const entry  = typeof opt === 'object' ? opt : { label: optKey, price: opt };
+      const lbl    = entry.label || optKey;
+      const price  = entry.price || 0;
+      const models = JSON.stringify(entry.models || []);
+      return `<option value="${esc(optKey)}" data-models='${models}'>${esc(lbl)}${price > 0 ? ' — $' + price : ''}</option>`;
     }).join('');
 
     sec.innerHTML = `
@@ -368,6 +369,28 @@ function buildConfigurator() {
   document.getElementById('section-summary').style.display = '';
   document.getElementById('cfg-loading').style.display = 'none';
 
+  // Wire base model change to filter addons
+  const baseSelect = document.getElementById('select-base');
+  baseSelect.addEventListener('change', () => filterAddons(baseSelect.value));
+
+  filterAddons(baseSelect.value);
+}
+
+function filterAddons(modelId) {
+  document.querySelectorAll('select[data-group]').forEach(sel => {
+    let currentInvalid = false;
+    Array.from(sel.options).forEach(o => {
+      const models  = JSON.parse(o.getAttribute('data-models') || '[]');
+      const allowed = models.length === 0 || models.includes(modelId);
+      o.hidden   = !allowed;
+      o.disabled = !allowed;
+      if (sel.value === o.value && !allowed) currentInvalid = true;
+    });
+    if (currentInvalid) {
+      const first = Array.from(sel.options).find(o => !o.hidden);
+      if (first) sel.value = first.value;
+    }
+  });
   updateConfig();
 }
 

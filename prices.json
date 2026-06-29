@@ -24,11 +24,11 @@
     "addons": {
       "inverter": {
         "_label": "AC Inverter",
-        "none":  { "label": "None (DC Only)",             "price": 0,   "cogs": 0 },
-        "400w":  { "label": "400W Inverter",              "price": 150, "cogs": 0 },
-        "600w":  { "label": "600W Inverter",              "price": 200, "cogs": 0 },
-        "1000w": { "label": "1000W Inverter",             "price": 300, "cogs": 0 },
-        "2000w": { "label": "2000W Inverter",             "price": 400, "cogs": 0 }
+        "none":  { "label": "None (DC Only)",             "price": 0,   "cogs": 0, "models": [] },
+        "400w":  { "label": "400W Inverter",              "price": 150, "cogs": 0, "models": [] },
+        "600w":  { "label": "600W Inverter",              "price": 200, "cogs": 0, "models": ["iso-station"] },
+        "1000w": { "label": "1000W Inverter",             "price": 300, "cogs": 0, "models": ["iso-station"] },
+        "2000w": { "label": "2000W Inverter",             "price": 400, "cogs": 0, "models": ["iso-station"] }
       },
       "charger": {
         "_label": "Wall Charger",

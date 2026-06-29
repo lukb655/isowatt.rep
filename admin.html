@@ -559,6 +559,54 @@ body {
   transition: all 0.15s;
 }
 .btn-add-row:hover { border-color: var(--amber); color: var(--amber); }
+
+/* ── MODEL FILTER ── */
+.btn-model-restrict {
+  background: none;
+  border: none;
+  font-size: 11px;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 2px 0;
+  font-family: inherit;
+  text-align: left;
+  transition: color 0.15s;
+  display: block;
+  margin-top: 2px;
+}
+.btn-model-restrict:hover { color: var(--amber); }
+.btn-model-restrict.restricted { color: var(--amber); }
+#mf-popup {
+  display: none;
+  position: fixed;
+  background: var(--card);
+  border: 1px solid var(--border-hi);
+  border-radius: 8px;
+  padding: 1rem;
+  z-index: 500;
+  min-width: 210px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+.mf-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--subtle);
+  margin-bottom: 0.75rem;
+}
+.mf-check-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 7px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text);
+}
+.mf-check-label input { accent-color: var(--amber); cursor: pointer; }
+.mf-hint { font-size: 11px; color: var(--muted); margin-bottom: 0.75rem; }
+.mf-actions { display: flex; gap: 8px; margin-top: 0.75rem; }
 </style>
 </head>
 <body>
@@ -751,6 +799,17 @@ body {
 </div><!-- /admin -->
 
 <div id="toast"></div>
+
+<!-- ═══════════ MODEL FILTER POPUP ═══════════ -->
+<div id="mf-popup">
+  <div class="mf-title">Available for models</div>
+  <div class="mf-hint">Unchecked = hidden in configurator for that model.</div>
+  <div id="mf-checks"></div>
+  <div class="mf-actions">
+    <button class="btn-sm" style="flex:1" onclick="saveMfPopup()">Save</button>
+    <button class="btn-ghost" style="flex:1" onclick="closeMfPopup()">Cancel</button>
+  </div>
+</div>
 
 <script>
 // ───────────────────────────────────────────────────
@@ -1003,17 +1062,34 @@ function buildProductRow(id, p, scope, removable = (scope === 'pb')) {
   return tr;
 }
 
+function modelRestrictLabel(models) {
+  if (!models || models.length === 0) return { text: 'All models', restricted: false };
+  const names = models.map(id => {
+    const m = P.configurator.baseModels[id];
+    if (!m) return id;
+    return m.name.split(' - ')[0].replace('IsoStation','IsoStation').replace('IsoPoint','IsoPoint');
+  });
+  return { text: names.join(', ') + ' only', restricted: true };
+}
+
 function buildAddonRow(groupKey, optKey, opt) {
-  const sell = opt.price || 0;
-  const cogs = opt.cogs  || 0;
+  const sell   = opt.price  || 0;
+  const cogs   = opt.cogs   || 0;
+  const models = opt.models || [];
   const { pct, cls } = calcMargin(sell, cogs);
   const uid = `${groupKey}-${optKey}`;
+  const { text, restricted } = modelRestrictLabel(models);
 
   const tr = document.createElement('tr');
   tr.dataset.group = groupKey;
   tr.dataset.opt   = optKey;
   tr.innerHTML = `
-    <td><div class="row-name">${opt.label}</div></td>
+    <td>
+      <div class="row-name">${opt.label}</div>
+      <button class="btn-model-restrict ${restricted ? 'restricted' : ''}"
+              onclick="openMfPopup(event,'${groupKey}','${optKey}')"
+              title="Restrict to specific models">⊙ ${text}</button>
+    </td>
     <td>
       <input type="number" class="num-field" value="${cogs}" min="0" step="1"
              data-field="cogs" data-group="${groupKey}" data-opt="${optKey}"
@@ -1365,6 +1441,60 @@ function fmtGross(sell, cogs) {
 }
 
 function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
+
+// ── MODEL FILTER POPUP ──
+let _mfTarget = null;
+
+function openMfPopup(e, groupKey, optKey) {
+  e.stopPropagation();
+  _mfTarget = { groupKey, optKey };
+  const opt = P.configurator.addons[groupKey][optKey];
+  const selected = opt.models || [];
+
+  const checksDiv = document.getElementById('mf-checks');
+  checksDiv.innerHTML = '';
+  Object.entries(P.configurator.baseModels).forEach(([id, m]) => {
+    const shortName = m.name.split(' - ')[0];
+    const checked = selected.length === 0 || selected.includes(id) ? 'checked' : '';
+    const lbl = document.createElement('label');
+    lbl.className = 'mf-check-label';
+    lbl.innerHTML = `<input type="checkbox" value="${id}" ${checked}><span>${shortName}</span>`;
+    checksDiv.appendChild(lbl);
+  });
+
+  const popup = document.getElementById('mf-popup');
+  popup.style.display = 'block';
+  const rect = e.currentTarget.getBoundingClientRect();
+  const popW = 220;
+  let left = rect.left;
+  if (left + popW > window.innerWidth - 12) left = window.innerWidth - popW - 12;
+  popup.style.top  = (rect.bottom + 6 + window.scrollY) + 'px';
+  popup.style.left = left + 'px';
+}
+
+function closeMfPopup() {
+  document.getElementById('mf-popup').style.display = 'none';
+  _mfTarget = null;
+}
+
+function saveMfPopup() {
+  if (!_mfTarget) return;
+  const { groupKey, optKey } = _mfTarget;
+  const checks   = document.querySelectorAll('#mf-checks input[type=checkbox]');
+  const allCount = checks.length;
+  const selected = Array.from(checks).filter(c => c.checked).map(c => c.value);
+  // Empty array means "all models" — store [] when everything is checked
+  P.configurator.addons[groupKey][optKey].models = selected.length === allCount ? [] : selected;
+  closeMfPopup();
+  renderAddons();
+  markDirty();
+  showToast('Model restriction saved — click Deploy to publish.', 'success');
+}
+
+document.addEventListener('click', e => {
+  const popup = document.getElementById('mf-popup');
+  if (popup && popup.style.display === 'block' && !popup.contains(e.target)) closeMfPopup();
+});
 
 </script>
 </body>
