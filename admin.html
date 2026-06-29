@@ -622,6 +622,7 @@ body {
             <div class="section-title">Base Models</div>
             <div class="section-sub">Foundation price for each unit type in the configurator</div>
           </div>
+          <button class="btn-add-row" onclick="addBaseModel()">+ Add Model</button>
         </div>
         <div class="margin-bar">
           <span class="margin-bar-label">Set all margins to:</span>
@@ -639,6 +640,7 @@ body {
               <th style="width:110px">Sell Price ($)</th>
               <th style="width:80px">Margin</th>
               <th style="width:90px">Gross Profit</th>
+              <th style="width:36px"></th>
             </tr>
           </thead>
           <tbody id="base-tbody"></tbody>
@@ -948,7 +950,7 @@ function renderBaseModels() {
   tbody.innerHTML = '';
   Object.entries(P.configurator.baseModels).forEach(([id, m]) => {
     const pseudo = { name: m.name, startingPrice: m.price, cogs: m.cogs || 0, badge: m.capacity, subtitle: m.leadTime };
-    tbody.appendChild(buildProductRow(id, pseudo, 'base', false));
+    tbody.appendChild(buildProductRow(id, pseudo, 'base', true));
   });
 }
 
@@ -996,7 +998,7 @@ function buildProductRow(id, p, scope, removable = (scope === 'pb')) {
     </td>
     <td><span class="badge ${cls}" data-margin="${id}-${scope}">${pct}</span></td>
     <td><span class="gross-text" data-gross="${id}-${scope}">${fmtGross(sell, cogs)}</span></td>
-    <td>${removable ? `<button class="btn-rm" onclick="removePrebuilt('${id}')" title="Remove">✕</button>` : ''}</td>
+    <td>${removable ? `<button class="btn-rm" onclick="${scope === 'base' ? 'removeBaseModel' : 'removePrebuilt'}('${id}')" title="Remove">✕</button>` : ''}</td>
   `;
   return tr;
 }
@@ -1106,6 +1108,30 @@ function bulkMargin(scope, sliderId) {
 // ───────────────────────────────────────────────────
 // ADD / REMOVE
 // ───────────────────────────────────────────────────
+function addBaseModel() {
+  const name = prompt('Model name (e.g. IsoStation XL - 200Ah LiFePO4 (2.4kWh)):');
+  if (!name?.trim()) return;
+  const capacity = prompt('Capacity (e.g. 2.4kWh):') || '';
+  const leadTime = prompt('Lead time (e.g. 3-4 weeks):') || '';
+  const price    = parseFloat(prompt('Sell price ($):') || '0') || 0;
+  const id = name.trim().toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+  P.configurator.baseModels[id] = { name: name.trim(), capacity, leadTime, price, cogs: 0 };
+  renderBaseModels();
+  markDirty();
+  showToast('Model added — click Deploy to publish.', 'success');
+}
+
+function removeBaseModel(id) {
+  if (Object.keys(P.configurator.baseModels).length <= 1) {
+    showToast('Cannot remove the last base model.', 'error'); return;
+  }
+  const m = P.configurator.baseModels[id];
+  if (!confirm(`Remove "${m.name}"?`)) return;
+  delete P.configurator.baseModels[id];
+  renderBaseModels();
+  markDirty();
+}
+
 function addOption() {
   const groupKey = prompt('Category key (existing: inverter, charger, usbc, 12v, monitor, light, protection, transport)\nOr enter a new category name:');
   if (!groupKey?.trim()) return;
