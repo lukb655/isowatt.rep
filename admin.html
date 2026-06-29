@@ -117,6 +117,34 @@ body {
   margin-top: 1rem;
 }
 .lock-hint code { color: var(--subtle); background: var(--surface); padding: 1px 5px; border-radius: 3px; }
+.lock-forgot {
+  text-align: center;
+  margin-top: 0.75rem;
+}
+.lock-forgot button {
+  background: none;
+  border: none;
+  color: var(--amber);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: underline;
+  padding: 0;
+}
+.lock-forgot button:hover { color: #d4920a; }
+#reset-panel {
+  display: none;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+.reset-q {
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+#reset-err { color: var(--red); font-size: 12px; margin-bottom: 0.5rem; display: none; }
 
 /* ── SHELL ── */
 #admin { display: none; flex-direction: column; min-height: 100vh; }
@@ -544,6 +572,15 @@ body {
     <div id="pw-err" class="lock-error">Incorrect password.</div>
     <button class="btn-full" onclick="tryLogin()">Unlock →</button>
     <div class="lock-hint">Default password: <code>isowatt</code> — change in Settings</div>
+    <div class="lock-forgot"><button onclick="toggleReset()">Forgot password?</button></div>
+
+    <div id="reset-panel">
+      <div class="reset-q" id="reset-question">Security question</div>
+      <input id="reset-answer" type="text" class="lock-input" placeholder="Your answer" autocomplete="off">
+      <div id="reset-err">Incorrect answer.</div>
+      <input id="reset-newpw" type="password" class="lock-input" placeholder="New password" autocomplete="new-password" style="display:none;">
+      <button class="btn-full" onclick="attemptReset()">Reset Password →</button>
+    </div>
   </div>
 </div>
 
@@ -662,6 +699,25 @@ body {
         </div>
 
         <div class="settings-card">
+          <div class="settings-card-title">Security Question (Password Reset)</div>
+          <p style="font-size:12px;color:var(--subtle);margin-bottom:1.25rem;line-height:1.6;">
+            Used on the lock screen "Forgot password?" flow. Answer is case-insensitive.
+          </p>
+          <div class="form-row">
+            <label class="form-lbl">Question</label>
+            <input type="text" id="sq-question" class="form-ctrl" placeholder="e.g. What is your dog's name?">
+          </div>
+          <div class="form-row">
+            <label class="form-lbl">Answer</label>
+            <input type="text" id="sq-answer" class="form-ctrl" placeholder="Your answer">
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button class="btn-sm" onclick="saveSecurityQuestion()">Save Question</button>
+            <span id="sq-result" class="inline-result"></span>
+          </div>
+        </div>
+
+        <div class="settings-card">
           <div class="settings-card-title">Admin Password</div>
           <div class="form-row">
             <label class="form-lbl">New Password</label>
@@ -754,6 +810,66 @@ function logout() {
   document.getElementById('pw-input').value = '';
 }
 
+// ── SECURITY QUESTION RESET ──
+function toggleReset() {
+  const panel = document.getElementById('reset-panel');
+  const open = panel.style.display === 'block';
+  panel.style.display = open ? 'none' : 'block';
+  if (!open) {
+    const q = localStorage.getItem('iw_sq') || 'What city was IsoWatt founded in?';
+    document.getElementById('reset-question').textContent = q;
+    document.getElementById('reset-answer').value = '';
+    document.getElementById('reset-newpw').value = '';
+    document.getElementById('reset-newpw').style.display = 'none';
+    document.getElementById('reset-err').style.display = 'none';
+    document.getElementById('reset-answer').focus();
+  }
+}
+
+function attemptReset() {
+  const answer = document.getElementById('reset-answer').value.trim().toLowerCase();
+  const stored = (localStorage.getItem('iw_sa') || 'bellefonte').toLowerCase();
+  const errEl  = document.getElementById('reset-err');
+  const newpwEl = document.getElementById('reset-newpw');
+
+  if (!newpwEl.style.display || newpwEl.style.display === 'none') {
+    if (answer !== stored) {
+      errEl.style.display = 'block';
+      const inp = document.getElementById('reset-answer');
+      inp.classList.add('shake');
+      setTimeout(() => inp.classList.remove('shake'), 400);
+      return;
+    }
+    errEl.style.display = 'none';
+    newpwEl.style.display = 'block';
+    newpwEl.focus();
+    document.querySelector('#reset-panel .btn-full').textContent = 'Set New Password →';
+  } else {
+    const newpw = newpwEl.value;
+    if (!newpw) { errEl.textContent = 'Enter a new password.'; errEl.style.display = 'block'; return; }
+    localStorage.setItem('iw_pw', btoa(newpw));
+    document.getElementById('reset-panel').style.display = 'none';
+    document.querySelector('#reset-panel .btn-full').textContent = 'Reset Password →';
+    errEl.textContent = 'Incorrect answer.';
+    const hint = document.querySelector('.lock-hint');
+    hint.style.color = 'var(--green)';
+    hint.textContent = '✓ Password updated — log in with your new password.';
+    setTimeout(() => { hint.style.color = ''; hint.innerHTML = 'Default password: <code>isowatt</code> — change in Settings'; }, 4000);
+  }
+}
+
+function saveSecurityQuestion() {
+  const q = document.getElementById('sq-question').value.trim();
+  const a = document.getElementById('sq-answer').value.trim().toLowerCase();
+  const r = document.getElementById('sq-result');
+  if (!q || !a) { r.style.color = 'var(--red)'; r.textContent = 'Both fields required.'; return; }
+  localStorage.setItem('iw_sq', q);
+  localStorage.setItem('iw_sa', a);
+  r.style.color = 'var(--green)';
+  r.textContent = '✓ Saved.';
+  setTimeout(() => { r.textContent = ''; }, 3000);
+}
+
 function changePw() {
   const a = document.getElementById('new-pw').value;
   const b = document.getElementById('confirm-pw').value;
@@ -774,6 +890,10 @@ async function init() {
   document.getElementById('gh-pat').value    = localStorage.getItem('iw_pat')    || '';
   document.getElementById('gh-repo').value   = localStorage.getItem('iw_repo')   || 'lukb655/isowatt.rep';
   document.getElementById('gh-branch').value = localStorage.getItem('iw_branch') || 'main';
+
+  // Restore security question settings
+  document.getElementById('sq-question').value = localStorage.getItem('iw_sq') || 'What city was IsoWatt founded in?';
+  document.getElementById('sq-answer').value   = localStorage.getItem('iw_sa') || 'bellefonte';
 
   await refreshFromGitHub();
 }
