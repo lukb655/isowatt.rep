@@ -1087,7 +1087,7 @@ function buildAddonRow(groupKey, optKey, opt) {
     <td>
       <div class="row-name">${opt.label}</div>
       <button class="btn-model-restrict ${restricted ? 'restricted' : ''}"
-              onclick="openMfPopup(event,'${groupKey}','${optKey}')"
+              onclick="openMfPopup(event,this,'${groupKey}','${optKey}')"
               title="Restrict to specific models">⊙ ${text}</button>
     </td>
     <td>
@@ -1445,7 +1445,7 @@ function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
 // ── MODEL FILTER POPUP ──
 let _mfTarget = null;
 
-function openMfPopup(e, groupKey, optKey) {
+function openMfPopup(e, btn, groupKey, optKey) {
   e.stopPropagation();
   _mfTarget = { groupKey, optKey };
   const opt = P.configurator.addons[groupKey][optKey];
@@ -1464,11 +1464,11 @@ function openMfPopup(e, groupKey, optKey) {
 
   const popup = document.getElementById('mf-popup');
   popup.style.display = 'block';
-  const rect = e.currentTarget.getBoundingClientRect();
+  const rect = btn.getBoundingClientRect();
   const popW = 220;
   let left = rect.left;
   if (left + popW > window.innerWidth - 12) left = window.innerWidth - popW - 12;
-  popup.style.top  = (rect.bottom + 6 + window.scrollY) + 'px';
+  popup.style.top  = (rect.bottom + 6) + 'px';
   popup.style.left = left + 'px';
 }
 
