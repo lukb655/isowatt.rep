@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T15:25:48.484Z",
+    "lastUpdated": "2026-06-30T15:46:29.731Z",
     "currency": "USD"
   },
   "configurator": {
@@ -31,29 +31,6 @@
     "addons": {
       "inverter": {
         "_label": "AC Inverter",
-        "_subcategory": {
-          "2": {
-            "label": "2 AC Outlets",
-            "price": 0,
-            "cogs": 0
-          },
-          "3": {
-            "label": "3 AC Outlets",
-            "price": 3,
-            "cogs": 2,
-            "parentOptions": [
-              "mqyjuvq7",
-              "mqyjv4he",
-              "mqyjvch3",
-              "mqyjvk3m"
-            ],
-            "models": [
-              "iso-station"
-            ]
-          },
-          "_label": "AC Outlet Count",
-          "_hideWhenParent": "none"
-        },
         "none": {
           "label": "None (DC Only)",
           "price": 0,
@@ -63,15 +40,19 @@
         "mqyjuov0": {
           "label": "300W Inverter",
           "price": 31,
-          "cogs": 21
+          "cogs": 21,
+          "models": [
+            "isopoint---25ah-battery--2800-enclosure--300wh",
+            "isopack---50ah-battery--3800-enclosure--600wh"
+          ]
         },
         "mqyjuvq7": {
           "label": "500W Inverter",
           "price": 43,
           "cogs": 30,
           "models": [
-            "iso-station",
-            "isopack---50ah-lifepo4-06kwh"
+            "isopoint---25ah-battery--2800-enclosure--300wh",
+            "isopack---50ah-battery--3800-enclosure--600wh"
           ]
         },
         "mqyjv4he": {
@@ -79,8 +60,7 @@
           "price": 50,
           "cogs": 35,
           "models": [
-            "iso-station",
-            "isopack---50ah-lifepo4-06kwh"
+            "isostation---100ah-battery--4800-enclosure--12kwh"
           ]
         },
         "mqyjvch3": {
@@ -99,13 +79,24 @@
             "iso-station"
           ]
         },
-        "mqyjvsun": {
-          "label": "150W Inverter",
-          "price": 15,
-          "cogs": 10,
-          "models": [
-            "iso-point"
-          ]
+        "_subcategory": {
+          "_label": "AC Outlet Count",
+          "_hideWhenParent": "None (DC Only)",
+          "mr0t7xpx": {
+            "label": "1 Outlet",
+            "price": 0,
+            "cogs": 10
+          },
+          "mr0t8axh": {
+            "label": "2 Outlets",
+            "price": 0,
+            "cogs": 20
+          },
+          "mr0t8f8p": {
+            "label": "3 Outlets",
+            "price": 0,
+            "cogs": 30
+          }
         }
       },
       "charger": {
@@ -128,24 +119,19 @@
           "1": {
             "label": "1 Port",
             "price": 0,
-            "cogs": 0
+            "cogs": 3
           },
           "2": {
             "label": "2 Ports",
             "price": 5,
-            "cogs": 3,
-            "models": [
-              "iso-station",
-              "isopack---50ah-lifepo4-06kwh"
-            ]
+            "cogs": 6,
+            "models": []
           },
           "3": {
             "label": "3 Ports",
             "price": 9,
-            "cogs": 6,
-            "models": [
-              "iso-station"
-            ]
+            "cogs": 9,
+            "models": []
           },
           "_label": "12V Port Quantity",
           "_hideWhenParent": "none"
@@ -168,15 +154,6 @@
           "label": "Cigarette Lighter Port",
           "price": 5,
           "cogs": 3
-        },
-        "mqyk9w8z": {
-          "label": "Both",
-          "price": 10,
-          "cogs": 7,
-          "models": [
-            "iso-station",
-            "isopack---50ah-lifepo4-06kwh"
-          ]
         }
       },
       "monitor": {
@@ -216,7 +193,7 @@
         },
         "mqyj4zvs": {
           "label": "External Flood Lights",
-          "price": 8,
+          "price": 10,
           "cogs": 5
         }
       },
@@ -227,27 +204,29 @@
           "price": 0,
           "cogs": 0
         },
-        "mqyjb70w": {
-          "label": "2-USB+2-USBC ComboPort x1",
-          "price": 8,
-          "cogs": 5
+        "_subcategory": {
+          "_label": "USB Port Count",
+          "_hideWhenParent": "None",
+          "mr0tdui5": {
+            "label": "1 ComboPort",
+            "price": 10,
+            "cogs": 5
+          },
+          "mr0te1j9": {
+            "label": "2 ComboPorts",
+            "price": 15,
+            "cogs": 10
+          },
+          "mr0te9w6": {
+            "label": "3 ComboPorts",
+            "price": 20,
+            "cogs": 15
+          }
         },
-        "mqyjbmgs": {
-          "label": "2-USB+2-USBC ComboPort x2",
-          "price": 15,
-          "cogs": 10,
-          "models": [
-            "iso-station",
-            "isopack---50ah-lifepo4-06kwh"
-          ]
-        },
-        "mqyjbvxv": {
-          "label": "2-USB+2-USBC ComboPort x3",
-          "price": 22,
-          "cogs": 15,
-          "models": [
-            "iso-station"
-          ]
+        "mr0thmfi": {
+          "label": "96W USB + USB-C ComboPort",
+          "price": 0,
+          "cogs": 0
         }
       }
     }
