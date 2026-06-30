@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T20:49:16.283Z",
+    "lastUpdated": "2026-06-30T23:09:44.556Z",
     "currency": "USD"
   },
   "configurator": {
@@ -10,22 +10,23 @@
         "name": "IsoStation - 100Ah LiFePO4 (1.2kWh)",
         "capacity": "1.2kWh",
         "leadTime": "2-3 weeks",
-        "price": 1200,
-        "cogs": 0
+        "price": 591,
+        "cogs": 325,
+        "image": "aaa"
       },
       "iso-point": {
         "name": "IsoPoint - 25Ah LiFePO4 (0.3kWh)",
         "capacity": "0.3kWh",
         "leadTime": "1-2 weeks",
-        "price": 600,
-        "cogs": 0
+        "price": 364,
+        "cogs": 200
       },
       "isopack---50ah-600wh": {
         "name": "IsoPack - 50Ah (600Wh)",
         "capacity": "600Wh",
         "leadTime": "2-3 weeks",
-        "price": 400,
-        "cogs": 0
+        "price": 446,
+        "cogs": 245
       }
     },
     "addons": {
@@ -41,16 +42,16 @@
           "_hideWhenParent": "none",
           "mr0zd4ah": {
             "label": "1 Outlet",
-            "price": 0,
-            "cogs": 0
+            "price": 37,
+            "cogs": 20
           },
           "mr102d83": {
             "label": "2 Outlets",
-            "price": 15,
-            "cogs": 0,
+            "price": 73,
+            "cogs": 40,
             "parentOptions": [
-              "mr12zfh4",
-              "mr12zmzn"
+              "mr17tcrj",
+              "mr17tnmr"
             ],
             "models": [
               "iso-station",
@@ -59,11 +60,11 @@
           },
           "mr102h5e": {
             "label": "3 Outlets",
-            "price": 25,
-            "cogs": 0,
+            "price": 110,
+            "cogs": 60,
             "parentOptions": [
-              "mr12zfh4",
-              "mr12zmzn"
+              "mr17tcrj",
+              "mr17tnmr"
             ],
             "models": [
               "iso-station"
@@ -72,32 +73,32 @@
         },
         "mr12yqft": {
           "label": "300W Inverter",
-          "price": 0,
-          "cogs": 0,
+          "price": 39,
+          "cogs": 21,
           "models": [
             "iso-point"
           ]
         },
-        "mr12yynm": {
-          "label": "600W Inverter",
-          "price": 0,
-          "cogs": 0,
+        "mr17spju": {
+          "label": "500W Inverter",
+          "price": 55,
+          "cogs": 30,
           "models": [
             "isopack---50ah-600wh"
           ]
         },
-        "mr12zfh4": {
+        "mr17tcrj": {
           "label": "1000W Inverter",
-          "price": 0,
-          "cogs": 0,
+          "price": 64,
+          "cogs": 35,
           "models": [
             "iso-station"
           ]
         },
-        "mr12zmzn": {
-          "label": "2200W Inverter",
-          "price": 0,
-          "cogs": 0,
+        "mr17tnmr": {
+          "label": "1600W Inverter",
+          "price": 68,
+          "cogs": 37,
           "models": [
             "iso-station"
           ]
@@ -107,13 +108,13 @@
         "_label": "Wall Charger",
         "standard": {
           "label": "Standard 10A",
-          "price": 50,
+          "price": 0,
           "cogs": 0
         },
         "fast": {
           "label": "Fast 20A",
-          "price": 100,
-          "cogs": 0
+          "price": 82,
+          "cogs": 45
         }
       },
       "monitor": {
@@ -121,18 +122,18 @@
         "led": {
           "label": "LED Indicator Only",
           "price": 0,
-          "cogs": 0,
+          "cogs": 5,
           "image": "https://raw.githubusercontent.com/lukb655/isowatt.rep/main/Images/LEDINDICATOR.png"
         },
         "mr10gigt": {
           "label": "Voltimeter",
-          "price": 10,
-          "cogs": 0
+          "price": 19,
+          "cogs": 10
         },
         "mr10hiaq": {
           "label": "Voltimeter + Thermostat Display",
-          "price": 20,
-          "cogs": 0,
+          "price": 28,
+          "cogs": 15,
           "image": "https://raw.githubusercontent.com/lukb655/isowatt.rep/main/Images/VOLTTEMP.png"
         }
       },
@@ -147,17 +148,17 @@
             "mr103wx6": {
               "label": "x1",
               "price": 10,
-              "cogs": 0
+              "cogs": 5
             },
             "mr1041a3": {
               "label": "x2",
-              "price": 20,
-              "cogs": 0
+              "price": 19,
+              "cogs": 10
             },
             "mr12x43h": {
               "label": "x3",
               "price": 28,
-              "cogs": 0
+              "cogs": 15
             }
           },
           "image": "https://raw.githubusercontent.com/lukb655/isowatt.rep/main/Images/96WCOMBOPORT.png"
@@ -171,18 +172,18 @@
             "_label": "Quantity",
             "mr10ixf7": {
               "label": "x1",
-              "price": 0,
-              "cogs": 0
+              "price": 6,
+              "cogs": 3
             },
             "mr12xhcf": {
               "label": "x2",
-              "price": 0,
-              "cogs": 0
+              "price": 11,
+              "cogs": 6
             },
             "mr12xkiz": {
               "label": "x3",
-              "price": 15,
-              "cogs": 0
+              "price": 17,
+              "cogs": 9
             }
           }
         },
@@ -194,18 +195,18 @@
             "_label": "Quantity",
             "mr131o9p": {
               "label": "x1",
-              "price": 0,
-              "cogs": 0
+              "price": 6,
+              "cogs": 3
             },
             "mr131sny": {
               "label": "x2",
-              "price": 0,
-              "cogs": 0
+              "price": 11,
+              "cogs": 6
             },
             "mr131v0r": {
               "label": "x3",
-              "price": 0,
-              "cogs": 0
+              "price": 17,
+              "cogs": 9
             }
           }
         }
@@ -221,12 +222,12 @@
             "mr10co03": {
               "label": "x1",
               "price": 10,
-              "cogs": 0
+              "cogs": 5
             },
             "mr132bs9": {
               "label": "x2",
-              "price": 0,
-              "cogs": 0
+              "price": 19,
+              "cogs": 10
             }
           }
         },
@@ -238,13 +239,17 @@
             "_label": "Quantity",
             "mr10cvkz": {
               "label": "x1",
-              "price": 15,
-              "cogs": 0
+              "price": 19,
+              "cogs": 10,
+              "models": [
+                "iso-station",
+                "isopack---50ah-600wh"
+              ]
             },
             "mr132jyv": {
               "label": "x2",
-              "price": 0,
-              "cogs": 0,
+              "price": 28,
+              "cogs": 15,
               "models": [
                 "iso-station"
               ]
