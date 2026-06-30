@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T20:12:59.919Z",
+    "lastUpdated": "2026-06-30T20:30:38.713Z",
     "currency": "USD"
   },
   "configurator": {
@@ -121,7 +121,8 @@
         "led": {
           "label": "LED Indicator Only",
           "price": 0,
-          "cogs": 0
+          "cogs": 0,
+          "image": null
         },
         "mr10gigt": {
           "label": "Voltimeter",
@@ -157,7 +158,8 @@
               "price": 28,
               "cogs": 0
             }
-          }
+          },
+          "image": "https://github.com/lukb655/isowatt.rep/blob/main/Images/96WCOMBOPORT.png?raw=true"
         },
         "_multiSelect": true,
         "mr10im26": {
