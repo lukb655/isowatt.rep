@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T15:24:47.775Z",
+    "lastUpdated": "2026-06-30T15:25:48.484Z",
     "currency": "USD"
   },
   "configurator": {
@@ -10,21 +10,21 @@
         "name": "IsoPoint - 25Ah Battery ~ 2800 Enclosure ~ 300Wh",
         "capacity": "300Wh",
         "leadTime": "2-3 Weeks",
-        "price": 337,
+        "price": 265,
         "cogs": 185
       },
       "isopack---50ah-battery--3800-enclosure--600wh": {
         "name": "IsoPack - 50Ah Battery ~ 3800 Enclosure ~ 600Wh",
         "capacity": "600Wh",
         "leadTime": "2-3 weeks",
-        "price": 419,
+        "price": 329,
         "cogs": 230
       },
       "isostation---100ah-battery--4800-enclosure--12kwh": {
         "name": "IsoStation - 100Ah Battery ~ 4800 Enclosure ~ 1.2kWh",
         "capacity": "1.2kWh",
         "leadTime": "2-3 weeks",
-        "price": 546,
+        "price": 429,
         "cogs": 300
       }
     },
@@ -35,19 +35,15 @@
           "2": {
             "label": "2 AC Outlets",
             "price": 0,
-            "cogs": 0,
-            "parentOptions": [
-              "mqyjuvq7",
-              "mqyjv4he",
-              "mqyjvch3",
-              "mqyjvk3m"
-            ]
+            "cogs": 0
           },
           "3": {
             "label": "3 AC Outlets",
-            "price": 4,
+            "price": 3,
             "cogs": 2,
             "parentOptions": [
+              "mqyjuvq7",
+              "mqyjv4he",
               "mqyjvch3",
               "mqyjvk3m"
             ],
@@ -56,13 +52,7 @@
             ]
           },
           "_label": "AC Outlet Count",
-          "_hideWhenParent": "none",
-          "mr0sqrl3": {
-            "label": "1 Outlet",
-            "price": 0,
-            "cogs": 0,
-            "parentOptions": []
-          }
+          "_hideWhenParent": "none"
         },
         "none": {
           "label": "None (DC Only)",
@@ -72,12 +62,12 @@
         },
         "mqyjuov0": {
           "label": "300W Inverter",
-          "price": 39,
+          "price": 31,
           "cogs": 21
         },
         "mqyjuvq7": {
           "label": "500W Inverter",
-          "price": 55,
+          "price": 43,
           "cogs": 30,
           "models": [
             "iso-station",
@@ -86,7 +76,7 @@
         },
         "mqyjv4he": {
           "label": "1000W Inverter",
-          "price": 64,
+          "price": 50,
           "cogs": 35,
           "models": [
             "iso-station",
@@ -95,7 +85,7 @@
         },
         "mqyjvch3": {
           "label": "1600W Inverter",
-          "price": 68,
+          "price": 53,
           "cogs": 37,
           "models": [
             "iso-station"
@@ -103,7 +93,7 @@
         },
         "mqyjvk3m": {
           "label": "2200W Inverter",
-          "price": 171,
+          "price": 135,
           "cogs": 94,
           "models": [
             "iso-station"
@@ -111,7 +101,7 @@
         },
         "mqyjvsun": {
           "label": "150W Inverter",
-          "price": 19,
+          "price": 15,
           "cogs": 10,
           "models": [
             "iso-point"
@@ -122,12 +112,12 @@
         "_label": "Wall Charger",
         "standard": {
           "label": "Standard 10A",
-          "price": 40,
+          "price": 32,
           "cogs": 22
         },
         "fast": {
           "label": "Fast 20A",
-          "price": 82,
+          "price": 65,
           "cogs": 45,
           "models": []
         }
@@ -137,20 +127,25 @@
         "_subcategory": {
           "1": {
             "label": "1 Port",
-            "price": 19,
-            "cogs": 10
+            "price": 0,
+            "cogs": 0
           },
           "2": {
             "label": "2 Ports",
-            "price": 37,
-            "cogs": 20,
-            "models": []
+            "price": 5,
+            "cogs": 3,
+            "models": [
+              "iso-station",
+              "isopack---50ah-lifepo4-06kwh"
+            ]
           },
           "3": {
             "label": "3 Ports",
-            "price": 55,
-            "cogs": 30,
-            "models": []
+            "price": 9,
+            "cogs": 6,
+            "models": [
+              "iso-station"
+            ]
           },
           "_label": "12V Port Quantity",
           "_hideWhenParent": "none"
@@ -162,7 +157,7 @@
         },
         "anderson": {
           "label": "Anderson SB50",
-          "price": 10,
+          "price": 8,
           "cogs": 5,
           "models": [
             "iso-station",
@@ -171,25 +166,34 @@
         },
         "mqyj0i1u": {
           "label": "Cigarette Lighter Port",
-          "price": 6,
+          "price": 5,
           "cogs": 3
+        },
+        "mqyk9w8z": {
+          "label": "Both",
+          "price": 10,
+          "cogs": 7,
+          "models": [
+            "iso-station",
+            "isopack---50ah-lifepo4-06kwh"
+          ]
         }
       },
       "monitor": {
         "_label": "Battery Monitor",
         "led": {
           "label": "LED Indicator Only",
-          "price": 4,
+          "price": 3,
           "cogs": 2
         },
         "mqyj2zmv": {
           "label": "Voltage Monitor Only",
-          "price": 6,
+          "price": 5,
           "cogs": 3
         },
         "mqyj3syz": {
           "label": "Volt + Temp + Alarm Display",
-          "price": 10,
+          "price": 8,
           "cogs": 5
         },
         "mqyj4dam": {
@@ -207,12 +211,12 @@
         },
         "integrated": {
           "label": "Integrated (Built-in)",
-          "price": 19,
+          "price": 15,
           "cogs": 10
         },
         "mqyj4zvs": {
           "label": "External Flood Lights",
-          "price": 10,
+          "price": 8,
           "cogs": 5
         }
       },
@@ -225,12 +229,12 @@
         },
         "mqyjb70w": {
           "label": "2-USB+2-USBC ComboPort x1",
-          "price": 10,
+          "price": 8,
           "cogs": 5
         },
         "mqyjbmgs": {
           "label": "2-USB+2-USBC ComboPort x2",
-          "price": 19,
+          "price": 15,
           "cogs": 10,
           "models": [
             "iso-station",
@@ -239,7 +243,7 @@
         },
         "mqyjbvxv": {
           "label": "2-USB+2-USBC ComboPort x3",
-          "price": 28,
+          "price": 22,
           "cogs": 15,
           "models": [
             "iso-station"
