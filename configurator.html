@@ -152,6 +152,83 @@
   font-size: 11px;
 }
 
+/* ── Section header row (title + image toggle) ───────────── */
+.cfg-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+.cfg-section-head .cfg-section-title {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* ── Image toggle button ─────────────────────────────────── */
+.img-toggle-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 3px 8px;
+  font-size: 14px;
+  line-height: 1;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.img-toggle-btn:hover  { border-color: var(--amber); color: var(--amber); }
+.img-toggle-btn.active { border-color: var(--amber); color: var(--amber); background: var(--amber-bg); }
+
+/* ── Image preview area ──────────────────────────────────── */
+.cfg-img-wrap {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+.cfg-img-wrap img {
+  width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+  border-radius: 6px;
+  background: var(--surface);
+}
+.cfg-img-none {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  padding: 0.75rem;
+}
+
+/* ── Multi-select addon options ──────────────────────────── */
+.cfg-multi-opts { display: flex; flex-direction: column; gap: 0.55rem; }
+.cfg-check-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 9px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+}
+.cfg-check-label:hover { border-color: #3a3a3a; }
+.cfg-check-label.is-checked { border-color: var(--amber); background: var(--amber-bg); }
+.cfg-check {
+  accent-color: var(--amber);
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.cfg-check-lbl { flex: 1; font-size: 14px; color: var(--text); }
+.cfg-check-price { font-size: 12px; color: var(--amber); font-weight: 600; font-family: 'Courier New', monospace; }
+
 /* ── Modal ────────────────────────────────────────────────── */
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>
@@ -199,9 +276,16 @@
 
   <!-- Base Model — always first -->
   <section class="cfg-section" id="section-base" style="display:none;">
-    <div class="cfg-section-title">Base Model</div>
+    <div class="cfg-section-head">
+      <div class="cfg-section-title">Base Model</div>
+      <button class="img-toggle-btn" id="img-btn-base" onclick="toggleImg('base')" title="Show/hide product image">🖼</button>
+    </div>
     <div class="cfg-group">
-      <select class="cfg-select" id="select-base" onchange="updateConfig()"></select>
+      <select class="cfg-select" id="select-base" onchange="updateConfig(); refreshBaseImg()"></select>
+    </div>
+    <div class="cfg-img-wrap" id="img-wrap-base" style="display:none;">
+      <img id="img-el-base" src="" alt="">
+      <div class="cfg-img-none" id="img-none-base">No image configured for this model yet.</div>
     </div>
   </section>
 
@@ -349,22 +433,14 @@ function buildConfigurator() {
   const container = document.getElementById('addon-sections');
   container.innerHTML = '';
   Object.entries(addons).forEach(([groupKey, group]) => {
-    const opts = Object.entries(group).filter(([k]) => k !== '_label' && k !== '_subcategory');
+    const opts = Object.entries(group).filter(([k]) => !k.startsWith('_'));
     if (opts.length === 0) return;
     const label = group._label || groupKey;
 
     const sec = document.createElement('section');
     sec.className = 'cfg-section';
 
-    const optionsHtml = opts.map(([optKey, opt]) => {
-      const entry  = typeof opt === 'object' ? opt : { label: optKey, price: opt };
-      const lbl    = entry.label || optKey;
-      const price  = entry.price || 0;
-      const models = JSON.stringify(entry.models || []);
-      return `<option value="${esc(optKey)}" data-models='${models}'>${esc(lbl)}${price > 0 ? ' — $' + price : ''}</option>`;
-    }).join('');
-
-    // Build subcategory sub-section if present
+    // Category-level subcategory (used by single-select groups)
     let subcatHtml = '';
     if (group._subcategory) {
       const sub = group._subcategory;
@@ -385,11 +461,97 @@ function buildConfigurator() {
       }
     }
 
+    let groupContent;
+
+    if (group._multiSelect) {
+      // MULTI-SELECT: checkboxes — each option independently selectable with its own inline subcategory
+      const multiRows = opts.map(([optKey, opt]) => {
+        const entry  = typeof opt === 'object' ? opt : { label: optKey, price: opt };
+        const lbl    = entry.label || optKey;
+        const price  = entry.price || 0;
+        const models = JSON.stringify(entry.models || []);
+
+        let optSubHtml = '';
+        if (typeof opt === 'object' && opt._subcategory) {
+          const sub = opt._subcategory;
+          const subOpts = Object.entries(sub).filter(([k]) => !k.startsWith('_'));
+          if (subOpts.length > 0) {
+            const subOptsHtml = subOpts.map(([sk, so]) => {
+              const sLbl   = so.label || sk;
+              const sPrice = so.price || 0;
+              const sMods  = JSON.stringify(so.models || []);
+              return `<option value="${esc(sk)}" data-models='${sMods}'>${esc(sLbl)}${sPrice > 0 ? ' — $' + sPrice : ''}</option>`;
+            }).join('');
+            optSubHtml = `
+              <div class="cfg-sub" id="sub-opt-${esc(groupKey)}-${esc(optKey)}" style="display:none;">
+                <label class="cfg-label">${esc(sub._label || 'Options')}</label>
+                <select class="cfg-select" data-group="${esc(groupKey)}" data-opt-parent="${esc(optKey)}" data-is-opt-subcat="true" onchange="updateConfig()">${subOptsHtml}</select>
+              </div>`;
+          }
+        }
+
+        return `
+          <div class="cfg-multi-opt-row" data-group="${esc(groupKey)}" data-opt="${esc(optKey)}" data-models='${models}'>
+            <label class="cfg-check-label" id="check-label-${esc(groupKey)}-${esc(optKey)}">
+              <input type="checkbox" class="cfg-check" data-group="${esc(groupKey)}" data-opt="${esc(optKey)}"
+                     onchange="onMultiCheckChange(this,'${esc(groupKey)}','${esc(optKey)}')">
+              <span class="cfg-check-lbl">${esc(lbl)}</span>
+              ${price > 0 ? `<span class="cfg-check-price">+$${price}</span>` : ''}
+            </label>${optSubHtml}
+          </div>`;
+      }).join('');
+
+      groupContent = `<div class="cfg-group"><div class="cfg-multi-opts">${multiRows}</div></div>${subcatHtml}`;
+
+    } else {
+      // SINGLE-SELECT: dropdown (existing behavior)
+      const optionsHtml = opts.map(([optKey, opt]) => {
+        const entry  = typeof opt === 'object' ? opt : { label: optKey, price: opt };
+        const lbl    = entry.label || optKey;
+        const price  = entry.price || 0;
+        const models = JSON.stringify(entry.models || []);
+        return `<option value="${esc(optKey)}" data-models='${models}'>${esc(lbl)}${price > 0 ? ' — $' + price : ''}</option>`;
+      }).join('');
+
+      let optSubcatHtml = '';
+      opts.forEach(([optKey, opt]) => {
+        if (typeof opt !== 'object' || !opt._subcategory) return;
+        const sub = opt._subcategory;
+        const subOpts = Object.entries(sub).filter(([k]) => !k.startsWith('_'));
+        if (subOpts.length === 0) return;
+        const subOptsHtml = subOpts.map(([sk, so]) => {
+          const lbl   = so.label || sk;
+          const price = so.price || 0;
+          const models = JSON.stringify(so.models || []);
+          return `<option value="${esc(sk)}" data-models='${models}'>${esc(lbl)}${price > 0 ? ' — $' + price : ''}</option>`;
+        }).join('');
+        optSubcatHtml += `
+          <div class="cfg-sub" id="sub-opt-${esc(groupKey)}-${esc(optKey)}" style="display:none;">
+            <label class="cfg-label">${esc(sub._label || 'Options')}</label>
+            <select class="cfg-select" data-group="${esc(groupKey)}" data-opt-parent="${esc(optKey)}" data-is-opt-subcat="true" onchange="updateConfig()">${subOptsHtml}</select>
+          </div>`;
+      });
+
+      const anyImg = opts.some(([, o]) => typeof o === 'object' && o.image);
+
+      groupContent = `
+        <div class="cfg-group">
+          <select class="cfg-select" data-group="${esc(groupKey)}" onchange="onAddonSelect(this)">${optionsHtml}</select>
+        </div>
+        <div class="cfg-img-wrap" id="img-wrap-${esc(groupKey)}" style="display:none;">
+          <img id="img-el-${esc(groupKey)}" src="" alt="" style="display:none;">
+          <div class="cfg-img-none" id="img-none-${esc(groupKey)}">No image available for this selection.</div>
+        </div>${subcatHtml}${optSubcatHtml}`;
+    }
+
+    // Hide img toggle only for multi-select groups (image support there is future work)
+    const hideImgBtn = !!group._multiSelect;
+
     sec.innerHTML = `
-      <div class="cfg-section-title">${esc(label)}</div>
-      <div class="cfg-group">
-        <select class="cfg-select" data-group="${esc(groupKey)}" onchange="onAddonSelect(this)">${optionsHtml}</select>
-      </div>${subcatHtml}`;
+      <div class="cfg-section-head">
+        <div class="cfg-section-title">${esc(label)}</div>
+        <button class="img-toggle-btn" id="img-btn-${esc(groupKey)}" onclick="toggleImg('${esc(groupKey)}')" title="Show/hide component image"${hideImgBtn ? ' style="display:none;"' : ''}>🖼</button>
+      </div>${groupContent}`;
     container.appendChild(sec);
   });
 
@@ -398,13 +560,15 @@ function buildConfigurator() {
   document.getElementById('cfg-loading').style.display = 'none';
 
   // Wire base model change to filter addons
-  baseSelect.addEventListener('change', () => filterAddons(baseSelect.value));
+  baseSelect.addEventListener('change', () => { filterAddons(baseSelect.value); refreshBaseImg(); });
 
   filterAddons(baseSelect.value);
+  refreshBaseImg();
 }
 
 function filterAddons(modelId) {
-  document.querySelectorAll('select[data-group]:not([data-is-subcat])').forEach(sel => {
+  // Single-select groups
+  document.querySelectorAll('select[data-group]:not([data-is-subcat]):not([data-is-opt-subcat])').forEach(sel => {
     let currentInvalid = false;
     Array.from(sel.options).forEach(o => {
       const models  = JSON.parse(o.getAttribute('data-models') || '[]');
@@ -418,12 +582,38 @@ function filterAddons(modelId) {
       if (first) sel.value = first.value;
     }
     filterSubcat(sel.dataset.group, sel.value, modelId);
+    filterOptSubcats(sel.dataset.group, sel.value, modelId);
+    refreshAddonImg(sel.dataset.group, sel.value);
+  });
+  // Multi-select groups: hide rows for options not available on this model
+  document.querySelectorAll('.cfg-multi-opt-row').forEach(row => {
+    const groupKey = row.dataset.group;
+    const optKey   = row.dataset.opt;
+    const models   = JSON.parse(row.dataset.models || '[]');
+    const allowed  = models.length === 0 || models.includes(modelId);
+    row.style.display = allowed ? '' : 'none';
+    if (!allowed) {
+      const cb = row.querySelector('.cfg-check');
+      if (cb && cb.checked) {
+        cb.checked = false;
+        const lbl = document.getElementById('check-label-' + groupKey + '-' + optKey);
+        if (lbl) lbl.classList.remove('is-checked');
+        const subDiv = document.getElementById('sub-opt-' + groupKey + '-' + optKey);
+        if (subDiv) subDiv.style.display = 'none';
+      }
+    } else {
+      // Re-filter opt-subcat options for any already-checked rows
+      const cb = row.querySelector('.cfg-check');
+      if (cb && cb.checked) filterMultiOptSubcat(groupKey, optKey, modelId);
+    }
   });
   updateConfig();
 }
 
 function onAddonSelect(sel) {
   filterSubcat(sel.dataset.group, sel.value);
+  filterOptSubcats(sel.dataset.group, sel.value);
+  refreshAddonImg(sel.dataset.group, sel.value);
   updateConfig();
 }
 
@@ -458,6 +648,105 @@ function filterSubcat(groupKey, parentValue, modelId) {
   }
 }
 
+function filterOptSubcats(groupKey, selectedOptKey, modelId) {
+  modelId = modelId || document.getElementById('select-base').value;
+  const group = getAddons()[groupKey];
+  if (!group) return;
+  Object.keys(group).filter(k => !k.startsWith('_')).forEach(optKey => {
+    const div = document.getElementById('sub-opt-' + groupKey + '-' + optKey);
+    if (!div) return;
+    if (optKey !== selectedOptKey || !group[optKey]?._subcategory) {
+      div.style.display = 'none';
+      return;
+    }
+    div.style.display = '';
+    const sel = div.querySelector('select');
+    if (!sel) return;
+    let currentInvalid = false;
+    Array.from(sel.options).forEach(o => {
+      const models = JSON.parse(o.getAttribute('data-models') || '[]');
+      const allowed = models.length === 0 || models.includes(modelId);
+      o.hidden = !allowed;
+      o.disabled = !allowed;
+      if (sel.value === o.value && !allowed) currentInvalid = true;
+    });
+    if (currentInvalid) {
+      const first = Array.from(sel.options).find(o => !o.hidden);
+      if (first) sel.value = first.value;
+    }
+  });
+}
+
+function filterMultiOptSubcat(groupKey, optKey, modelId) {
+  modelId = modelId || document.getElementById('select-base').value;
+  const subDiv = document.getElementById('sub-opt-' + groupKey + '-' + optKey);
+  if (!subDiv) return;
+  const sel = subDiv.querySelector('select');
+  if (!sel) return;
+  let bad = false;
+  Array.from(sel.options).forEach(o => {
+    const mods = JSON.parse(o.getAttribute('data-models') || '[]');
+    const ok = mods.length === 0 || mods.includes(modelId);
+    o.hidden = !ok;
+    o.disabled = !ok;
+    if (sel.value === o.value && !ok) bad = true;
+  });
+  if (bad) {
+    const first = Array.from(sel.options).find(o => !o.hidden);
+    if (first) sel.value = first.value;
+  }
+}
+
+function onMultiCheckChange(cb, groupKey, optKey) {
+  const labelEl = document.getElementById('check-label-' + groupKey + '-' + optKey);
+  if (labelEl) labelEl.classList.toggle('is-checked', cb.checked);
+  const subDiv = document.getElementById('sub-opt-' + groupKey + '-' + optKey);
+  if (subDiv) {
+    if (cb.checked) {
+      subDiv.style.display = '';
+      filterMultiOptSubcat(groupKey, optKey);
+    } else {
+      subDiv.style.display = 'none';
+    }
+  }
+  updateConfig();
+}
+
+function toggleImg(key) {
+  const wrap = document.getElementById('img-wrap-' + key);
+  const btn  = document.getElementById('img-btn-' + key);
+  if (!wrap) return;
+  const opening = wrap.style.display === 'none';
+  wrap.style.display = opening ? '' : 'none';
+  if (btn) btn.classList.toggle('active', opening);
+}
+
+function refreshBaseImg() {
+  const baseId = document.getElementById('select-base').value;
+  const model  = getBaseModels()[baseId];
+  const img    = model?.image || null;
+  const wrap   = document.getElementById('img-wrap-base');
+  const imgEl  = document.getElementById('img-el-base');
+  const noneEl = document.getElementById('img-none-base');
+  // Update image content whenever selection changes (wrap may be open)
+  if (imgEl) { imgEl.src = img || ''; imgEl.style.display = img ? '' : 'none'; }
+  if (noneEl) noneEl.style.display = img ? 'none' : '';
+}
+
+function refreshAddonImg(groupKey, optKey) {
+  const group  = getAddons()[groupKey];
+  const opt    = group?.[optKey];
+  const img    = (typeof opt === 'object' ? opt.image : null) || null;
+  const wrap   = document.getElementById('img-wrap-' + groupKey);
+  const imgEl  = document.getElementById('img-el-' + groupKey);
+  const noneEl = document.getElementById('img-none-' + groupKey);
+  // Always update image content when selection changes (wrap may be open)
+  if (wrap && wrap.style.display !== 'none') {
+    if (imgEl) { imgEl.src = img || ''; imgEl.style.display = img ? '' : 'none'; }
+    if (noneEl) noneEl.style.display = img ? 'none' : '';
+  }
+}
+
 // ── Recalculate totals whenever any select changes ───────────
 function updateConfig() {
   const baseId = document.getElementById('select-base').value;
@@ -466,7 +755,7 @@ function updateConfig() {
 
   // Collect addon prices — works for any number of groups
   const lines = [];
-  document.querySelectorAll('select[data-group]:not([data-is-subcat])').forEach(sel => {
+  document.querySelectorAll('select[data-group]:not([data-is-subcat]):not([data-is-opt-subcat])').forEach(sel => {
     const groupKey = sel.dataset.group;
     const optKey   = sel.value;
     const entry    = getAddonEntry(groupKey, optKey);
@@ -476,7 +765,7 @@ function updateConfig() {
       lines.push({ label: groupLbl + ': ' + entry.label, price: entry.price });
       total += entry.price;
     }
-    // Include visible subcategory price
+    // Include visible category-level subcategory price
     const subDiv = document.getElementById('sub-' + groupKey);
     if (subDiv && subDiv.style.display !== 'none') {
       const subSel = subDiv.querySelector('select');
@@ -488,6 +777,49 @@ function updateConfig() {
           lines.push({ label: (sub._label || 'Options') + ': ' + (subOpt.label || subKey), price: subOpt.price });
           total += subOpt.price;
         }
+      }
+    }
+    // Include visible option-level subcategory price
+    const optSubDiv = document.getElementById('sub-opt-' + groupKey + '-' + optKey);
+    if (optSubDiv && optSubDiv.style.display !== 'none') {
+      const optSubSel = optSubDiv.querySelector('select');
+      const optSubKey = optSubSel.value;
+      const optSub    = group?.[optKey]?._subcategory;
+      if (optSub) {
+        const optSubOpt = optSub[optSubKey];
+        if (optSubOpt && optSubOpt.price > 0) {
+          lines.push({ label: (optSub._label || 'Options') + ': ' + (optSubOpt.label || optSubKey), price: optSubOpt.price });
+          total += optSubOpt.price;
+        }
+      }
+    }
+  });
+
+  // Multi-select groups: each checked option adds its price
+  document.querySelectorAll('.cfg-multi-opt-row').forEach(row => {
+    const cb = row.querySelector('.cfg-check');
+    if (!cb || !cb.checked) return;
+    const groupKey = row.dataset.group;
+    const optKey   = row.dataset.opt;
+    const group    = getAddons()[groupKey];
+    const opt      = group?.[optKey];
+    if (!opt) return;
+    const groupLbl = group._label || groupKey;
+    const optLbl   = (typeof opt === 'object' ? opt.label : null) || optKey;
+    const optPrice = (typeof opt === 'object' ? opt.price : 0) || 0;
+    if (optPrice > 0) {
+      lines.push({ label: groupLbl + ': ' + optLbl, price: optPrice });
+      total += optPrice;
+    }
+    const optSubDiv = document.getElementById('sub-opt-' + groupKey + '-' + optKey);
+    if (optSubDiv && optSubDiv.style.display !== 'none') {
+      const optSubSel = optSubDiv.querySelector('select');
+      const optSubKey = optSubSel.value;
+      const optSub    = typeof opt === 'object' ? opt._subcategory : null;
+      if (optSub?.[optSubKey]?.price > 0) {
+        const so = optSub[optSubKey];
+        lines.push({ label: (optSub._label || 'Options') + ': ' + (so.label || optSubKey), price: so.price });
+        total += so.price;
       }
     }
   });
@@ -534,12 +866,13 @@ function collectSpec() {
   const addons  = getAddons();
   const spec    = { baseModel: base.name, capacity: base.capacity, leadTime: base.leadTime, options: {}, total: '$0' };
 
-  document.querySelectorAll('select[data-group]:not([data-is-subcat])').forEach(sel => {
+  document.querySelectorAll('select[data-group]:not([data-is-subcat]):not([data-is-opt-subcat])').forEach(sel => {
     const gk    = sel.dataset.group;
-    const entry = getAddonEntry(gk, sel.value);
+    const optKey = sel.value;
+    const entry = getAddonEntry(gk, optKey);
     const lbl   = addons[gk]?._label || gk;
     spec.options[lbl] = entry.label + (entry.price > 0 ? ' (+$' + entry.price + ')' : '');
-    // Include visible subcategory selection
+    // Include visible category-level subcategory selection
     const subDiv = document.getElementById('sub-' + gk);
     if (subDiv && subDiv.style.display !== 'none') {
       const subSel = subDiv.querySelector('select');
@@ -549,6 +882,43 @@ function collectSpec() {
         const subOpt = sub[subKey];
         const subLbl = sub._label || 'Options';
         if (subOpt) spec.options[subLbl] = (subOpt.label || subKey) + (subOpt.price > 0 ? ' (+$' + subOpt.price + ')' : '');
+      }
+    }
+    // Include visible option-level subcategory selection
+    const optSubDiv = document.getElementById('sub-opt-' + gk + '-' + optKey);
+    if (optSubDiv && optSubDiv.style.display !== 'none') {
+      const optSubSel = optSubDiv.querySelector('select');
+      const optSubKey = optSubSel.value;
+      const optSub    = addons[gk]?.[optKey]?._subcategory;
+      if (optSub) {
+        const optSubOpt = optSub[optSubKey];
+        const optSubLbl = optSub._label || 'Options';
+        if (optSubOpt) spec.options[optSubLbl] = (optSubOpt.label || optSubKey) + (optSubOpt.price > 0 ? ' (+$' + optSubOpt.price + ')' : '');
+      }
+    }
+  });
+
+  // Multi-select groups: each checked option is a separate spec line
+  document.querySelectorAll('.cfg-multi-opt-row').forEach(row => {
+    const cb = row.querySelector('.cfg-check');
+    if (!cb || !cb.checked) return;
+    const groupKey = row.dataset.group;
+    const optKey   = row.dataset.opt;
+    const group    = addons[groupKey];
+    const opt      = group?.[optKey];
+    if (!opt) return;
+    const groupLbl = group._label || groupKey;
+    const optLbl   = (typeof opt === 'object' ? opt.label : null) || optKey;
+    const optPrice = (typeof opt === 'object' ? opt.price : 0) || 0;
+    spec.options[groupLbl + ': ' + optLbl] = optLbl + (optPrice > 0 ? ' (+$' + optPrice + ')' : '');
+    const optSubDiv = document.getElementById('sub-opt-' + groupKey + '-' + optKey);
+    if (optSubDiv && optSubDiv.style.display !== 'none') {
+      const optSubSel = optSubDiv.querySelector('select');
+      const optSubKey = optSubSel.value;
+      const optSub    = typeof opt === 'object' ? opt._subcategory : null;
+      if (optSub?.[optSubKey]) {
+        const so = optSub[optSubKey];
+        spec.options[optSub._label || 'Options'] = (so.label || optSubKey) + (so.price > 0 ? ' (+$' + so.price + ')' : '');
       }
     }
   });
