@@ -576,7 +576,7 @@ body {
 }
 .btn-model-restrict:hover { color: var(--amber); }
 .btn-model-restrict.restricted { color: var(--amber); }
-#mf-popup {
+#mf-popup, #pof-popup {
   display: none;
   position: fixed;
   background: var(--card);
@@ -587,6 +587,32 @@ body {
   min-width: 210px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.6);
 }
+
+/* ── SUBCATEGORY ── */
+.btn-add-subcat {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 2px 8px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  vertical-align: middle;
+}
+.btn-add-subcat:hover { border-color: var(--amber); color: var(--amber); }
+.subcat-header td {
+  padding: 5px 14px 3px 28px;
+  background: rgba(240,168,32,0.04);
+  border-bottom: 1px solid var(--border);
+}
+.subcat-row td:first-child { padding-left: 28px; }
 .mf-title {
   font-size: 10px;
   font-weight: 700;
@@ -811,6 +837,17 @@ body {
   </div>
 </div>
 
+<!-- ═══════════ PARENT OPTION FILTER POPUP ═══════════ -->
+<div id="pof-popup">
+  <div class="mf-title">Visible when parent is</div>
+  <div class="mf-hint">Unchecked = this sub-option hidden for that parent selection.</div>
+  <div id="pof-checks"></div>
+  <div class="mf-actions">
+    <button class="btn-sm" style="flex:1" onclick="savePofPopup()">Save</button>
+    <button class="btn-ghost" style="flex:1" onclick="closePofPopup()">Cancel</button>
+  </div>
+</div>
+
 <script>
 // ───────────────────────────────────────────────────
 // DEFAULTS (used when prices.json not yet on GitHub)
@@ -1019,13 +1056,35 @@ function renderAddons() {
   Object.entries(P.configurator.addons).forEach(([groupKey, group]) => {
     const hrow = document.createElement('tr');
     hrow.className = 'group-header';
-    hrow.innerHTML = `<td colspan="7"><span class="group-label-text">${group._label || groupKey}</span></td>`;
+    const hasSubcat = !!group._subcategory;
+    hrow.innerHTML = `<td colspan="7">
+      <span class="group-label-text">${group._label || groupKey}</span>
+      ${!hasSubcat ? `<button class="btn-add-subcat" onclick="addSubcategory('${groupKey}')">+ Subcategory</button>` : ''}
+    </td>`;
     tbody.appendChild(hrow);
 
     Object.entries(group).forEach(([optKey, opt]) => {
-      if (optKey === '_label') return;
+      if (optKey === '_label' || optKey === '_subcategory') return;
       tbody.appendChild(buildAddonRow(groupKey, optKey, opt));
     });
+
+    // Render subcategory section if present
+    if (hasSubcat) {
+      const sub = group._subcategory;
+      const subRealKeys = Object.keys(sub).filter(k => !k.startsWith('_'));
+      const subHrow = document.createElement('tr');
+      subHrow.className = 'subcat-header';
+      subHrow.innerHTML = `<td colspan="7">
+        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--amber);opacity:0.75;">↳ ${sub._label || 'Subcategory'}</span>
+        <span style="font-size:10px;color:var(--muted);margin-left:8px;">Hidden when parent = "${sub._hideWhenParent || ''}"</span>
+        <button class="btn-add-subcat" style="float:right;" onclick="addSubcatOption('${groupKey}')">+ Option</button>
+      </td>`;
+      tbody.appendChild(subHrow);
+
+      subRealKeys.forEach(subKey => {
+        tbody.appendChild(buildSubcatRow(groupKey, subKey, sub[subKey], group));
+      });
+    }
   });
 }
 
@@ -1087,7 +1146,7 @@ function buildAddonRow(groupKey, optKey, opt) {
     <td>
       <div class="row-name">${opt.label}</div>
       <button class="btn-model-restrict ${restricted ? 'restricted' : ''}"
-              onclick="openMfPopup(event,this,'${groupKey}','${optKey}')"
+              onclick="openMfPopup(event,this,'${groupKey}','${optKey}',false)"
               title="Restrict to specific models">⊙ ${text}</button>
     </td>
     <td>
@@ -1104,6 +1163,56 @@ function buildAddonRow(groupKey, optKey, opt) {
     <td><span class="badge ${cls}" data-margin="${uid}">${pct}</span></td>
     <td><span class="gross-text" data-gross="${uid}">${fmtGross(sell, cogs)}</span></td>
     <td><button class="btn-rm" onclick="removeOption('${groupKey}','${optKey}')" title="Remove">✕</button></td>
+  `;
+  return tr;
+}
+
+function buildSubcatRow(groupKey, subKey, subOpt, parentGroup) {
+  const sell = subOpt.price || 0;
+  const cogs = subOpt.cogs  || 0;
+  const models     = subOpt.models        || [];
+  const parentOpts = subOpt.parentOptions || [];
+  const { pct, cls } = calcMargin(sell, cogs);
+  const uid = `${groupKey}-sub-${subKey}`;
+  const { text: modelText, restricted: modelRestricted } = modelRestrictLabel(models);
+
+  // Parent option restriction label
+  let parentText = 'All selections';
+  let parentRestricted = false;
+  if (parentOpts.length > 0) {
+    const names = parentOpts.map(ok => parentGroup[ok]?.label || ok);
+    parentText = names.join(', ') + ' only';
+    parentRestricted = true;
+  }
+
+  const tr = document.createElement('tr');
+  tr.className = 'subcat-row';
+  tr.dataset.group  = groupKey;
+  tr.dataset.subcat = subKey;
+  tr.innerHTML = `
+    <td>
+      <div class="row-name" style="font-size:12px;">↳ ${subOpt.label}</div>
+      <button class="btn-model-restrict ${modelRestricted ? 'restricted' : ''}"
+              onclick="openMfPopup(event,this,'${groupKey}','${subKey}',true)"
+              title="Restrict to specific base models">⊙ ${modelText}</button>
+      <button class="btn-model-restrict ${parentRestricted ? 'restricted' : ''}"
+              onclick="openPofPopup(event,this,'${groupKey}','${subKey}')"
+              title="Restrict to parent selections">↑ ${parentText}</button>
+    </td>
+    <td>
+      <input type="number" class="num-field" value="${cogs}" min="0" step="1"
+             data-field="cogs" data-group="${groupKey}" data-subcat="${subKey}"
+             oninput="onSubcatChange(this)">
+    </td>
+    <td class="arrow-sep">→</td>
+    <td>
+      <input type="number" class="num-field" value="${sell}" min="0" step="1"
+             data-field="sell" data-group="${groupKey}" data-subcat="${subKey}"
+             oninput="onSubcatChange(this)">
+    </td>
+    <td><span class="badge ${cls}" data-margin="${uid}">${pct}</span></td>
+    <td><span class="gross-text" data-gross="${uid}">${fmtGross(sell, cogs)}</span></td>
+    <td><button class="btn-rm" onclick="removeSubcatOption('${groupKey}','${subKey}')" title="Remove">✕</button></td>
   `;
   return tr;
 }
@@ -1149,6 +1258,25 @@ function onAddonChange(input) {
   markDirty();
 }
 
+function onSubcatChange(input) {
+  const groupKey = input.dataset.group;
+  const subKey   = input.dataset.subcat;
+  const field    = input.dataset.field;
+  const val      = parseFloat(input.value) || 0;
+
+  const row  = input.closest('tr');
+  const cogs = parseFloat(row.querySelector('[data-field="cogs"]').value) || 0;
+  const sell = parseFloat(row.querySelector('[data-field="sell"]').value) || 0;
+
+  const sub = P.configurator.addons[groupKey]._subcategory;
+  if (field === 'cogs') sub[subKey].cogs  = val;
+  else                   sub[subKey].price = val;
+
+  updateRowCalc(groupKey + '-sub-' + subKey, sell, cogs);
+  input.classList.add('dirty');
+  markDirty();
+}
+
 function updateRowCalc(uid, sell, cogs) {
   const mEl = document.querySelector(`[data-margin="${uid}"]`);
   const gEl = document.querySelector(`[data-gross="${uid}"]`);
@@ -1170,9 +1298,15 @@ function bulkMargin(scope, sliderId) {
   });
   Object.values(P.configurator.addons).forEach(group => {
     Object.entries(group).forEach(([k, opt]) => {
-      if (k === '_label') return;
+      if (k === '_label' || k === '_subcategory') return;
       if (opt.cogs > 0) opt.price = Math.ceil(opt.cogs / (1 - pct));
     });
+    if (group._subcategory) {
+      Object.entries(group._subcategory).forEach(([k, subOpt]) => {
+        if (k.startsWith('_')) return;
+        if (subOpt.cogs > 0) subOpt.price = Math.ceil(subOpt.cogs / (1 - pct));
+      });
+    }
   });
   renderBaseModels();
   renderAddons();
@@ -1227,13 +1361,56 @@ function addOption() {
 
 function removeOption(groupKey, optKey) {
   const group = P.configurator.addons[groupKey];
-  const realKeys = Object.keys(group).filter(k => k !== '_label');
+  const realKeys = Object.keys(group).filter(k => k !== '_label' && k !== '_subcategory');
   if (realKeys.length <= 1) {
     if (!confirm(`Remove the entire "${group._label || groupKey}" category?`)) return;
     delete P.configurator.addons[groupKey];
   } else {
     if (!confirm(`Remove "${group[optKey].label}"?`)) return;
     delete P.configurator.addons[groupKey][optKey];
+  }
+  renderAddons();
+  markDirty();
+}
+
+function addSubcategory(groupKey) {
+  const group = P.configurator.addons[groupKey];
+  if (group._subcategory) { showToast('This group already has a subcategory.', 'info'); return; }
+  const label = prompt('Subcategory label (e.g. "AC Outlet Count"):');
+  if (!label?.trim()) return;
+  const hideWhen = prompt('Hide when parent is set to (option key, e.g. "none"):\nLeave blank to always show.') || '';
+  const firstLabel = prompt('First option label (e.g. "2 Outlets"):') || 'Option 1';
+  const firstKey = Date.now().toString(36);
+  group._subcategory = {
+    '_label': label.trim(),
+    '_hideWhenParent': hideWhen.trim()
+  };
+  group._subcategory[firstKey] = { label: firstLabel, price: 0, cogs: 0 };
+  renderAddons();
+  markDirty();
+  showToast('Subcategory added — set prices then Deploy.', 'success');
+}
+
+function addSubcatOption(groupKey) {
+  const group = P.configurator.addons[groupKey];
+  if (!group._subcategory) { showToast('No subcategory for this group.', 'error'); return; }
+  const label = prompt('Subcategory option label (e.g. "3 Outlets"):');
+  if (!label?.trim()) return;
+  const optKey = Date.now().toString(36);
+  group._subcategory[optKey] = { label: label.trim(), price: 0, cogs: 0 };
+  renderAddons();
+  markDirty();
+}
+
+function removeSubcatOption(groupKey, subKey) {
+  const sub = P.configurator.addons[groupKey]._subcategory;
+  const realKeys = Object.keys(sub).filter(k => !k.startsWith('_'));
+  if (realKeys.length <= 1) {
+    if (!confirm(`Remove the entire subcategory for "${P.configurator.addons[groupKey]._label}"?`)) return;
+    delete P.configurator.addons[groupKey]._subcategory;
+  } else {
+    if (!confirm(`Remove "${sub[subKey].label}"?`)) return;
+    delete sub[subKey];
   }
   renderAddons();
   markDirty();
@@ -1376,11 +1553,19 @@ function exportCSV() {
 
   Object.entries(P.configurator.addons).forEach(([gk, group]) => {
     Object.entries(group).forEach(([ok, opt]) => {
-      if (ok === '_label') return;
+      if (ok === '_label' || ok === '_subcategory') return;
       const g   = (opt.price || 0) - (opt.cogs || 0);
       const pct = opt.price > 0 ? (g / opt.price * 100).toFixed(1) : '';
       rows.push([group._label || gk, opt.label, opt.cogs || 0, opt.price || 0, g, pct]);
     });
+    if (group._subcategory) {
+      Object.entries(group._subcategory).forEach(([sk, subOpt]) => {
+        if (sk.startsWith('_')) return;
+        const g   = (subOpt.price || 0) - (subOpt.cogs || 0);
+        const pct = subOpt.price > 0 ? (g / subOpt.price * 100).toFixed(1) : '';
+        rows.push([`${group._label || gk} (Sub)`, subOpt.label, subOpt.cogs || 0, subOpt.price || 0, g, pct]);
+      });
+    }
   });
 
   const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
@@ -1445,10 +1630,12 @@ function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
 // ── MODEL FILTER POPUP ──
 let _mfTarget = null;
 
-function openMfPopup(e, btn, groupKey, optKey) {
+function openMfPopup(e, btn, groupKey, optKey, isSubcat = false) {
   e.stopPropagation();
-  _mfTarget = { groupKey, optKey };
-  const opt = P.configurator.addons[groupKey][optKey];
+  _mfTarget = { groupKey, optKey, isSubcat };
+  const opt = isSubcat
+    ? P.configurator.addons[groupKey]._subcategory[optKey]
+    : P.configurator.addons[groupKey][optKey];
   const selected = opt.models || [];
 
   const checksDiv = document.getElementById('mf-checks');
@@ -1503,12 +1690,16 @@ function closeMfPopup() {
 
 function saveMfPopup() {
   if (!_mfTarget) return;
-  const { groupKey, optKey } = _mfTarget;
+  const { groupKey, optKey, isSubcat } = _mfTarget;
   const checks   = document.querySelectorAll('#mf-checks input[type=checkbox]');
   const allCount = checks.length;
   const selected = Array.from(checks).filter(c => c.checked).map(c => c.value);
-  // Empty array means "all models" — store [] when everything is checked
-  P.configurator.addons[groupKey][optKey].models = selected.length === allCount ? [] : selected;
+  const models   = selected.length === allCount ? [] : selected;
+  if (isSubcat) {
+    P.configurator.addons[groupKey]._subcategory[optKey].models = models;
+  } else {
+    P.configurator.addons[groupKey][optKey].models = models;
+  }
   closeMfPopup();
   renderAddons();
   markDirty();
@@ -1516,9 +1707,80 @@ function saveMfPopup() {
 }
 
 document.addEventListener('click', e => {
-  const popup = document.getElementById('mf-popup');
-  if (popup && popup.style.display === 'block' && !popup.contains(e.target)) closeMfPopup();
+  const mfp = document.getElementById('mf-popup');
+  if (mfp && mfp.style.display === 'block' && !mfp.contains(e.target)) closeMfPopup();
+  const pofp = document.getElementById('pof-popup');
+  if (pofp && pofp.style.display === 'block' && !pofp.contains(e.target)) closePofPopup();
 });
+
+// ── PARENT OPTION FILTER POPUP ──
+let _pofTarget = null;
+
+function openPofPopup(e, btn, groupKey, subKey) {
+  e.stopPropagation();
+  _pofTarget = { groupKey, subKey };
+  const group  = P.configurator.addons[groupKey];
+  const subOpt = group._subcategory[subKey];
+  const selected  = subOpt.parentOptions || [];
+  const hideWhen  = group._subcategory._hideWhenParent;
+
+  const checksDiv = document.getElementById('pof-checks');
+  checksDiv.innerHTML = '';
+  Object.entries(group).forEach(([optKey, opt]) => {
+    if (optKey === '_label' || optKey === '_subcategory') return;
+    if (optKey === hideWhen) return;
+    const lbl     = opt.label || optKey;
+    const checked = selected.length === 0 || selected.includes(optKey) ? 'checked' : '';
+    const label   = document.createElement('label');
+    label.className = 'mf-check-label';
+    label.innerHTML = `<input type="checkbox" value="${optKey}" ${checked}><span>${lbl}</span>`;
+    checksDiv.appendChild(label);
+  });
+
+  const popup = document.getElementById('pof-popup');
+  popup.style.visibility = 'hidden';
+  popup.style.display = 'block';
+  const rect  = btn.getBoundingClientRect();
+  const popW  = popup.offsetWidth  || 220;
+  const popH  = popup.offsetHeight || 200;
+  const margin = 8;
+  let left = rect.left, top = rect.bottom + 6;
+  if (left + popW > window.innerWidth  - margin) left = window.innerWidth  - popW - margin;
+  if (top  + popH > window.innerHeight - margin) top  = rect.top - popH - 6;
+  popup.style.left       = Math.max(margin, left) + 'px';
+  popup.style.top        = Math.max(margin, top)  + 'px';
+  popup.style.visibility = '';
+
+  const title = popup.querySelector('.mf-title');
+  title.style.cursor = 'grab';
+  title.onmousedown = function(ev) {
+    ev.preventDefault();
+    let ox = ev.clientX - popup.offsetLeft, oy = ev.clientY - popup.offsetTop;
+    function move(mv) { popup.style.left = (mv.clientX - ox) + 'px'; popup.style.top = (mv.clientY - oy) + 'px'; }
+    function up() { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up); title.style.cursor = 'grab'; }
+    title.style.cursor = 'grabbing';
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup', up);
+  };
+}
+
+function closePofPopup() {
+  document.getElementById('pof-popup').style.display = 'none';
+  _pofTarget = null;
+}
+
+function savePofPopup() {
+  if (!_pofTarget) return;
+  const { groupKey, subKey } = _pofTarget;
+  const checks   = document.querySelectorAll('#pof-checks input[type=checkbox]');
+  const allCount = checks.length;
+  const selected = Array.from(checks).filter(c => c.checked).map(c => c.value);
+  P.configurator.addons[groupKey]._subcategory[subKey].parentOptions = selected.length === allCount ? [] : selected;
+  closePofPopup();
+  renderAddons();
+  markDirty();
+  showToast('Parent restriction saved — click Deploy to publish.', 'success');
+}
 
 </script>
 </body>
