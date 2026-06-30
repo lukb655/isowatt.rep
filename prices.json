@@ -55,7 +55,7 @@
       },
       "12v": {
         "_label": "12V Outputs",
-        "none": { "label": "None", "price": 0, "cogs": 0 },
+        "_multiSelect": true,
         "anderson": {
           "label": "Anderson SB50",
           "price": 10,
@@ -79,13 +79,6 @@
             "1": { "label": "×1", "price": 0, "cogs": 0 },
             "2": { "label": "×2", "price": 6, "cogs": 2 }
           }
-        },
-        "mqyk9w8z": {
-          "label": "Both (Anderson + Cigarette)",
-          "price": 14,
-          "cogs": 7,
-          "models": ["iso-station", "isopack---50ah-lifepo4-06kwh"],
-          "image": null
         }
       },
       "monitor": {

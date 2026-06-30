@@ -1083,6 +1083,10 @@ function renderAddons() {
     const hasSubcat = !!group._subcategory;
     hrow.innerHTML = `<td colspan="7">
       <span class="group-label-text">${group._label || groupKey}</span>
+      ${group._multiSelect ? `<span style="font-size:10px;color:var(--amber);border:1px solid var(--amber-dim);border-radius:3px;padding:1px 6px;margin-left:8px;vertical-align:middle;">MULTI-SELECT</span>` : ''}
+      <button class="btn-add-subcat" onclick="toggleMultiSelect('${groupKey}')" style="margin-left:6px;" title="Toggle multi-select mode for this group">
+        ${group._multiSelect ? '✕ Single-Select' : '☐ Multi-Select'}
+      </button>
       ${!hasSubcat ? `<button class="btn-add-subcat" onclick="addSubcategory('${groupKey}')">+ Subcategory</button>` : ''}
     </td>`;
     tbody.appendChild(hrow);
@@ -1418,6 +1422,16 @@ function removeOption(groupKey, optKey) {
   }
   renderAddons();
   markDirty();
+}
+
+function toggleMultiSelect(groupKey) {
+  const group = P.configurator.addons[groupKey];
+  const enabling = !group._multiSelect;
+  if (enabling) group._multiSelect = true;
+  else delete group._multiSelect;
+  renderAddons();
+  markDirty();
+  showToast(`Multi-select ${enabling ? 'enabled' : 'disabled'} for "${group._label || groupKey}". Deploy to publish.`, 'success');
 }
 
 function addSubcategory(groupKey) {
