@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T15:54:26.303Z",
+    "lastUpdated": "2026-06-30T16:57:16.200Z",
     "currency": "USD"
   },
   "configurator": {
@@ -68,7 +68,7 @@
           "price": 53,
           "cogs": 37,
           "models": [
-            "iso-station"
+            "isostation---100ah-battery--4800-enclosure--12kwh"
           ]
         },
         "mqyjvk3m": {
@@ -76,7 +76,7 @@
           "price": 135,
           "cogs": 94,
           "models": [
-            "iso-station"
+            "isostation---100ah-battery--4800-enclosure--12kwh"
           ]
         },
         "_subcategory": {
@@ -85,7 +85,24 @@
           "mr0tp4me": {
             "label": "1 Outlet",
             "price": 0,
-            "cogs": 0
+            "cogs": 10
+          },
+          "mr0w1t3m": {
+            "label": "2 Outlets",
+            "price": 15,
+            "cogs": 20,
+            "models": [
+              "isopack---50ah-battery--3800-enclosure--600wh",
+              "isostation---100ah-battery--4800-enclosure--12kwh"
+            ]
+          },
+          "mr0w1vmz": {
+            "label": "3 Outlets",
+            "price": 25,
+            "cogs": 30,
+            "models": [
+              "isostation---100ah-battery--4800-enclosure--12kwh"
+            ]
           }
         }
       },
@@ -108,18 +125,18 @@
         "_subcategory": {
           "1": {
             "label": "1 Port",
-            "price": 0,
+            "price": 5,
             "cogs": 0
           },
           "2": {
             "label": "2 Ports",
-            "price": 5,
+            "price": 9,
             "cogs": 6,
             "models": []
           },
           "3": {
             "label": "3 Ports",
-            "price": 9,
+            "price": 13,
             "cogs": 9,
             "models": []
           },
@@ -142,7 +159,7 @@
         },
         "mqyj0i1u": {
           "label": "Cigarette Lighter Port",
-          "price": 5,
+          "price": 0,
           "cogs": 3
         }
       },
