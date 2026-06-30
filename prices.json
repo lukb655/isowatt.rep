@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T20:32:01.518Z",
+    "lastUpdated": "2026-06-30T20:37:53.618Z",
     "currency": "USD"
   },
   "configurator": {
@@ -122,7 +122,7 @@
           "label": "LED Indicator Only",
           "price": 0,
           "cogs": 0,
-          "image": "https://github.com/lukb655/isowatt.rep/blob/main/Images/LEDINDICATOR.png?raw=true"
+          "image": "https://raw.githubusercontent.com/lukb655/isowatt.rep/main/images/LEDINDICATOR.png"
         },
         "mr10gigt": {
           "label": "Voltimeter",
