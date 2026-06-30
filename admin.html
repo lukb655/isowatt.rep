@@ -633,6 +633,30 @@ body {
 .mf-check-label input { accent-color: var(--amber); cursor: pointer; }
 .mf-hint { font-size: 11px; color: var(--muted); margin-bottom: 0.75rem; }
 .mf-actions { display: flex; gap: 8px; margin-top: 0.75rem; }
+
+/* ── IMAGE URL FIELD ── */
+.img-url-field {
+  width: 100%;
+  padding: 4px 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--subtle);
+  font-size: 11px;
+  font-family: inherit;
+  margin-top: 4px;
+  transition: border-color 0.15s;
+}
+.img-url-field:focus { outline: none; border-color: var(--amber); }
+.img-url-field::placeholder { color: var(--muted); }
+
+/* ── OPTION-LEVEL SUBCATEGORY ROWS ── */
+.opt-subcat-header td {
+  padding: 5px 14px 3px 42px;
+  background: rgba(240,168,32,0.02);
+  border-bottom: 1px solid var(--border);
+}
+.opt-subcat-row td:first-child { padding-left: 42px; }
 </style>
 </head>
 <body>
@@ -1045,7 +1069,7 @@ function renderBaseModels() {
   const tbody = document.getElementById('base-tbody');
   tbody.innerHTML = '';
   Object.entries(P.configurator.baseModels).forEach(([id, m]) => {
-    const pseudo = { name: m.name, startingPrice: m.price, cogs: m.cogs || 0, badge: m.capacity, subtitle: m.leadTime };
+    const pseudo = { name: m.name, startingPrice: m.price, cogs: m.cogs || 0, badge: m.capacity, subtitle: m.leadTime, image: m.image || null };
     tbody.appendChild(buildProductRow(id, pseudo, 'base', true));
   });
 }
@@ -1066,6 +1090,16 @@ function renderAddons() {
     Object.entries(group).forEach(([optKey, opt]) => {
       if (optKey === '_label' || optKey === '_subcategory') return;
       tbody.appendChild(buildAddonRow(groupKey, optKey, opt));
+      // Render option-level subcategory rows immediately after the parent option row
+      if (typeof opt === 'object' && opt._subcategory) {
+        const optSub = opt._subcategory;
+        const optSubRealKeys = Object.keys(optSub).filter(k => !k.startsWith('_'));
+        const optSubHrow = document.createElement('tr');
+        optSubHrow.className = 'opt-subcat-header';
+        optSubHrow.innerHTML = `<td colspan="7"><span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--amber);opacity:0.65;">↳↳ ${optSub._label || 'Subcategory'}</span><button class="btn-add-subcat" style="float:right;" onclick="addOptSubcatOption('${groupKey}','${optKey}')">+ Option</button></td>`;
+        tbody.appendChild(optSubHrow);
+        optSubRealKeys.forEach(sk => tbody.appendChild(buildOptSubcatRow(groupKey, optKey, sk, optSub[sk])));
+      }
     });
 
     // Render subcategory section if present
@@ -1102,6 +1136,8 @@ function buildProductRow(id, p, scope, removable = (scope === 'pb')) {
     <td>
       <div class="row-name">${p.name}</div>
       ${p.badge || p.subtitle ? `<div class="row-meta">${[p.badge, p.subtitle].filter(Boolean).join(' · ')}</div>` : ''}
+      <input type="text" class="img-url-field" placeholder="Image URL (optional)"
+             value="${p.image || ''}" oninput="onModelImgChange(this,'${id}')">
     </td>
     <td>
       <input type="number" class="num-field" value="${cogs}" min="0" step="1"
@@ -1148,6 +1184,9 @@ function buildAddonRow(groupKey, optKey, opt) {
       <button class="btn-model-restrict ${restricted ? 'restricted' : ''}"
               onclick="openMfPopup(event,this,'${groupKey}','${optKey}',false)"
               title="Restrict to specific models">⊙ ${text}</button>
+      ${!opt._subcategory ? `<button class="btn-add-subcat" onclick="addOptSubcat('${groupKey}','${optKey}')">↳ + Sub</button>` : ''}
+      <input type="text" class="img-url-field" placeholder="Image URL (optional)"
+             value="${opt.image || ''}" oninput="onAddonImgChange(this,'${groupKey}','${optKey}')">
     </td>
     <td>
       <input type="number" class="num-field" value="${cogs}" min="0" step="1"
@@ -1300,7 +1339,15 @@ function bulkMargin(scope, sliderId) {
     Object.entries(group).forEach(([k, opt]) => {
       if (k === '_label' || k === '_subcategory') return;
       if (opt.cogs > 0) opt.price = Math.ceil(opt.cogs / (1 - pct));
+      // Option-level subcategory
+      if (opt._subcategory) {
+        Object.entries(opt._subcategory).forEach(([sk, so]) => {
+          if (sk.startsWith('_')) return;
+          if (so.cogs > 0) so.price = Math.ceil(so.cogs / (1 - pct));
+        });
+      }
     });
+    // Category-level subcategory
     if (group._subcategory) {
       Object.entries(group._subcategory).forEach(([k, subOpt]) => {
         if (k.startsWith('_')) return;
@@ -1557,13 +1604,22 @@ function exportCSV() {
       const g   = (opt.price || 0) - (opt.cogs || 0);
       const pct = opt.price > 0 ? (g / opt.price * 100).toFixed(1) : '';
       rows.push([group._label || gk, opt.label, opt.cogs || 0, opt.price || 0, g, pct]);
+      // Option-level subcategory rows
+      if (opt._subcategory) {
+        Object.entries(opt._subcategory).forEach(([sk, so]) => {
+          if (sk.startsWith('_')) return;
+          const sg   = (so.price || 0) - (so.cogs || 0);
+          const spct = so.price > 0 ? (sg / so.price * 100).toFixed(1) : '';
+          rows.push([`${group._label || gk} › ${opt.label} (Sub)`, so.label, so.cogs || 0, so.price || 0, sg, spct]);
+        });
+      }
     });
     if (group._subcategory) {
       Object.entries(group._subcategory).forEach(([sk, subOpt]) => {
         if (sk.startsWith('_')) return;
         const g   = (subOpt.price || 0) - (subOpt.cogs || 0);
         const pct = subOpt.price > 0 ? (g / subOpt.price * 100).toFixed(1) : '';
-        rows.push([`${group._label || gk} (Sub)`, subOpt.label, subOpt.cogs || 0, subOpt.price || 0, g, pct]);
+        rows.push([`${group._label || gk} (Category Sub)`, subOpt.label, subOpt.cogs || 0, subOpt.price || 0, g, pct]);
       });
     }
   });
@@ -1630,12 +1686,13 @@ function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
 // ── MODEL FILTER POPUP ──
 let _mfTarget = null;
 
-function openMfPopup(e, btn, groupKey, optKey, isSubcat = false) {
+function openMfPopup(e, btn, groupKey, key1, key2 = null) {
   e.stopPropagation();
-  _mfTarget = { groupKey, optKey, isSubcat };
-  const opt = isSubcat
-    ? P.configurator.addons[groupKey]._subcategory[optKey]
-    : P.configurator.addons[groupKey][optKey];
+  _mfTarget = { groupKey, key1, key2 };
+  let opt;
+  if (!key2)          opt = P.configurator.addons[groupKey][key1];
+  else if (key2 === true) opt = P.configurator.addons[groupKey]._subcategory[key1];
+  else                opt = P.configurator.addons[groupKey][key1]._subcategory[key2];
   const selected = opt.models || [];
 
   const checksDiv = document.getElementById('mf-checks');
@@ -1690,16 +1747,14 @@ function closeMfPopup() {
 
 function saveMfPopup() {
   if (!_mfTarget) return;
-  const { groupKey, optKey, isSubcat } = _mfTarget;
+  const { groupKey, key1, key2 } = _mfTarget;
   const checks   = document.querySelectorAll('#mf-checks input[type=checkbox]');
   const allCount = checks.length;
   const selected = Array.from(checks).filter(c => c.checked).map(c => c.value);
   const models   = selected.length === allCount ? [] : selected;
-  if (isSubcat) {
-    P.configurator.addons[groupKey]._subcategory[optKey].models = models;
-  } else {
-    P.configurator.addons[groupKey][optKey].models = models;
-  }
+  if (!key2)          P.configurator.addons[groupKey][key1].models = models;
+  else if (key2 === true) P.configurator.addons[groupKey]._subcategory[key1].models = models;
+  else                P.configurator.addons[groupKey][key1]._subcategory[key2].models = models;
   closeMfPopup();
   renderAddons();
   markDirty();
@@ -1780,6 +1835,115 @@ function savePofPopup() {
   renderAddons();
   markDirty();
   showToast('Parent restriction saved — click Deploy to publish.', 'success');
+}
+
+// ── OPTION-LEVEL SUBCATEGORY ──
+function buildOptSubcatRow(groupKey, optKey, subKey, subOpt) {
+  const sell   = subOpt.price  || 0;
+  const cogs   = subOpt.cogs   || 0;
+  const models = subOpt.models || [];
+  const { pct, cls } = calcMargin(sell, cogs);
+  const uid = `${groupKey}-${optKey}-osub-${subKey}`;
+  const { text: modelText, restricted: modelRestricted } = modelRestrictLabel(models);
+
+  const tr = document.createElement('tr');
+  tr.className = 'opt-subcat-row';
+  tr.dataset.group   = groupKey;
+  tr.dataset.optkey  = optKey;
+  tr.dataset.optsubc = subKey;
+  tr.innerHTML = `
+    <td>
+      <div class="row-name" style="font-size:12px;">↳↳ ${subOpt.label}</div>
+      <button class="btn-model-restrict ${modelRestricted ? 'restricted' : ''}"
+              onclick="openMfPopup(event,this,'${groupKey}','${optKey}','${subKey}')"
+              title="Restrict to specific base models">⊙ ${modelText}</button>
+    </td>
+    <td>
+      <input type="number" class="num-field" value="${cogs}" min="0" step="1"
+             data-field="cogs" data-group="${groupKey}" data-optkey="${optKey}" data-optsubc="${subKey}"
+             oninput="onOptSubcatChange(this)">
+    </td>
+    <td class="arrow-sep">→</td>
+    <td>
+      <input type="number" class="num-field" value="${sell}" min="0" step="1"
+             data-field="sell" data-group="${groupKey}" data-optkey="${optKey}" data-optsubc="${subKey}"
+             oninput="onOptSubcatChange(this)">
+    </td>
+    <td><span class="badge ${cls}" data-margin="${uid}">${pct}</span></td>
+    <td><span class="gross-text" data-gross="${uid}">${fmtGross(sell, cogs)}</span></td>
+    <td><button class="btn-rm" onclick="removeOptSubcatOption('${groupKey}','${optKey}','${subKey}')" title="Remove">✕</button></td>
+  `;
+  return tr;
+}
+
+function onOptSubcatChange(input) {
+  const groupKey = input.dataset.group;
+  const optKey   = input.dataset.optkey;
+  const subKey   = input.dataset.optsubc;
+  const field    = input.dataset.field;
+  const val      = parseFloat(input.value) || 0;
+
+  const row  = input.closest('tr');
+  const cogs = parseFloat(row.querySelector('[data-field="cogs"]').value) || 0;
+  const sell = parseFloat(row.querySelector('[data-field="sell"]').value) || 0;
+
+  const optSub = P.configurator.addons[groupKey][optKey]._subcategory;
+  if (field === 'cogs') optSub[subKey].cogs  = val;
+  else                   optSub[subKey].price = val;
+
+  updateRowCalc(groupKey + '-' + optKey + '-osub-' + subKey, sell, cogs);
+  input.classList.add('dirty');
+  markDirty();
+}
+
+function addOptSubcat(groupKey, optKey) {
+  const opt = P.configurator.addons[groupKey][optKey];
+  if (opt._subcategory) { showToast('This option already has a subcategory.', 'info'); return; }
+  const label = prompt('Subcategory label (e.g. "Quantity"):');
+  if (!label?.trim()) return;
+  const firstLabel = prompt('First option label (e.g. "×1"):') || '×1';
+  const firstKey   = Date.now().toString(36);
+  opt._subcategory = { '_label': label.trim() };
+  opt._subcategory[firstKey] = { label: firstLabel, price: 0, cogs: 0 };
+  renderAddons();
+  markDirty();
+  showToast('Option subcategory added — set prices then Deploy.', 'success');
+}
+
+function addOptSubcatOption(groupKey, optKey) {
+  const opt = P.configurator.addons[groupKey][optKey];
+  if (!opt._subcategory) { showToast('No subcategory for this option.', 'error'); return; }
+  const label = prompt('Option label (e.g. "×2"):');
+  if (!label?.trim()) return;
+  const key = Date.now().toString(36);
+  opt._subcategory[key] = { label: label.trim(), price: 0, cogs: 0 };
+  renderAddons();
+  markDirty();
+}
+
+function removeOptSubcatOption(groupKey, optKey, subKey) {
+  const optSub   = P.configurator.addons[groupKey][optKey]._subcategory;
+  const realKeys = Object.keys(optSub).filter(k => !k.startsWith('_'));
+  if (realKeys.length <= 1) {
+    if (!confirm(`Remove the entire subcategory for "${P.configurator.addons[groupKey][optKey].label}"?`)) return;
+    delete P.configurator.addons[groupKey][optKey]._subcategory;
+  } else {
+    if (!confirm(`Remove "${optSub[subKey].label}"?`)) return;
+    delete optSub[subKey];
+  }
+  renderAddons();
+  markDirty();
+}
+
+// ── IMAGE URL HANDLERS ──
+function onModelImgChange(input, id) {
+  P.configurator.baseModels[id].image = input.value.trim() || null;
+  markDirty();
+}
+
+function onAddonImgChange(input, groupKey, optKey) {
+  P.configurator.addons[groupKey][optKey].image = input.value.trim() || null;
+  markDirty();
 }
 
 </script>

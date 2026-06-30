@@ -152,6 +152,57 @@
   font-size: 11px;
 }
 
+/* ── Section header row (title + image toggle) ───────────── */
+.cfg-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+.cfg-section-head .cfg-section-title {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* ── Image toggle button ─────────────────────────────────── */
+.img-toggle-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 3px 8px;
+  font-size: 14px;
+  line-height: 1;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.img-toggle-btn:hover  { border-color: var(--amber); color: var(--amber); }
+.img-toggle-btn.active { border-color: var(--amber); color: var(--amber); background: var(--amber-bg); }
+
+/* ── Image preview area ──────────────────────────────────── */
+.cfg-img-wrap {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+.cfg-img-wrap img {
+  width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+  border-radius: 6px;
+  background: var(--surface);
+}
+.cfg-img-none {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  padding: 0.75rem;
+}
+
 /* ── Modal ────────────────────────────────────────────────── */
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>
@@ -199,9 +250,16 @@
 
   <!-- Base Model — always first -->
   <section class="cfg-section" id="section-base" style="display:none;">
-    <div class="cfg-section-title">Base Model</div>
+    <div class="cfg-section-head">
+      <div class="cfg-section-title">Base Model</div>
+      <button class="img-toggle-btn" id="img-btn-base" onclick="toggleImg('base')" title="Show/hide product image" style="display:none;">🖼</button>
+    </div>
     <div class="cfg-group">
-      <select class="cfg-select" id="select-base" onchange="updateConfig()"></select>
+      <select class="cfg-select" id="select-base" onchange="updateConfig(); refreshBaseImg()"></select>
+    </div>
+    <div class="cfg-img-wrap" id="img-wrap-base" style="display:none;">
+      <img id="img-el-base" src="" alt="">
+      <div class="cfg-img-none" id="img-none-base" style="display:none;">No image set for this model.</div>
     </div>
   </section>
 
@@ -364,7 +422,7 @@ function buildConfigurator() {
       return `<option value="${esc(optKey)}" data-models='${models}'>${esc(lbl)}${price > 0 ? ' — $' + price : ''}</option>`;
     }).join('');
 
-    // Build subcategory sub-section if present
+    // Category-level subcategory
     let subcatHtml = '';
     if (group._subcategory) {
       const sub = group._subcategory;
@@ -385,11 +443,41 @@ function buildConfigurator() {
       }
     }
 
+    // Per-option subcategories (one hidden div per option that has _subcategory)
+    let optSubcatHtml = '';
+    opts.forEach(([optKey, opt]) => {
+      if (typeof opt !== 'object' || !opt._subcategory) return;
+      const sub = opt._subcategory;
+      const subOpts = Object.entries(sub).filter(([k]) => !k.startsWith('_'));
+      if (subOpts.length === 0) return;
+      const subOptsHtml = subOpts.map(([sk, so]) => {
+        const lbl = so.label || sk;
+        const price = so.price || 0;
+        const models = JSON.stringify(so.models || []);
+        return `<option value="${esc(sk)}" data-models='${models}'>${esc(lbl)}${price > 0 ? ' — $' + price : ''}</option>`;
+      }).join('');
+      optSubcatHtml += `
+        <div class="cfg-sub" id="sub-opt-${esc(groupKey)}-${esc(optKey)}" style="display:none;">
+          <label class="cfg-label">${esc(sub._label || 'Options')}</label>
+          <select class="cfg-select" data-group="${esc(groupKey)}" data-opt-parent="${esc(optKey)}" data-is-opt-subcat="true" onchange="updateConfig()">${subOptsHtml}</select>
+        </div>`;
+    });
+
+    // Whether any option in this group has an image (controls showing the toggle btn)
+    const anyImg = opts.some(([, o]) => typeof o === 'object' && o.image);
+
     sec.innerHTML = `
-      <div class="cfg-section-title">${esc(label)}</div>
+      <div class="cfg-section-head">
+        <div class="cfg-section-title">${esc(label)}</div>
+        <button class="img-toggle-btn" id="img-btn-${esc(groupKey)}" onclick="toggleImg('${esc(groupKey)}')" title="Show/hide component image" style="${anyImg ? '' : 'display:none;'}">🖼</button>
+      </div>
       <div class="cfg-group">
         <select class="cfg-select" data-group="${esc(groupKey)}" onchange="onAddonSelect(this)">${optionsHtml}</select>
-      </div>${subcatHtml}`;
+      </div>
+      <div class="cfg-img-wrap" id="img-wrap-${esc(groupKey)}" style="display:none;">
+        <img id="img-el-${esc(groupKey)}" src="" alt="" style="display:none;">
+        <div class="cfg-img-none" id="img-none-${esc(groupKey)}">No image available for this selection.</div>
+      </div>${subcatHtml}${optSubcatHtml}`;
     container.appendChild(sec);
   });
 
@@ -398,13 +486,14 @@ function buildConfigurator() {
   document.getElementById('cfg-loading').style.display = 'none';
 
   // Wire base model change to filter addons
-  baseSelect.addEventListener('change', () => filterAddons(baseSelect.value));
+  baseSelect.addEventListener('change', () => { filterAddons(baseSelect.value); refreshBaseImg(); });
 
   filterAddons(baseSelect.value);
+  refreshBaseImg();
 }
 
 function filterAddons(modelId) {
-  document.querySelectorAll('select[data-group]:not([data-is-subcat])').forEach(sel => {
+  document.querySelectorAll('select[data-group]:not([data-is-subcat]):not([data-is-opt-subcat])').forEach(sel => {
     let currentInvalid = false;
     Array.from(sel.options).forEach(o => {
       const models  = JSON.parse(o.getAttribute('data-models') || '[]');
@@ -418,12 +507,16 @@ function filterAddons(modelId) {
       if (first) sel.value = first.value;
     }
     filterSubcat(sel.dataset.group, sel.value, modelId);
+    filterOptSubcats(sel.dataset.group, sel.value, modelId);
+    refreshAddonImg(sel.dataset.group, sel.value);
   });
   updateConfig();
 }
 
 function onAddonSelect(sel) {
   filterSubcat(sel.dataset.group, sel.value);
+  filterOptSubcats(sel.dataset.group, sel.value);
+  refreshAddonImg(sel.dataset.group, sel.value);
   updateConfig();
 }
 
@@ -458,6 +551,77 @@ function filterSubcat(groupKey, parentValue, modelId) {
   }
 }
 
+function filterOptSubcats(groupKey, selectedOptKey, modelId) {
+  modelId = modelId || document.getElementById('select-base').value;
+  const group = getAddons()[groupKey];
+  if (!group) return;
+  Object.keys(group).filter(k => !k.startsWith('_')).forEach(optKey => {
+    const div = document.getElementById('sub-opt-' + groupKey + '-' + optKey);
+    if (!div) return;
+    if (optKey !== selectedOptKey || !group[optKey]?._subcategory) {
+      div.style.display = 'none';
+      return;
+    }
+    div.style.display = '';
+    const sel = div.querySelector('select');
+    if (!sel) return;
+    let currentInvalid = false;
+    Array.from(sel.options).forEach(o => {
+      const models = JSON.parse(o.getAttribute('data-models') || '[]');
+      const allowed = models.length === 0 || models.includes(modelId);
+      o.hidden = !allowed;
+      o.disabled = !allowed;
+      if (sel.value === o.value && !allowed) currentInvalid = true;
+    });
+    if (currentInvalid) {
+      const first = Array.from(sel.options).find(o => !o.hidden);
+      if (first) sel.value = first.value;
+    }
+  });
+}
+
+function toggleImg(key) {
+  const wrap = document.getElementById('img-wrap-' + key);
+  const btn  = document.getElementById('img-btn-' + key);
+  if (!wrap) return;
+  const opening = wrap.style.display === 'none';
+  wrap.style.display = opening ? '' : 'none';
+  if (btn) btn.classList.toggle('active', opening);
+}
+
+function refreshBaseImg() {
+  const baseId = document.getElementById('select-base').value;
+  const model  = getBaseModels()[baseId];
+  const img    = model?.image || null;
+  const btn    = document.getElementById('img-btn-base');
+  const wrap   = document.getElementById('img-wrap-base');
+  const imgEl  = document.getElementById('img-el-base');
+  const noneEl = document.getElementById('img-none-base');
+  if (btn) btn.style.display = img ? '' : 'none';
+  if (!img && wrap && wrap.style.display !== 'none') {
+    wrap.style.display = 'none';
+    if (btn) btn.classList.remove('active');
+  }
+  if (imgEl) { imgEl.src = img || ''; imgEl.style.display = img ? '' : 'none'; }
+  if (noneEl) noneEl.style.display = img ? 'none' : '';
+}
+
+function refreshAddonImg(groupKey, optKey) {
+  const group  = getAddons()[groupKey];
+  const opt    = group?.[optKey];
+  const img    = (typeof opt === 'object' ? opt.image : null) || null;
+  const anyImg = group ? Object.entries(group).some(([k, v]) => !k.startsWith('_') && typeof v === 'object' && v.image) : false;
+  const btn    = document.getElementById('img-btn-' + groupKey);
+  const wrap   = document.getElementById('img-wrap-' + groupKey);
+  const imgEl  = document.getElementById('img-el-' + groupKey);
+  const noneEl = document.getElementById('img-none-' + groupKey);
+  if (btn) btn.style.display = anyImg ? '' : 'none';
+  if (wrap && wrap.style.display !== 'none') {
+    if (imgEl) { imgEl.src = img || ''; imgEl.style.display = img ? '' : 'none'; }
+    if (noneEl) noneEl.style.display = img ? 'none' : '';
+  }
+}
+
 // ── Recalculate totals whenever any select changes ───────────
 function updateConfig() {
   const baseId = document.getElementById('select-base').value;
@@ -466,7 +630,7 @@ function updateConfig() {
 
   // Collect addon prices — works for any number of groups
   const lines = [];
-  document.querySelectorAll('select[data-group]:not([data-is-subcat])').forEach(sel => {
+  document.querySelectorAll('select[data-group]:not([data-is-subcat]):not([data-is-opt-subcat])').forEach(sel => {
     const groupKey = sel.dataset.group;
     const optKey   = sel.value;
     const entry    = getAddonEntry(groupKey, optKey);
@@ -476,7 +640,7 @@ function updateConfig() {
       lines.push({ label: groupLbl + ': ' + entry.label, price: entry.price });
       total += entry.price;
     }
-    // Include visible subcategory price
+    // Include visible category-level subcategory price
     const subDiv = document.getElementById('sub-' + groupKey);
     if (subDiv && subDiv.style.display !== 'none') {
       const subSel = subDiv.querySelector('select');
@@ -487,6 +651,20 @@ function updateConfig() {
         if (subOpt && subOpt.price > 0) {
           lines.push({ label: (sub._label || 'Options') + ': ' + (subOpt.label || subKey), price: subOpt.price });
           total += subOpt.price;
+        }
+      }
+    }
+    // Include visible option-level subcategory price
+    const optSubDiv = document.getElementById('sub-opt-' + groupKey + '-' + optKey);
+    if (optSubDiv && optSubDiv.style.display !== 'none') {
+      const optSubSel = optSubDiv.querySelector('select');
+      const optSubKey = optSubSel.value;
+      const optSub    = group?.[optKey]?._subcategory;
+      if (optSub) {
+        const optSubOpt = optSub[optSubKey];
+        if (optSubOpt && optSubOpt.price > 0) {
+          lines.push({ label: (optSub._label || 'Options') + ': ' + (optSubOpt.label || optSubKey), price: optSubOpt.price });
+          total += optSubOpt.price;
         }
       }
     }
@@ -534,12 +712,13 @@ function collectSpec() {
   const addons  = getAddons();
   const spec    = { baseModel: base.name, capacity: base.capacity, leadTime: base.leadTime, options: {}, total: '$0' };
 
-  document.querySelectorAll('select[data-group]:not([data-is-subcat])').forEach(sel => {
+  document.querySelectorAll('select[data-group]:not([data-is-subcat]):not([data-is-opt-subcat])').forEach(sel => {
     const gk    = sel.dataset.group;
-    const entry = getAddonEntry(gk, sel.value);
+    const optKey = sel.value;
+    const entry = getAddonEntry(gk, optKey);
     const lbl   = addons[gk]?._label || gk;
     spec.options[lbl] = entry.label + (entry.price > 0 ? ' (+$' + entry.price + ')' : '');
-    // Include visible subcategory selection
+    // Include visible category-level subcategory selection
     const subDiv = document.getElementById('sub-' + gk);
     if (subDiv && subDiv.style.display !== 'none') {
       const subSel = subDiv.querySelector('select');
@@ -549,6 +728,18 @@ function collectSpec() {
         const subOpt = sub[subKey];
         const subLbl = sub._label || 'Options';
         if (subOpt) spec.options[subLbl] = (subOpt.label || subKey) + (subOpt.price > 0 ? ' (+$' + subOpt.price + ')' : '');
+      }
+    }
+    // Include visible option-level subcategory selection
+    const optSubDiv = document.getElementById('sub-opt-' + gk + '-' + optKey);
+    if (optSubDiv && optSubDiv.style.display !== 'none') {
+      const optSubSel = optSubDiv.querySelector('select');
+      const optSubKey = optSubSel.value;
+      const optSub    = addons[gk]?.[optKey]?._subcategory;
+      if (optSub) {
+        const optSubOpt = optSub[optSubKey];
+        const optSubLbl = optSub._label || 'Options';
+        if (optSubOpt) spec.options[optSubLbl] = (optSubOpt.label || optSubKey) + (optSubOpt.price > 0 ? ' (+$' + optSubOpt.price + ')' : '');
       }
     }
   });
