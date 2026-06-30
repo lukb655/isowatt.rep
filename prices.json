@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T22:46:44.491Z",
+    "lastUpdated": "2026-06-30T23:05:13.354Z",
     "currency": "USD"
   },
   "configurator": {
@@ -11,7 +11,8 @@
         "capacity": "1.2kWh",
         "leadTime": "2-3 weeks",
         "price": 591,
-        "cogs": 325
+        "cogs": 325,
+        "image": "aaa"
       },
       "iso-point": {
         "name": "IsoPoint - 25Ah LiFePO4 (0.3kWh)",
@@ -120,7 +121,7 @@
         "_label": "Battery Monitor",
         "led": {
           "label": "LED Indicator Only",
-          "price": 10,
+          "price": 0,
           "cogs": 5,
           "image": "https://raw.githubusercontent.com/lukb655/isowatt.rep/main/Images/LEDINDICATOR.png"
         },
