@@ -2,6 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "lastUpdated": "2026-06-29T13:57:30.056Z",
+    "lastUpdated": "2026-06-30T20:49:16.283Z",
     "currency": "USD"
   },
   "configurator": {
@@ -13,6 +14,8 @@
         "price": 450,
         "cogs": 300,
         "image": null
+        "price": 1200,
+        "cogs": 0
       },
       "iso-point": {
         "name": "IsoPoint - 25Ah LiFePO4 (0.3kWh)",
@@ -29,6 +32,15 @@
         "price": 300,
         "cogs": 230,
         "image": null
+        "price": 600,
+        "cogs": 0
+      },
+      "isopack---50ah-600wh": {
+        "name": "IsoPack - 50Ah (600Wh)",
+        "capacity": "600Wh",
+        "leadTime": "2-3 weeks",
+        "price": 400,
+        "cogs": 0
       }
     },
     "addons": {
@@ -79,6 +91,89 @@
             "1": { "label": "×1", "price": 0, "cogs": 0 },
             "2": { "label": "×2", "price": 6, "cogs": 2 }
           }
+        "none": {
+          "label": "None (DC Only)",
+          "price": 0,
+          "cogs": 0
+        },
+        "_subcategory": {
+          "_label": "AC Outlet Count",
+          "_hideWhenParent": "none",
+          "mr0zd4ah": {
+            "label": "1 Outlet",
+            "price": 0,
+            "cogs": 0
+          },
+          "mr102d83": {
+            "label": "2 Outlets",
+            "price": 15,
+            "cogs": 0,
+            "parentOptions": [
+              "1000w",
+              "2000w"
+            ],
+            "models": [
+              "iso-station",
+              "isopack---50ah-600wh"
+            ]
+          },
+          "mr102h5e": {
+            "label": "3 Outlets",
+            "price": 25,
+            "cogs": 0,
+            "parentOptions": [
+              "1000w",
+              "2000w"
+            ],
+            "models": [
+              "iso-station"
+            ]
+          }
+        },
+        "mr12yqft": {
+          "label": "300W Inverter",
+          "price": 0,
+          "cogs": 0,
+          "models": [
+            "iso-point"
+          ]
+        },
+        "mr12yynm": {
+          "label": "600W Inverter",
+          "price": 0,
+          "cogs": 0,
+          "models": [
+            "isopack---50ah-600wh"
+          ]
+        },
+        "mr12zfh4": {
+          "label": "1000W Inverter",
+          "price": 0,
+          "cogs": 0,
+          "models": [
+            "iso-station"
+          ]
+        },
+        "mr12zmzn": {
+          "label": "2200W Inverter",
+          "price": 0,
+          "cogs": 0,
+          "models": [
+            "iso-station"
+          ]
+        }
+      },
+      "charger": {
+        "_label": "Wall Charger",
+        "standard": {
+          "label": "Standard 10A",
+          "price": 50,
+          "cogs": 0
+        },
+        "fast": {
+          "label": "Fast 20A",
+          "price": 100,
+          "cogs": 0
         }
       },
       "monitor": {
@@ -109,6 +204,144 @@
             "3": { "label": "×3", "price": 18, "cogs": 10, "models": ["iso-station"] }
           }
         }
+        "led": {
+          "label": "LED Indicator Only",
+          "price": 0,
+          "cogs": 0,
+          "image": "https://raw.githubusercontent.com/lukb655/isowatt.rep/main/Images/LEDINDICATOR.png"
+        },
+        "mr10gigt": {
+          "label": "Voltimeter",
+          "price": 10,
+          "cogs": 0
+        },
+        "mr10hiaq": {
+          "label": "Voltimeter + Thermostat Display",
+          "price": 20,
+          "cogs": 0,
+          "image": "https://raw.githubusercontent.com/lukb655/isowatt.rep/main/Images/VOLTTEMP.png"
+        }
+      },
+      "usb-ports": {
+        "_label": "USB Ports",
+        "mr103l5f": {
+          "label": "96W USB + USB-C ComboPort",
+          "price": 0,
+          "cogs": 0,
+          "_subcategory": {
+            "_label": "Quantity",
+            "mr103wx6": {
+              "label": "x1",
+              "price": 10,
+              "cogs": 0
+            },
+            "mr1041a3": {
+              "label": "x2",
+              "price": 20,
+              "cogs": 0
+            },
+            "mr12x43h": {
+              "label": "x3",
+              "price": 28,
+              "cogs": 0
+            }
+          },
+          "image": "https://raw.githubusercontent.com/lukb655/isowatt.rep/main/Images/96WCOMBOPORT.png"
+        },
+        "_multiSelect": true,
+        "mr10im26": {
+          "label": "USB QC3.0 Only",
+          "price": 0,
+          "cogs": 0,
+          "_subcategory": {
+            "_label": "Quantity",
+            "mr10ixf7": {
+              "label": "x1",
+              "price": 0,
+              "cogs": 0
+            },
+            "mr12xhcf": {
+              "label": "x2",
+              "price": 0,
+              "cogs": 0
+            },
+            "mr12xkiz": {
+              "label": "x3",
+              "price": 15,
+              "cogs": 0
+            }
+          }
+        },
+        "mr131ew5": {
+          "label": "USB-C PD Only",
+          "price": 0,
+          "cogs": 0,
+          "_subcategory": {
+            "_label": "Quantity",
+            "mr131o9p": {
+              "label": "x1",
+              "price": 0,
+              "cogs": 0
+            },
+            "mr131sny": {
+              "label": "x2",
+              "price": 0,
+              "cogs": 0
+            },
+            "mr131v0r": {
+              "label": "x3",
+              "price": 0,
+              "cogs": 0
+            }
+          }
+        }
+      },
+      "12v": {
+        "_label": "12v Outputs",
+        "mr10bwj7": {
+          "label": "Cigarette Lighter Port",
+          "price": 0,
+          "cogs": 0,
+          "_subcategory": {
+            "_label": "Quantity",
+            "mr10co03": {
+              "label": "x1",
+              "price": 10,
+              "cogs": 0
+            },
+            "mr132bs9": {
+              "label": "x2",
+              "price": 0,
+              "cogs": 0
+            }
+          }
+        },
+        "mr10cazi": {
+          "label": "Anderson SB50",
+          "price": 0,
+          "cogs": 0,
+          "_subcategory": {
+            "_label": "Quantity",
+            "mr10cvkz": {
+              "label": "x1",
+              "price": 15,
+              "cogs": 0
+            },
+            "mr132jyv": {
+              "label": "x2",
+              "price": 0,
+              "cogs": 0,
+              "models": [
+                "iso-station"
+              ]
+            }
+          },
+          "models": [
+            "iso-station",
+            "isopack---50ah-600wh"
+          ]
+        },
+        "_multiSelect": true
       }
     }
   }
