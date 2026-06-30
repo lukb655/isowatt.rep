@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T23:09:44.556Z",
+    "lastUpdated": "2026-06-30T23:16:37.976Z",
     "currency": "USD"
   },
   "configurator": {
@@ -42,7 +42,7 @@
           "_hideWhenParent": "none",
           "mr0zd4ah": {
             "label": "1 Outlet",
-            "price": 37,
+            "price": 0,
             "cogs": 20
           },
           "mr102d83": {
