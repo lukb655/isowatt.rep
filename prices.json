@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T22:41:47.227Z",
+    "lastUpdated": "2026-06-30T22:45:06.450Z",
     "currency": "USD"
   },
   "configurator": {
@@ -41,12 +41,12 @@
           "_hideWhenParent": "none",
           "mr0zd4ah": {
             "label": "1 Outlet",
-            "price": 0,
+            "price": 37,
             "cogs": 20
           },
           "mr102d83": {
             "label": "2 Outlets",
-            "price": 15,
+            "price": 73,
             "cogs": 40,
             "parentOptions": [
               "1000w",
@@ -59,7 +59,7 @@
           },
           "mr102h5e": {
             "label": "3 Outlets",
-            "price": 25,
+            "price": 110,
             "cogs": 60,
             "parentOptions": [
               "1000w",
@@ -72,7 +72,7 @@
         },
         "mr12yqft": {
           "label": "300W Inverter",
-          "price": 0,
+          "price": 39,
           "cogs": 21,
           "models": [
             "iso-point"
@@ -80,17 +80,17 @@
         },
         "mr17spju": {
           "label": "500W Inverter",
-          "price": 0,
+          "price": 55,
           "cogs": 30
         },
         "mr17tcrj": {
           "label": "1000W Inverter",
-          "price": 0,
+          "price": 64,
           "cogs": 35
         },
         "mr17tnmr": {
           "label": "1600W Inverter",
-          "price": 0,
+          "price": 68,
           "cogs": 37
         }
       },
@@ -98,12 +98,12 @@
         "_label": "Wall Charger",
         "standard": {
           "label": "Standard 10A",
-          "price": 0,
+          "price": 42,
           "cogs": 23
         },
         "fast": {
           "label": "Fast 20A",
-          "price": 100,
+          "price": 82,
           "cogs": 45
         }
       },
@@ -111,18 +111,18 @@
         "_label": "Battery Monitor",
         "led": {
           "label": "LED Indicator Only",
-          "price": 0,
+          "price": 10,
           "cogs": 5,
           "image": "https://raw.githubusercontent.com/lukb655/isowatt.rep/main/Images/LEDINDICATOR.png"
         },
         "mr10gigt": {
           "label": "Voltimeter",
-          "price": 10,
+          "price": 19,
           "cogs": 10
         },
         "mr10hiaq": {
           "label": "Voltimeter + Thermostat Display",
-          "price": 20,
+          "price": 28,
           "cogs": 15,
           "image": "https://raw.githubusercontent.com/lukb655/isowatt.rep/main/Images/VOLTTEMP.png"
         }
@@ -142,7 +142,7 @@
             },
             "mr1041a3": {
               "label": "x2",
-              "price": 20,
+              "price": 19,
               "cogs": 10
             },
             "mr12x43h": {
@@ -162,17 +162,17 @@
             "_label": "Quantity",
             "mr10ixf7": {
               "label": "x1",
-              "price": 0,
+              "price": 6,
               "cogs": 3
             },
             "mr12xhcf": {
               "label": "x2",
-              "price": 0,
+              "price": 11,
               "cogs": 6
             },
             "mr12xkiz": {
               "label": "x3",
-              "price": 15,
+              "price": 17,
               "cogs": 9
             }
           }
@@ -185,17 +185,17 @@
             "_label": "Quantity",
             "mr131o9p": {
               "label": "x1",
-              "price": 0,
+              "price": 6,
               "cogs": 3
             },
             "mr131sny": {
               "label": "x2",
-              "price": 0,
+              "price": 11,
               "cogs": 6
             },
             "mr131v0r": {
               "label": "x3",
-              "price": 0,
+              "price": 17,
               "cogs": 9
             }
           }
@@ -216,7 +216,7 @@
             },
             "mr132bs9": {
               "label": "x2",
-              "price": 0,
+              "price": 19,
               "cogs": 10
             }
           }
@@ -229,12 +229,12 @@
             "_label": "Quantity",
             "mr10cvkz": {
               "label": "x1",
-              "price": 15,
+              "price": 19,
               "cogs": 10
             },
             "mr132jyv": {
               "label": "x2",
-              "price": 0,
+              "price": 28,
               "cogs": 15,
               "models": [
                 "iso-station"
