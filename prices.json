@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T18:49:55.060Z",
+    "lastUpdated": "2026-06-30T18:56:50.694Z",
     "currency": "USD"
   },
   "configurator": {
@@ -39,22 +39,34 @@
         "400w": {
           "label": "400W Inverter",
           "price": 150,
-          "cogs": 0
+          "cogs": 0,
+          "models": [
+            "iso-point"
+          ]
         },
         "600w": {
           "label": "600W Inverter",
           "price": 200,
-          "cogs": 0
+          "cogs": 0,
+          "models": [
+            "isopack---50ah-600wh"
+          ]
         },
         "1000w": {
           "label": "1000W Inverter",
           "price": 300,
-          "cogs": 0
+          "cogs": 0,
+          "models": [
+            "iso-station"
+          ]
         },
         "2000w": {
           "label": "2000W Inverter",
           "price": 400,
-          "cogs": 0
+          "cogs": 0,
+          "models": [
+            "iso-station"
+          ]
         },
         "_subcategory": {
           "_label": "AC Outlet Count",
@@ -66,13 +78,28 @@
           },
           "mr102d83": {
             "label": "2 Outlets",
-            "price": 0,
-            "cogs": 0
+            "price": 15,
+            "cogs": 0,
+            "parentOptions": [
+              "1000w",
+              "2000w"
+            ],
+            "models": [
+              "iso-station",
+              "isopack---50ah-600wh"
+            ]
           },
           "mr102h5e": {
             "label": "3 Outlets",
-            "price": 0,
-            "cogs": 0
+            "price": 25,
+            "cogs": 0,
+            "parentOptions": [
+              "1000w",
+              "2000w"
+            ],
+            "models": [
+              "iso-station"
+            ]
           }
         }
       },
@@ -107,11 +134,40 @@
             "_label": "Quantity",
             "mr103wx6": {
               "label": "x1",
-              "price": 0,
+              "price": 10,
               "cogs": 0
             },
             "mr1041a3": {
               "label": "x2",
+              "price": 20,
+              "cogs": 0
+            }
+          }
+        }
+      },
+      "12v": {
+        "_label": "12v Outputs",
+        "mr10bwj7": {
+          "label": "Cigarette Lighter Port",
+          "price": 0,
+          "cogs": 0,
+          "_subcategory": {
+            "_label": "Quantity",
+            "mr10co03": {
+              "label": "x1",
+              "price": 0,
+              "cogs": 0
+            }
+          }
+        },
+        "mr10cazi": {
+          "label": "Anderson SB50",
+          "price": 0,
+          "cogs": 0,
+          "_subcategory": {
+            "_label": "Quantity",
+            "mr10cvkz": {
+              "label": "x1",
               "price": 0,
               "cogs": 0
             }
