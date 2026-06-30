@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T18:56:50.694Z",
+    "lastUpdated": "2026-06-30T18:58:05.320Z",
     "currency": "USD"
   },
   "configurator": {
@@ -155,7 +155,7 @@
             "_label": "Quantity",
             "mr10co03": {
               "label": "x1",
-              "price": 0,
+              "price": 10,
               "cogs": 0
             }
           }
@@ -168,11 +168,12 @@
             "_label": "Quantity",
             "mr10cvkz": {
               "label": "x1",
-              "price": 0,
+              "price": 15,
               "cogs": 0
             }
           }
-        }
+        },
+        "_multiSelect": true
       }
     }
   }
