@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T16:57:16.200Z",
+    "lastUpdated": "2026-06-30T17:19:05.423Z",
     "currency": "USD"
   },
   "configurator": {
@@ -51,7 +51,6 @@
           "price": 43,
           "cogs": 30,
           "models": [
-            "isopoint---25ah-battery--2800-enclosure--300wh",
             "isopack---50ah-battery--3800-enclosure--600wh"
           ]
         },
@@ -153,8 +152,8 @@
           "price": 8,
           "cogs": 5,
           "models": [
-            "iso-station",
-            "isopack---50ah-lifepo4-06kwh"
+            "isopack---50ah-battery--3800-enclosure--600wh",
+            "isostation---100ah-battery--4800-enclosure--12kwh"
           ]
         },
         "mqyj0i1u": {
