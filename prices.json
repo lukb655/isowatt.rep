@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T18:58:05.320Z",
+    "lastUpdated": "2026-06-30T19:01:38.366Z",
     "currency": "USD"
   },
   "configurator": {
@@ -122,6 +122,16 @@
           "label": "LED Indicator Only",
           "price": 0,
           "cogs": 0
+        },
+        "mr10gigt": {
+          "label": "Voltimeter",
+          "price": 10,
+          "cogs": 0
+        },
+        "mr10hiaq": {
+          "label": "Voltimeter + Thermostat Display",
+          "price": 20,
+          "cogs": 0
         }
       },
       "usb-ports": {
@@ -140,6 +150,20 @@
             "mr1041a3": {
               "label": "x2",
               "price": 20,
+              "cogs": 0
+            }
+          }
+        },
+        "_multiSelect": true,
+        "mr10im26": {
+          "label": "USB QC3.0 Only",
+          "price": 0,
+          "cogs": 0,
+          "_subcategory": {
+            "_label": "Quantity",
+            "mr10ixf7": {
+              "label": "x1",
+              "price": 5,
               "cogs": 0
             }
           }
