@@ -174,14 +174,44 @@
   border-radius: 4px;
   color: var(--muted);
   cursor: pointer;
-  padding: 3px 8px;
-  font-size: 14px;
+  padding: 3px 7px;
   line-height: 1;
   transition: all 0.15s;
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
 }
 .img-toggle-btn:hover  { border-color: var(--amber); color: var(--amber); }
 .img-toggle-btn.active { border-color: var(--amber); color: var(--amber); background: var(--amber-bg); }
+/* ── Per-option image button (multi-select rows) ──────────── */
+.cfg-check-img-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 2px 6px;
+  line-height: 1;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+}
+.cfg-check-img-btn:hover  { border-color: var(--amber); color: var(--amber); }
+.cfg-check-img-btn.active { border-color: var(--amber); color: var(--amber); background: var(--amber-bg); }
+.cfg-multi-opt-img-wrap {
+  margin: 0.5rem 0 0.3rem;
+  padding: 0.6rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.cfg-multi-opt-img-wrap img {
+  width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 4px;
+}
 
 /* ── Image preview area ──────────────────────────────────── */
 .cfg-img-wrap {
@@ -278,7 +308,7 @@
   <section class="cfg-section" id="section-base" style="display:none;">
     <div class="cfg-section-head">
       <div class="cfg-section-title">Base Model</div>
-      <button class="img-toggle-btn" id="img-btn-base" onclick="toggleImg('base')" title="Show/hide product image">🖼</button>
+      <button class="img-toggle-btn" id="img-btn-base" onclick="toggleImg('base')" title="Show/hide product image" style="display:none;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></button>
     </div>
     <div class="cfg-group">
       <select class="cfg-select" id="select-base" onchange="updateConfig(); refreshBaseImg()"></select>
@@ -428,6 +458,9 @@ function buildConfigurator() {
     baseSelect.appendChild(o);
   });
   document.getElementById('section-base').style.display = '';
+  // Only show camera button if at least one base model has an image
+  const baseBtn = document.getElementById('img-btn-base');
+  if (baseBtn) baseBtn.style.display = Object.values(baseModels).some(m => m.image) ? '' : 'none';
 
   // Addon sections — one card per group
   const container = document.getElementById('addon-sections');
@@ -490,6 +523,13 @@ function buildConfigurator() {
           }
         }
 
+        const hasOptImg = typeof opt === 'object' && !!opt.image;
+        const camSvg   = `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>`;
+        const optImgHtml = hasOptImg ? `
+              <div class="cfg-multi-opt-img-wrap" id="img-wrap-${esc(groupKey)}-${esc(optKey)}" style="display:none;">
+                <img src="${esc(entry.image)}" alt="${esc(lbl)}">
+              </div>` : '';
+
         return `
           <div class="cfg-multi-opt-row" data-group="${esc(groupKey)}" data-opt="${esc(optKey)}" data-models='${models}'>
             <label class="cfg-check-label" id="check-label-${esc(groupKey)}-${esc(optKey)}">
@@ -497,7 +537,8 @@ function buildConfigurator() {
                      onchange="onMultiCheckChange(this,'${esc(groupKey)}','${esc(optKey)}')">
               <span class="cfg-check-lbl">${esc(lbl)}</span>
               ${price > 0 ? `<span class="cfg-check-price">+$${price}</span>` : ''}
-            </label>${optSubHtml}
+              ${hasOptImg ? `<button class="cfg-check-img-btn" id="img-btn-${esc(groupKey)}-${esc(optKey)}" onclick="event.preventDefault();toggleMultiOptImg('${esc(groupKey)}','${esc(optKey)}')" title="View image">${camSvg}</button>` : ''}
+            </label>${optImgHtml}${optSubHtml}
           </div>`;
       }).join('');
 
@@ -544,13 +585,14 @@ function buildConfigurator() {
         </div>${subcatHtml}${optSubcatHtml}`;
     }
 
-    // Hide img toggle only for multi-select groups (image support there is future work)
-    const hideImgBtn = !!group._multiSelect;
+    // For single-select: show camera button only when at least one option has an image URL
+    const camSvgHdr = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>`;
+    const showImgBtn = !group._multiSelect && opts.some(([, o]) => typeof o === 'object' && o.image);
 
     sec.innerHTML = `
       <div class="cfg-section-head">
         <div class="cfg-section-title">${esc(label)}</div>
-        <button class="img-toggle-btn" id="img-btn-${esc(groupKey)}" onclick="toggleImg('${esc(groupKey)}')" title="Show/hide component image"${hideImgBtn ? ' style="display:none;"' : ''}>🖼</button>
+        ${showImgBtn ? `<button class="img-toggle-btn" id="img-btn-${esc(groupKey)}" onclick="toggleImg('${esc(groupKey)}')" title="View component image">${camSvgHdr}</button>` : ''}
       </div>${groupContent}`;
     container.appendChild(sec);
   });
@@ -715,6 +757,15 @@ function onMultiCheckChange(cb, groupKey, optKey) {
 function toggleImg(key) {
   const wrap = document.getElementById('img-wrap-' + key);
   const btn  = document.getElementById('img-btn-' + key);
+  if (!wrap) return;
+  const opening = wrap.style.display === 'none';
+  wrap.style.display = opening ? '' : 'none';
+  if (btn) btn.classList.toggle('active', opening);
+}
+
+function toggleMultiOptImg(groupKey, optKey) {
+  const wrap = document.getElementById(`img-wrap-${groupKey}-${optKey}`);
+  const btn  = document.getElementById(`img-btn-${groupKey}-${optKey}`);
   if (!wrap) return;
   const opening = wrap.style.display === 'none';
   wrap.style.display = opening ? '' : 'none';

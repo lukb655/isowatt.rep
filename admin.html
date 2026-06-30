@@ -1092,7 +1092,7 @@ function renderAddons() {
     tbody.appendChild(hrow);
 
     Object.entries(group).forEach(([optKey, opt]) => {
-      if (optKey === '_label' || optKey === '_subcategory') return;
+      if (optKey.startsWith('_')) return;
       tbody.appendChild(buildAddonRow(groupKey, optKey, opt));
       // Render option-level subcategory rows immediately after the parent option row
       if (typeof opt === 'object' && opt._subcategory) {
@@ -1796,7 +1796,7 @@ function openPofPopup(e, btn, groupKey, subKey) {
   const checksDiv = document.getElementById('pof-checks');
   checksDiv.innerHTML = '';
   Object.entries(group).forEach(([optKey, opt]) => {
-    if (optKey === '_label' || optKey === '_subcategory') return;
+    if (optKey.startsWith('_')) return;
     if (optKey === hideWhen) return;
     const lbl     = opt.label || optKey;
     const checked = selected.length === 0 || selected.includes(optKey) ? 'checked' : '';
