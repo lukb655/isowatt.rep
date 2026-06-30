@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T15:46:29.731Z",
+    "lastUpdated": "2026-06-30T15:48:31.173Z",
     "currency": "USD"
   },
   "configurator": {
@@ -81,20 +81,20 @@
         },
         "_subcategory": {
           "_label": "AC Outlet Count",
-          "_hideWhenParent": "None (DC Only)",
-          "mr0t7xpx": {
+          "_hideWhenParent": "None",
+          "mr0tln6e": {
             "label": "1 Outlet",
-            "price": 0,
+            "price": 15,
             "cogs": 10
           },
-          "mr0t8axh": {
+          "mr0tlrek": {
             "label": "2 Outlets",
-            "price": 0,
+            "price": 25,
             "cogs": 20
           },
-          "mr0t8f8p": {
+          "mr0tlujx": {
             "label": "3 Outlets",
-            "price": 0,
+            "price": 35,
             "cogs": 30
           }
         }
