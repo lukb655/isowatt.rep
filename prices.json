@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T17:19:05.423Z",
+    "lastUpdated": "2026-06-30T17:30:28.560Z",
     "currency": "USD"
   },
   "configurator": {
@@ -125,19 +125,28 @@
           "1": {
             "label": "1 Port",
             "price": 5,
-            "cogs": 0
+            "cogs": 0,
+            "parentOptions": [
+              "mqyj0i1u"
+            ]
           },
           "2": {
             "label": "2 Ports",
             "price": 9,
             "cogs": 6,
-            "models": []
+            "models": [],
+            "parentOptions": [
+              "mqyj0i1u"
+            ]
           },
           "3": {
             "label": "3 Ports",
             "price": 13,
             "cogs": 9,
-            "models": []
+            "models": [],
+            "parentOptions": [
+              "mqyj0i1u"
+            ]
           },
           "_label": "12V Port Quantity",
           "_hideWhenParent": "none"
@@ -146,15 +155,6 @@
           "label": "None",
           "price": 0,
           "cogs": 0
-        },
-        "anderson": {
-          "label": "Anderson SB50",
-          "price": 8,
-          "cogs": 5,
-          "models": [
-            "isopack---50ah-battery--3800-enclosure--600wh",
-            "isostation---100ah-battery--4800-enclosure--12kwh"
-          ]
         },
         "mqyj0i1u": {
           "label": "Cigarette Lighter Port",
