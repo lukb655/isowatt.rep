@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T23:05:13.354Z",
+    "lastUpdated": "2026-06-30T23:09:44.556Z",
     "currency": "USD"
   },
   "configurator": {
@@ -50,8 +50,8 @@
             "price": 73,
             "cogs": 40,
             "parentOptions": [
-              "mr12zfh4",
-              "mr12zmzn"
+              "mr17tcrj",
+              "mr17tnmr"
             ],
             "models": [
               "iso-station",
@@ -63,8 +63,8 @@
             "price": 110,
             "cogs": 60,
             "parentOptions": [
-              "mr12zfh4",
-              "mr12zmzn"
+              "mr17tcrj",
+              "mr17tnmr"
             ],
             "models": [
               "iso-station"
