@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T18:01:31.094Z",
+    "lastUpdated": "2026-06-30T18:24:09.683Z",
     "currency": "USD"
   },
   "configurator": {
@@ -44,14 +44,16 @@
           "label": "300W Inverter",
           "price": 35,
           "cogs": 21,
-          "image": null
+          "image": null,
+          "models": [
+            "iso-point"
+          ]
         },
         "mqyjuvq7": {
           "label": "500W Inverter",
           "price": 45,
           "cogs": 30,
           "models": [
-            "iso-station",
             "isopack---50ah-lifepo4-06kwh"
           ],
           "image": null
@@ -61,8 +63,7 @@
           "price": 50,
           "cogs": 35,
           "models": [
-            "iso-station",
-            "isopack---50ah-lifepo4-06kwh"
+            "iso-station"
           ],
           "image": null
         },
@@ -84,14 +85,31 @@
           ],
           "image": null
         },
-        "mqyjvsun": {
-          "label": "150W Inverter",
-          "price": 20,
-          "cogs": 10,
-          "models": [
-            "iso-point"
-          ],
-          "image": null
+        "_subcategory": {
+          "_label": "AC Outlet Count",
+          "_hideWhenParent": "none",
+          "mr0yzyko": {
+            "label": "1 Outlet",
+            "price": 0,
+            "cogs": 0
+          },
+          "mr0z0ad4": {
+            "label": "2 Outlets",
+            "price": 15,
+            "cogs": 0
+          },
+          "mr0z0eg0": {
+            "label": "3 Outlets",
+            "price": 25,
+            "cogs": 0,
+            "models": [
+              "iso-station"
+            ],
+            "parentOptions": [
+              "mqyjvch3",
+              "mqyjvk3m"
+            ]
+          }
         }
       },
       "charger": {
@@ -112,7 +130,6 @@
       },
       "12v": {
         "_label": "12V Outputs",
-        "_multiSelect": true,
         "anderson": {
           "label": "Anderson SB50",
           "price": 10,
@@ -121,14 +138,53 @@
             "iso-station",
             "isopack---50ah-lifepo4-06kwh"
           ],
-          "image": null
+          "image": null,
+          "_subcategory": {
+            "_label": "Quantity",
+            "mr0z3g95": {
+              "label": "x1",
+              "price": 0,
+              "cogs": 0,
+              "models": [
+                "iso-station",
+                "isopack---50ah-lifepo4-06kwh"
+              ]
+            },
+            "mr0z3mpt": {
+              "label": "x2",
+              "price": 0,
+              "cogs": 0,
+              "models": [
+                "iso-station"
+              ]
+            }
+          }
         },
         "mqyj0i1u": {
           "label": "Cigarette Lighter Port",
-          "price": 8,
+          "price": 0,
           "cogs": 3,
-          "image": null
-        }
+          "image": null,
+          "_subcategory": {
+            "_label": "Quantity",
+            "mr0z396p": {
+              "label": "x1",
+              "price": 8,
+              "cogs": 0
+            },
+            "mr0z4hyx": {
+              "label": "x2",
+              "price": 15,
+              "cogs": 0
+            },
+            "mr0z4kbl": {
+              "label": "x3",
+              "price": 25,
+              "cogs": 0
+            }
+          }
+        },
+        "_multiSelect": true
       },
       "monitor": {
         "_label": "Battery Monitor",
