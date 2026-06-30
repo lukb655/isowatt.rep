@@ -212,6 +212,16 @@
   object-fit: contain;
   border-radius: 4px;
 }
+/* ── Inline option subcategory (multi-select rows) ───────── */
+.cfg-opt-sub {
+  border-top: none;
+  margin-top: 0.5rem;
+  margin-left: 28px;
+  padding: 0.5rem 0.75rem;
+  background: var(--black);
+  border-left: 2px solid var(--border);
+  border-radius: 0 4px 4px 0;
+}
 
 /* ── Image preview area ──────────────────────────────────── */
 .cfg-img-wrap {
@@ -516,7 +526,7 @@ function buildConfigurator() {
               return `<option value="${esc(sk)}" data-models='${sMods}'>${esc(sLbl)}${sPrice > 0 ? ' — $' + sPrice : ''}</option>`;
             }).join('');
             optSubHtml = `
-              <div class="cfg-sub" id="sub-opt-${esc(groupKey)}-${esc(optKey)}" style="display:none;">
+              <div class="cfg-sub cfg-opt-sub" id="sub-opt-${esc(groupKey)}-${esc(optKey)}" style="display:none;">
                 <label class="cfg-label">${esc(sub._label || 'Options')}</label>
                 <select class="cfg-select" data-group="${esc(groupKey)}" data-opt-parent="${esc(optKey)}" data-is-opt-subcat="true" onchange="updateConfig()">${subOptsHtml}</select>
               </div>`;
@@ -788,14 +798,10 @@ function refreshAddonImg(groupKey, optKey) {
   const group  = getAddons()[groupKey];
   const opt    = group?.[optKey];
   const img    = (typeof opt === 'object' ? opt.image : null) || null;
-  const wrap   = document.getElementById('img-wrap-' + groupKey);
   const imgEl  = document.getElementById('img-el-' + groupKey);
   const noneEl = document.getElementById('img-none-' + groupKey);
-  // Always update image content when selection changes (wrap may be open)
-  if (wrap && wrap.style.display !== 'none') {
-    if (imgEl) { imgEl.src = img || ''; imgEl.style.display = img ? '' : 'none'; }
-    if (noneEl) noneEl.style.display = img ? 'none' : '';
-  }
+  if (imgEl) { imgEl.src = img || ''; imgEl.style.display = img ? '' : 'none'; }
+  if (noneEl) noneEl.style.display = img ? 'none' : '';
 }
 
 // ── Recalculate totals whenever any select changes ───────────
@@ -980,6 +986,51 @@ function collectSpec() {
   return spec;
 }
 
+function collectCogs() {
+  const baseId = document.getElementById('select-base').value;
+  const base   = getBaseModels()[baseId];
+  const addons = getAddons();
+  let cogs = base?.cogs || 0;
+
+  document.querySelectorAll('select[data-group]:not([data-is-subcat]):not([data-is-opt-subcat])').forEach(sel => {
+    const gk     = sel.dataset.group;
+    const optKey = sel.value;
+    const group  = addons[gk];
+    const opt    = group?.[optKey];
+    if (opt && typeof opt === 'object') cogs += opt.cogs || 0;
+    const subDiv = document.getElementById('sub-' + gk);
+    if (subDiv && subDiv.style.display !== 'none') {
+      const subKey = subDiv.querySelector('select')?.value;
+      const subOpt = group?._subcategory?.[subKey];
+      if (subOpt) cogs += subOpt.cogs || 0;
+    }
+    const optSubDiv = document.getElementById('sub-opt-' + gk + '-' + optKey);
+    if (optSubDiv && optSubDiv.style.display !== 'none') {
+      const optSubKey = optSubDiv.querySelector('select')?.value;
+      const optSubOpt = group?.[optKey]?._subcategory?.[optSubKey];
+      if (optSubOpt) cogs += optSubOpt.cogs || 0;
+    }
+  });
+
+  document.querySelectorAll('.cfg-multi-opt-row').forEach(row => {
+    const cb = row.querySelector('.cfg-check');
+    if (!cb || !cb.checked) return;
+    const gk    = row.dataset.group;
+    const optKey = row.dataset.opt;
+    const opt   = addons[gk]?.[optKey];
+    if (!opt) return;
+    cogs += (typeof opt === 'object' ? opt.cogs : 0) || 0;
+    const optSubDiv = document.getElementById('sub-opt-' + gk + '-' + optKey);
+    if (optSubDiv && optSubDiv.style.display !== 'none') {
+      const optSubKey = optSubDiv.querySelector('select')?.value;
+      const optSubOpt = (typeof opt === 'object' ? opt._subcategory : null)?.[optSubKey];
+      if (optSubOpt) cogs += optSubOpt.cogs || 0;
+    }
+  });
+
+  return cogs;
+}
+
 function reserveConfig() {
   const spec = collectSpec();
   let previewHtml = `<strong style="color:var(--white);">${esc(spec.baseModel)}</strong><br>`;
@@ -1026,16 +1077,29 @@ async function submitQuote() {
   document.getElementById('quote-btn-label').textContent = 'Sending…';
   statusEl.style.display = 'none';
 
-  const spec = collectSpec();
+  const spec     = collectSpec();
+  const totalCogs = collectCogs();
+  const totalPrice = parseFloat(spec.total.replace(/[$,]/g, '')) || 0;
+  const grossProfit = totalPrice - totalCogs;
+  const marginPct = totalPrice > 0 ? Math.round((grossProfit / totalPrice) * 100) : 0;
+
   const specLines = [`Base Model: ${spec.baseModel}`, `Capacity: ${spec.capacity}`, `Lead Time: ${spec.leadTime}`, ''];
   Object.entries(spec.options).forEach(([k, v]) => specLines.push(`${k}: ${v}`));
   specLines.push('', `Quote Total: ${spec.total}`);
   if (notes) specLines.push('', `Notes: ${notes}`);
+  specLines.push('', '--- Internal Financials ---',
+    `Selling Price: ${spec.total}`,
+    `Total COGS: $${totalCogs.toLocaleString()}`,
+    `Gross Profit: $${grossProfit.toLocaleString()}`,
+    `Gross Margin: ${marginPct}%`);
   const specText = specLines.join('\n');
 
   // Build flat spec object for email template
   const specFlat = { baseModel: spec.baseModel, total: spec.total, capacity: spec.capacity, leadTime: spec.leadTime };
   Object.assign(specFlat, spec.options);
+  specFlat['__cogs']        = '$' + totalCogs.toLocaleString();
+  specFlat['__grossProfit'] = '$' + grossProfit.toLocaleString();
+  specFlat['__grossMargin'] = marginPct + '%';
 
   try {
     const res = await fetch('/api/contact', {
