@@ -1,7 +1,6 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-29T13:57:30.056Z",
     "lastUpdated": "2026-06-30T20:49:16.283Z",
     "currency": "USD"
   },
@@ -11,9 +10,6 @@
         "name": "IsoStation - 100Ah LiFePO4 (1.2kWh)",
         "capacity": "1.2kWh",
         "leadTime": "2-3 weeks",
-        "price": 450,
-        "cogs": 300,
-        "image": null
         "price": 1200,
         "cogs": 0
       },
@@ -21,17 +17,6 @@
         "name": "IsoPoint - 25Ah LiFePO4 (0.3kWh)",
         "capacity": "0.3kWh",
         "leadTime": "1-2 weeks",
-        "price": 245,
-        "cogs": 185,
-        "image": null
-      },
-      "isopack---50ah-lifepo4-06kwh": {
-        "name": "IsoPack - 50Ah LiFePO4 (0.6kWh)",
-        "capacity": "0.6kWh",
-        "leadTime": "2-3 weeks",
-        "price": 300,
-        "cogs": 230,
-        "image": null
         "price": 600,
         "cogs": 0
       },
@@ -46,51 +31,6 @@
     "addons": {
       "inverter": {
         "_label": "AC Inverter",
-        "_subcategory": {
-          "_label": "AC Outlet Count",
-          "_hideWhenParent": "none",
-          "2": { "label": "2 AC Outlets", "price": 0, "cogs": 0 },
-          "3": { "label": "3 AC Outlets", "price": 5, "cogs": 2, "parentOptions": ["mqyjuvq7", "mqyjv4he", "mqyjvch3", "mqyjvk3m"], "models": ["iso-station"] }
-        },
-        "none": { "label": "None (DC Only)", "price": 0, "cogs": 0, "models": [] },
-        "mqyjuov0": { "label": "300W Inverter", "price": 35, "cogs": 21, "image": null },
-        "mqyjuvq7": { "label": "500W Inverter", "price": 45, "cogs": 30, "models": ["iso-station", "isopack---50ah-lifepo4-06kwh"], "image": null },
-        "mqyjv4he": { "label": "1000W Inverter", "price": 50, "cogs": 35, "models": ["iso-station", "isopack---50ah-lifepo4-06kwh"], "image": null },
-        "mqyjvch3": { "label": "1600W Inverter", "price": 65, "cogs": 37, "models": ["iso-station"], "image": null },
-        "mqyjvk3m": { "label": "2200W Inverter", "price": 150, "cogs": 94, "models": ["iso-station"], "image": null },
-        "mqyjvsun": { "label": "150W Inverter", "price": 20, "cogs": 10, "models": ["iso-point"], "image": null }
-      },
-      "charger": {
-        "_label": "Wall Charger",
-        "standard": { "label": "Standard 10A", "price": 40, "cogs": 22, "image": null },
-        "fast": { "label": "Fast 20A", "price": 82, "cogs": 45, "models": [], "image": null }
-      },
-      "12v": {
-        "_label": "12V Outputs",
-        "_multiSelect": true,
-        "anderson": {
-          "label": "Anderson SB50",
-          "price": 10,
-          "cogs": 5,
-          "models": ["iso-station", "isopack---50ah-lifepo4-06kwh"],
-          "image": null,
-          "_subcategory": {
-            "_label": "SB50 Quantity",
-            "1": { "label": "×1", "price": 0, "cogs": 0 },
-            "2": { "label": "×2", "price": 8, "cogs": 4, "models": ["iso-station", "isopack---50ah-lifepo4-06kwh"] },
-            "3": { "label": "×3", "price": 16, "cogs": 8, "models": ["iso-station"] }
-          }
-        },
-        "mqyj0i1u": {
-          "label": "Cigarette Lighter Port",
-          "price": 8,
-          "cogs": 3,
-          "image": null,
-          "_subcategory": {
-            "_label": "Cigarette Port Qty",
-            "1": { "label": "×1", "price": 0, "cogs": 0 },
-            "2": { "label": "×2", "price": 6, "cogs": 2 }
-          }
         "none": {
           "label": "None (DC Only)",
           "price": 0,
@@ -178,32 +118,6 @@
       },
       "monitor": {
         "_label": "Battery Monitor",
-        "led":      { "label": "LED Indicator Only",        "price": 4,  "cogs": 2, "image": null },
-        "mqyj2zmv": { "label": "Voltage Monitor Only",      "price": 6,  "cogs": 3, "image": null },
-        "mqyj3syz": { "label": "Volt + Temp + Alarm Display","price": 10, "cogs": 5, "image": null },
-        "mqyj4dam": { "label": "None",                      "price": 0,  "cogs": 0 }
-      },
-      "light": {
-        "_label": "LED Work Light",
-        "none":       { "label": "None",                "price": 0,  "cogs": 0 },
-        "integrated": { "label": "Integrated (Built-in)","price": 19, "cogs": 10, "image": null },
-        "mqyj4zvs":   { "label": "External Flood Lights","price": 10, "cogs": 5,  "image": null }
-      },
-      "usb": {
-        "_label": "USB Ports",
-        "none": { "label": "None", "price": 0, "cogs": 0 },
-        "combo": {
-          "label": "2-USB+2-USBC Combo Port",
-          "price": 10,
-          "cogs": 5,
-          "image": null,
-          "_subcategory": {
-            "_label": "Quantity",
-            "1": { "label": "×1", "price": 0, "cogs": 0 },
-            "2": { "label": "×2", "price": 9, "cogs": 5, "models": ["iso-station", "isopack---50ah-lifepo4-06kwh"] },
-            "3": { "label": "×3", "price": 18, "cogs": 10, "models": ["iso-station"] }
-          }
-        }
         "led": {
           "label": "LED Indicator Only",
           "price": 0,
