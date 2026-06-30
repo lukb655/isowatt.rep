@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-06-30T20:43:51.763Z",
+    "lastUpdated": "2026-06-30T20:49:16.283Z",
     "currency": "USD"
   },
   "configurator": {
@@ -133,7 +133,7 @@
           "label": "Voltimeter + Thermostat Display",
           "price": 20,
           "cogs": 0,
-          "image": "https://raw.githubusercontent.com/lukb655/isowatt.rep/main/Images/VOLTEMP.png"
+          "image": "https://raw.githubusercontent.com/lukb655/isowatt.rep/main/Images/VOLTTEMP.png"
         }
       },
       "usb-ports": {
@@ -160,7 +160,7 @@
               "cogs": 0
             }
           },
-          "image": "https://raw.githubusercontent.com/lukb655/isowatt.rep/main/Images/96WCOMBOPORT"
+          "image": "https://raw.githubusercontent.com/lukb655/isowatt.rep/main/Images/96WCOMBOPORT.png"
         },
         "_multiSelect": true,
         "mr10im26": {
