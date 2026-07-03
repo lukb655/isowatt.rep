@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-07-03T14:44:42.034Z",
+    "lastUpdated": "2026-07-03T14:45:19.176Z",
     "currency": "USD"
   },
   "configurator": {
@@ -84,6 +84,7 @@
           "price": 38,
           "cogs": 30,
           "models": [
+            "iso-station",
             "isopack---50ah-600wh"
           ]
         },
