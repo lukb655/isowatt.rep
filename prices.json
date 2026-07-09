@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "lastUpdated": "2026-07-03T14:45:19.176Z",
+    "lastUpdated": "2026-07-09T13:11:10.111Z",
     "currency": "USD"
   },
   "configurator": {
@@ -12,7 +12,7 @@
         "leadTime": "2-3 weeks",
         "price": 407,
         "cogs": 325,
-        "image": "aaa"
+        "image": "https://github.com/lukb655/isowatt.rep/blob/89d60b939d730153cc45bc1d824e9d4b34dea4d3/Images/IMG_5919.jpeg"
       },
       "iso-point": {
         "name": "IsoPoint - 25Ah LiFePO4 (0.3kWh)",
