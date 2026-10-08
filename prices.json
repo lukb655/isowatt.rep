@@ -2,7 +2,7 @@
   "meta": {
     "version": "2.0.0",
     "currency": "USD",
-    "lastUpdated": "2026-10-08T17:56:03.875Z"
+    "lastUpdated": "2026-10-08T17:57:22.637Z"
   },
   "productOrder": [
     "power-station",
@@ -322,7 +322,7 @@
       "name": "Electronic Cocktail Smoker",
       "status": "live",
       "featured": true,
-      "badge": "NEW!",
+      "badge": "COLLABORATION W/ CROOKED WOOD STUDIOS",
       "tier": "Bar · Handbuilt",
       "tagline": "Edit this tagline in Admin → Products.",
       "summary": "Edit this summary in Admin → Products.",
