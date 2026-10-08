@@ -2,7 +2,7 @@
   "meta": {
     "version": "2.0.0",
     "currency": "USD",
-    "lastUpdated": "2026-10-08T17:37:54.131Z"
+    "lastUpdated": "2026-10-08T17:39:15.076Z"
   },
   "productOrder": [
     "power-station",
@@ -289,7 +289,7 @@
       }
     },
     "heater-box": {
-      "name": "Heater Box",
+      "name": "IsoHeater Diesel Heaters",
       "status": "coming-soon",
       "featured": false,
       "badge": "",
