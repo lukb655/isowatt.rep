@@ -16,9 +16,6 @@
         },
         "addons": {
           "inverter": {
-            "none": {
-              "cogs": 0
-            },
             "_subcategory": {
               "mr0zd4ah": {
                 "cogs": 20
@@ -44,9 +41,6 @@
             }
           },
           "charger": {
-            "standard": {
-              "cogs": 0
-            },
             "fast": {
               "cogs": 45
             }
@@ -64,7 +58,6 @@
           },
           "usb-ports": {
             "mr103l5f": {
-              "cogs": 0,
               "_subcategory": {
                 "mr103wx6": {
                   "cogs": 5
@@ -78,7 +71,6 @@
               }
             },
             "mr10im26": {
-              "cogs": 0,
               "_subcategory": {
                 "mr10ixf7": {
                   "cogs": 3
@@ -92,7 +84,6 @@
               }
             },
             "mr131ew5": {
-              "cogs": 0,
               "_subcategory": {
                 "mr131o9p": {
                   "cogs": 3
@@ -108,7 +99,6 @@
           },
           "12v": {
             "mr10bwj7": {
-              "cogs": 0,
               "_subcategory": {
                 "mr10co03": {
                   "cogs": 5
@@ -119,7 +109,6 @@
               }
             },
             "mr10cazi": {
-              "cogs": 0,
               "_subcategory": {
                 "mr10cvkz": {
                   "cogs": 10
