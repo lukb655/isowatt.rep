@@ -177,14 +177,14 @@
 <nav class="nav">
   <a href="index.html" class="wordmark">
     <span class="iso">Iso</span><span class="watt">Watt</span>
-    <span class="sub">Consumer Grade · Industrial Power.</span>
+    <span class="sub" data-edit="nav.tagline">Consumer Grade · Industrial Power.</span>
   </a>
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li>
     <li><a href="products.html">Products</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="contact.html" class="active">Contact</a></li>
-    <li><a href="configurator.html" class="nav-cta">Configure →</a></li>
+    <li><a href="products.html" class="nav-cta" data-edit="nav.cta">Shop →</a></li>
   </ul>
   <button class="nav-burger" id="nav-burger" onclick="toggleMobileMenu()" aria-label="Open menu">
     <span></span><span></span><span></span>
@@ -195,16 +195,15 @@
   <a href="products.html">Products</a>
   <a href="about.html">About</a>
   <a href="contact.html" class="active">Contact</a>
-  <a href="configurator.html" class="amber">Configure →</a>
+  <a href="products.html" class="amber">Shop →</a>
 </div>
-<script>function toggleMobileMenu(){document.getElementById('mobile-menu').classList.toggle('open');}</script>
 
 <!-- Hero -->
 <div class="contact-hero">
   <div class="container">
-    <span class="eyebrow">Get in Touch</span>
-    <h1 class="section-title" style="font-size:clamp(48px,9vw,100px);margin-bottom:1rem;">Let's talk<em>.</em></h1>
-    <p class="section-body" style="max-width:520px;">Questions about builds, specs, lead times, or bulk orders. You're talking to the builder — not a ticket system.</p>
+    <span class="eyebrow" data-edit="contact.eyebrow">Get in Touch</span>
+    <h1 class="section-title" style="font-size:clamp(48px,9vw,100px);margin-bottom:1rem;" data-edit="contact.title">Let's talk<em>.</em></h1>
+    <p class="section-body" style="max-width:520px;" data-edit="contact.body">Questions about builds, specs, lead times, or bulk orders. You're talking to the builder — not a ticket system.</p>
   </div>
 </div>
 
@@ -216,39 +215,39 @@
     <div class="info-card">
       <div class="info-icon">⚡</div>
       <div>
-        <div class="info-title">Build Inquiry</div>
-        <div class="info-body">Asking about a custom IsoStation or IsoPoint? Select "Custom Build Inquiry" in the form — include your use case and I'll turn around a quote within 24 hours.</div>
+        <div class="info-title" data-edit="contact.card1.title">Build Inquiry</div>
+        <div class="info-body" data-edit="contact.card1.body">Asking about a custom build? Select "Custom Build Inquiry" in the form — include your use case and I'll turn around a quote within 24 hours.</div>
       </div>
     </div>
     <div class="info-card">
       <div class="info-icon">📦</div>
       <div>
-        <div class="info-title">Orders & Reservations</div>
-        <div class="info-body">Ready to reserve? Use the <a href="products.html">Products page</a> or <a href="configurator.html">Configurator</a> to initiate. Lead time is 1–3 weeks after deposit.</div>
+        <div class="info-title" data-edit="contact.card2.title">Orders & Reservations</div>
+        <div class="info-body" data-edit="contact.card2.body">Ready to reserve? Start from the <a href="products.html">Products page</a> — configure or request a quote there. Lead time is 1–3 weeks after deposit.</div>
       </div>
     </div>
     <div class="info-card">
       <div class="info-icon">🤝</div>
       <div>
-        <div class="info-title">Partnerships & Bulk</div>
-        <div class="info-body">Contractor, fleet, or wholesale inquiry? Select "Partnership / Bulk Order" — pricing scales at volume.</div>
+        <div class="info-title" data-edit="contact.card3.title">Partnerships & Bulk</div>
+        <div class="info-body" data-edit="contact.card3.body">Contractor, fleet, or wholesale inquiry? Select "Partnership / Bulk Order" — pricing scales at volume.</div>
       </div>
     </div>
     <div class="info-card">
       <div class="info-icon">📍</div>
       <div>
-        <div class="info-title">Location</div>
-        <div class="info-body">IsoWatt LLC<br>Bellefonte, PA<br>Built to order · LiFePO4 Power Systems</div>
+        <div class="info-title" data-edit="contact.card4.title">Location</div>
+        <div class="info-body" data-edit="contact.card4.body">IsoWatt LLC<br>Bellefonte, PA<br>Built to order · LiFePO4 Power Systems</div>
       </div>
     </div>
-    <div class="rt-badge">
+    <div class="rt-badge" data-edit="contact.response">
       <strong>Response time:</strong> Within 24 hours on business days. Technical questions may take an extra day if I need to spec something out.
     </div>
   </div>
 
   <!-- Right: contact form -->
   <div class="form-card">
-    <div class="form-card-title">Send a Message</div>
+    <div class="form-card-title" data-edit="contact.form.title">Send a Message</div>
 
     <form id="contact-form" onsubmit="submitForm(event)" novalidate>
 
@@ -305,7 +304,7 @@
   <div class="footer-inner">
     <div class="footer-col">
       <div class="col-title">IsoWatt</div>
-      <p>Portable LiFePO4 power systems.<br>Built in Bellefonte, PA.</p>
+      <p data-edit="footer.about">Portable power, heat and gear.<br>Built in Bellefonte, PA.</p>
     </div>
     <div class="footer-col">
       <div class="col-title">Navigation</div>
@@ -313,20 +312,35 @@
       <a href="products.html">Products</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
-      <a href="configurator.html">Configure</a>
     </div>
     <div class="footer-col">
       <div class="col-title">IsoWatt LLC</div>
-      <p>Bellefonte, PA<br>Build to order · LiFePO4 Power Systems</p>
+      <p data-edit="footer.company">Bellefonte, PA<br>Built to order · Handbuilt</p>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 IsoWatt LLC · Bellefonte, PA</span>
-    <span class="amber">Consumer Grade. Industrial Power.</span>
+    <span data-edit="footer.copyright">© 2026 IsoWatt LLC · Bellefonte, PA</span>
+    <span class="amber" data-edit="footer.slogan">Consumer Grade. Industrial Power.</span>
   </div>
 </footer>
 
+<script src="site.js"></script>
 <script>
+// Pre-fill when arriving from a product page (contact.html?product=heater-box)
+(async () => {
+  const pid = IW.param('product');
+  if (!pid) return;
+  const cat = await IW.loadCatalog();
+  const p = cat.products[pid];
+  if (!p) return;
+  const soon = p.status === 'coming-soon';
+  document.getElementById('f-type').value = soon ? 'General Inquiry' : 'Custom Build Inquiry';
+  document.getElementById('f-subject').value = (soon ? 'Notify me: ' : 'Quote request: ') + p.name;
+  document.getElementById('f-message').placeholder = soon
+    ? "Let me know when the " + p.name + " is available. (Add anything you'd like it to do.)"
+    : 'Tell me about your use case for the ' + p.name + ' — options, timeline, anything relevant.';
+})();
+
 async function submitForm(e) {
   e.preventDefault();
 

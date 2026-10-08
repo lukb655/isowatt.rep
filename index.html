@@ -6,7 +6,7 @@
 <meta name="description" content="IsoWatt — Portable LiFePO4 power stations built by hand in Bellefonte, PA. Consumer grade. Industrial power.">
 <title>IsoWatt — Consumer Grade. Industrial Power.</title>
 <link rel="stylesheet" href="style.css">
-<link rel="icon" type="image/png" href="./IW_LOGO.png">
+<link rel="icon" type="image/png" href="./IW_LOGO_FAV.png">
 <style>
 /* ── HERO ── */
 .hero {
@@ -142,153 +142,8 @@ text-transform: uppercase;
 letter-spacing: 0.1em;
 font-family: 'Barlow Condensed', sans-serif;
 }
-/* ── PRODUCTS ── */
+/* ── PRODUCTS ── (card styles live in style.css) */
 .products-section { background: var(--black); }
-.products-grid {
-display: grid;
-grid-template-columns: repeat(2, 1fr);
-gap: 16px;
-margin-top: 3rem;
-}
-@media (max-width: 800px) {
-.products-grid { grid-template-columns: 1fr; }
-}
-.product-card {
-background: var(--card);
-border: 1px solid var(--border);
-border-radius: 10px;
-padding: 2rem 1.75rem;
-display: flex;
-flex-direction: column;
-gap: 1.25rem;
-transition: border-color 0.2s, transform 0.2s;
-text-decoration: none;
-color: inherit;
-position: relative;
-overflow: hidden;
-}
-.product-card::before {
-content: '';
-position: absolute;
-top: 0; left: 0; right: 0;
-height: 2px;
-background: var(--border);
-transition: background 0.2s;
-}
-.product-card:hover { border-color: var(--border-hi); transform: translateY(-3px); }
-.product-card:hover::before { background: var(--amber); }
-.product-card.featured {
-border-color: var(--amber-dim);
-background: linear-gradient(160deg, var(--amber-bg) 0%, var(--card) 60%);
-grid-column: 1 / -1;
-}
-.product-card.featured::before { background: var(--amber); }
-.product-card.featured .card-name {
-font-size: 48px;
-}
-.featured-badge {
-position: absolute;
-top: 1.25rem; right: 1.25rem;
-background: var(--amber);
-color: var(--black);
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 10px;
-font-weight: 700;
-letter-spacing: 0.15em;
-text-transform: uppercase;
-padding: 3px 9px;
-border-radius: 3px;
-}
-.card-tier {
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 10px;
-letter-spacing: 0.25em;
-text-transform: uppercase;
-color: var(--subtle);
-}
-.card-name {
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 32px;
-font-weight: 900;
-letter-spacing: 0.04em;
-color: var(--white);
-line-height: 1;
-}
-.card-name .iso { color: var(--amber); }
-.card-desc {
-font-size: 14px;
-color: var(--subtle);
-line-height: 1.6;
-flex: 1;
-}
-.card-specs {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 8px;
-}
-.card-spec {
-background: var(--surface);
-border: 1px solid var(--border);
-border-radius: 5px;
-padding: 8px 10px;
-}
-.card-spec .cs-label {
-font-size: 9px;
-letter-spacing: 0.2em;
-text-transform: uppercase;
-color: var(--muted);
-font-family: 'Barlow Condensed', sans-serif;
-display: block;
-margin-bottom: 2px;
-}
-.card-spec .cs-val {
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 17px;
-font-weight: 700;
-color: var(--white);
-}
-.card-price {
-display: flex;
-justify-content: space-between;
-align-items: flex-end;
-padding-top: 1rem;
-border-top: 1px solid var(--border);
-}
-.card-price .price {
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 28px;
-font-weight: 900;
-color: var(--white);
-}
-.card-price .price-note {
-font-size: 12px;
-color: var(--subtle);
-text-align: right;
-line-height: 1.4;
-}
-.card-cta {
-display: block;
-text-align: center;
-background: transparent;
-border: 1px solid var(--border-hi);
-border-radius: 5px;
-padding: 10px;
-font-family: 'Barlow Condensed', sans-serif;
-font-size: 14px;
-font-weight: 700;
-letter-spacing: 0.1em;
-text-transform: uppercase;
-color: var(--text);
-text-decoration: none;
-transition: all 0.15s;
-}
-.product-card.featured .card-cta {
-background: var(--amber);
-border-color: var(--amber);
-color: var(--black);
-}
-.card-cta:hover { border-color: var(--amber); color: var(--amber); }
-.product-card.featured .card-cta:hover { background: var(--amber-hi); }
 /* ── WHY ── */
 .why-section { background: var(--surface); }
 .why-grid {
@@ -343,11 +198,11 @@ margin-bottom: 1rem;
 .cta-band .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
 /* Hero logo responsive */
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   .hero-logo-desktop { display: none !important; }
   .hero-logo-mobile { display: block !important; }
 }
-@media (min-width: 769px) {
+@media (min-width: 1024px) {
   .hero-logo-desktop { display: block !important; }
   .hero-logo-mobile { display: none !important; }
 }
@@ -357,13 +212,14 @@ margin-bottom: 1rem;
 <nav class="nav">
   <a href="index.html" class="wordmark">
     <span class="iso">Iso</span><span class="watt">Watt</span>
-    <span class="sub">Consumer Grade · Industrial Power.</span>
+    <span class="sub" data-edit="nav.tagline">Consumer Grade · Industrial Power.</span>
   </a>
   <ul class="nav-links">
     <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="products.html">Products</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="contact.html">Contact</a></li>
-    <li><a href="configurator.html" class="nav-cta">Configure →</a></li>
+    <li><a href="products.html" class="nav-cta" data-edit="nav.cta">Shop →</a></li>
   </ul>
   <button class="nav-burger" id="nav-burger" onclick="toggleMobileMenu()" aria-label="Open menu">
     <span></span><span></span><span></span>
@@ -371,11 +227,11 @@ margin-bottom: 1rem;
 </nav>
 <div class="mobile-menu" id="mobile-menu">
   <a href="index.html" class="active">Home</a>
+  <a href="products.html">Products</a>
   <a href="about.html">About</a>
   <a href="contact.html">Contact</a>
-  <a href="configurator.html" class="amber">Configure →</a>
+  <a href="products.html" class="amber">Shop →</a>
 </div>
-<script>function toggleMobileMenu(){var m=document.getElementById('mobile-menu');m.classList.toggle('open');}</script>
 
 <main class="page">
 <!-- HERO -->
@@ -386,84 +242,48 @@ margin-bottom: 1rem;
 <div style="display:flex;align-items:center;gap:2.5rem;flex-direction:row;flex-wrap:wrap;">
   <img src="./IW_LOGO.png" alt="IsoWatt" class="hero-logo-mobile" style="height:200px;width:auto;mix-blend-mode:screen;filter:drop-shadow(0 0 32px rgba(240,165,0,0.3));display:none;margin:0 auto;">
   <div style="flex:1;min-width:240px;">
-    <p class="hero-eyebrow">Handbuilt in Bellefonte, PA</p>
+    <p class="hero-eyebrow" data-edit="home.hero.eyebrow">Handbuilt in Bellefonte, PA</p>
     <h1>
-    <span class="line-dim">Power</span><br>
-    <span class="line-amber">without</span><br>
-    <span>the grid.</span>
+    <span class="line-dim" data-edit="home.hero.line1">Power</span><br>
+    <span class="line-amber" data-edit="home.hero.line2">without</span><br>
+    <span data-edit="home.hero.line3">the grid.</span>
     </h1>
   </div>
   <img src="./IW_LOGO.png" alt="IsoWatt" class="hero-logo-desktop" style="height:300px;width:auto;flex-shrink:0;mix-blend-mode:screen;filter:drop-shadow(0 0 32px rgba(240,165,0,0.3));">
 </div>
-<p class="hero-sub">Custom-built portable power stations for everyone. Get reliable power wherever you need it. Hand assembled in Central Pennsylvania with lifetime warranty, built to last.  </p>
+<p class="hero-sub" data-edit="home.hero.sub">Custom-built portable power stations for everyone. Get reliable power wherever you need it. Hand assembled in Central Pennsylvania with lifetime warranty, built to last.</p>
 <div class="hero-actions">
-<a href="configurator.html" class="btn btn-primary">Configure Your Build ↗</a>
-<a href="contact.html" class="btn btn-ghost">Ask a Question</a>
+<a href="products.html" class="btn btn-primary" data-edit="home.hero.btn1">Shop the Lineup ↗</a>
+<a href="contact.html" class="btn btn-ghost" data-edit="home.hero.btn2">Ask a Question</a>
 </div>
 </div>
-
 </section>
 
 <!-- STATS -->
 <div class="stats-bar">
 <div class="stats-inner">
 <div class="stat-item">
-<div class="stat-num">1.2<span style="font-size:20px;">kWh</span></div>
-<div class="stat-label">Max Capacity</div>
+<div class="stat-num" data-edit="home.stat1.num">1.2<span style="font-size:20px;">kWh</span></div>
+<div class="stat-label" data-edit="home.stat1.label">Max Capacity</div>
 </div>
 <div class="stat-item">
-<div class="stat-num">Up to 2000W</div>
-<div class="stat-label">AC Power</div>
+<div class="stat-num" data-edit="home.stat2.num">Up to 1600W</div>
+<div class="stat-label" data-edit="home.stat2.label">AC Power</div>
 </div>
 <div class="stat-item">
-<div class="stat-num">LiFePO4</div>
-<div class="stat-label">Chemistry</div>
+<div class="stat-num" data-edit="home.stat3.num">LiFePO4</div>
+<div class="stat-label" data-edit="home.stat3.label">Chemistry</div>
 </div>
 </div>
 </div>
 
-<!-- BUILDS -->
+<!-- PRODUCT LINEUP (built from the catalog in Admin → Products) -->
 <section class="section products-section" id="products">
 <div class="container">
-<span class="eyebrow">Custom Builds</span>
-<h2 class="section-title">Built for <em>you.</em></h2>
-<p class="section-body">Every IsoWatt is configured to order. Choose your platform, pick your components, and we'll build it by hand — tested under load before it ships.</p>
-
-<div class="products-grid">
-<a href="configurator.html" class="product-card featured">
-<div class="card-tier">Large Format · Custom Build</div>
-<div class="card-name"><span class="iso">Iso</span>Station</div>
-<p class="card-desc">Start with a 100Ah LiFePO4 base and configure everything — inverter wattage up to 2000W, dual AC outlets, USB-C ports, LED lighting, protection packages, and transport options.</p>
-<div class="card-specs">
-<div class="card-spec"><span class="cs-label">Battery</span><span class="cs-val">100Ah</span></div>
-<div class="card-spec"><span class="cs-label">Energy</span><span class="cs-val">1.2kWh</span></div>
-<div class="card-spec"><span class="cs-label">AC Power</span><span class="cs-val">Up to 2000W</span></div>
-<div class="card-spec"><span class="cs-label">Enclosure</span><span class="cs-val">Apache 4800</span></div>
-</div>
-<div class="card-price">
-<span class="price">Configure for Pricing</span>
-<span class="price-note">Custom quote<br>via configurator</span>
-</div>
-<span class="card-cta">Configure IsoStation ↗</span>
-</a>
-
-<a href="configurator.html" class="product-card featured">
-<div class="card-tier">Compact · Custom Build</div>
-<div class="card-name"><span class="iso">Iso</span>Point</div>
-<p class="card-desc">Start with a 25Ah LiFePO4 compact base. Add DC-only or up to 500W AC, USB-C ports, and accessories. True portability under 9 lbs — built exactly how you need it.</p>
-<div class="card-specs">
-<div class="card-spec"><span class="cs-label">Battery</span><span class="cs-val">25Ah</span></div>
-<div class="card-spec"><span class="cs-label">Energy</span><span class="cs-val">0.3kWh</span></div>
-<div class="card-spec"><span class="cs-label">AC Power</span><span class="cs-val">Up to 500W</span></div>
-<div class="card-spec"><span class="cs-label">Enclosure</span><span class="cs-val">Apache 2800</span></div>
-</div>
-<div class="card-price">
-<span class="price">Configure for Pricing</span>
-<span class="price-note">Custom quote<br>via configurator</span>
-</div>
-<span class="card-cta">Configure IsoPoint ↗</span>
-</a>
-</div>
+<span class="eyebrow" data-edit="home.products.eyebrow">The Lineup</span>
+<h2 class="section-title" data-edit="home.products.title">Built for <em>you.</em></h2>
+<p class="section-body" data-edit="home.products.body">Every IsoWatt product is built to order and assembled by hand — tested before it ships.</p>
+<div class="products-grid" id="product-grid"></div>
 </div>
 </section>
 
@@ -472,23 +292,23 @@ margin-bottom: 1rem;
 <!-- WHY ISOWATT -->
 <section class="section why-section">
 <div class="container">
-<span class="eyebrow">Why IsoWatt</span>
-<h2 class="section-title">Built different.<br><em>On purpose.</em></h2>
+<span class="eyebrow" data-edit="home.why.eyebrow">Why IsoWatt</span>
+<h2 class="section-title" data-edit="home.why.title">Built different.<br><em>On purpose.</em></h2>
 <div class="why-grid">
 <div class="why-card">
-<span class="why-icon">⚡</span>
-<div class="why-title">LiFePO4 Chemistry</div>
-<p class="why-body">Safer, longer-lasting, and more stable than lithium-ion. No thermal runaway. 2,000+ charge cycles. The chemistry that industrial systems trust.</p>
+<span class="why-icon" data-edit="home.why1.icon">⚡</span>
+<div class="why-title" data-edit="home.why1.title">LiFePO4 Chemistry</div>
+<p class="why-body" data-edit="home.why1.body">Safer, longer-lasting, and more stable than lithium-ion. No thermal runaway. 2,000+ charge cycles. The chemistry that industrial systems trust.</p>
 </div>
 <div class="why-card">
-<span class="why-icon">🔧</span>
-<div class="why-title">Built to Order</div>
-<p class="why-body">No warehouse. No mass production. Every unit is assembled, wired, and load-tested by hand before it ships. You get what we'd build for ourselves.</p>
+<span class="why-icon" data-edit="home.why2.icon">🔧</span>
+<div class="why-title" data-edit="home.why2.title">Built to Order</div>
+<p class="why-body" data-edit="home.why2.body">No warehouse. No mass production. Every unit is assembled, wired, and load-tested by hand before it ships. You get what we'd build for ourselves.</p>
 </div>
 <div class="why-card">
-<span class="why-icon">📍</span>
-<div class="why-title">Made in Bellefonte, PA</div>
-<p class="why-body">Local product. Local support. When something needs attention, you're not filing a ticket with a call center — you're talking to the builder.</p>
+<span class="why-icon" data-edit="home.why3.icon">📍</span>
+<div class="why-title" data-edit="home.why3.title">Made in Bellefonte, PA</div>
+<p class="why-body" data-edit="home.why3.body">Local product. Local support. When something needs attention, you're not filing a ticket with a call center — you're talking to the builder.</p>
 </div>
 </div>
 </div>
@@ -497,11 +317,11 @@ margin-bottom: 1rem;
 <!-- CTA BAND -->
 <section class="cta-band">
 <div class="container-sm">
-<h2>Ready to <em style="font-style:normal;color:var(--amber);">go off-grid?</em></h2>
-<p>Configure your power station, get a real price, and request your custom build — we'll invoice you directly.</p>
+<h2 data-edit="home.cta.title">Ready to <em style="font-style:normal;color:var(--amber);">go off-grid?</em></h2>
+<p data-edit="home.cta.body">Pick a product, configure it, and request your build — we'll invoice you directly.</p>
 <div class="actions">
-<a href="configurator.html" class="btn btn-primary">Start Configuring ↗</a>
-<a href="contact.html" class="btn btn-ghost">Ask a Question</a>
+<a href="products.html" class="btn btn-primary" data-edit="home.cta.btn1">Browse Products ↗</a>
+<a href="contact.html" class="btn btn-ghost" data-edit="home.cta.btn2">Ask a Question</a>
 </div>
 </div>
 </section>
@@ -511,25 +331,27 @@ margin-bottom: 1rem;
   <div class="footer-inner">
     <div class="footer-col">
       <div class="col-title">IsoWatt</div>
-      <p>Portable LiFePO4 power systems.<br>Built in Bellefonte, PA.</p>
+      <p data-edit="footer.about">Portable power, heat and gear.<br>Built in Bellefonte, PA.</p>
     </div>
     <div class="footer-col">
       <div class="col-title">Navigation</div>
       <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
-      <a href="configurator.html">Configure</a>
     </div>
     <div class="footer-col">
       <div class="col-title">IsoWatt LLC</div>
-      <p>Bellefonte, PA<br>Build to order · LiFePO4 Power Systems</p>
+      <p data-edit="footer.company">Bellefonte, PA<br>Built to order · Handbuilt</p>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 IsoWatt LLC · Bellefonte, PA</span>
-    <span class="amber">Consumer Grade. Industrial Power.</span>
+    <span data-edit="footer.copyright">© 2026 IsoWatt LLC · Bellefonte, PA</span>
+    <span class="amber" data-edit="footer.slogan">Consumer Grade. Industrial Power.</span>
   </div>
 </footer>
 
+<script src="site.js"></script>
+<script>IW.renderGrid(document.getElementById('product-grid'));</script>
 </body>
 </html>

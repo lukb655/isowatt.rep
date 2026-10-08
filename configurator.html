@@ -269,23 +269,33 @@
 .cfg-check-lbl { flex: 1; font-size: 14px; color: var(--text); }
 .cfg-check-price { font-size: 12px; color: var(--amber); font-weight: 600; font-family: 'Courier New', monospace; }
 
+/* ── Product switcher ─────────────────────────────────── */
+.cfg-switch { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1.5rem; }
+.cfg-switch a {
+  font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; text-decoration: none; color: var(--subtle);
+  border: 1px solid var(--border-hi); border-radius: 20px; padding: 6px 14px; transition: all .15s;
+}
+.cfg-switch a:hover { color: var(--white); border-color: var(--subtle); }
+.cfg-switch a.on { color: var(--black); background: var(--amber); border-color: var(--amber); }
+
 /* ── Modal ────────────────────────────────────────────────── */
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 
-<!-- ── Nav ──────────────────────────────────────────────── -->
 <nav class="nav">
   <a href="index.html" class="wordmark">
     <span class="iso">Iso</span><span class="watt">Watt</span>
-    <span class="sub">Consumer Grade · Industrial Power.</span>
+    <span class="sub" data-edit="nav.tagline">Consumer Grade · Industrial Power.</span>
   </a>
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li>
+    <li><a href="products.html" class="active">Products</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="contact.html">Contact</a></li>
-    <li><a href="configurator.html" class="nav-cta">Configure →</a></li>
+    <li><a href="products.html" class="nav-cta" data-edit="nav.cta">Shop →</a></li>
   </ul>
   <button class="nav-burger" id="nav-burger" onclick="toggleMobileMenu()" aria-label="Open menu">
     <span></span><span></span><span></span>
@@ -293,18 +303,19 @@
 </nav>
 <div class="mobile-menu" id="mobile-menu">
   <a href="index.html">Home</a>
+  <a href="products.html" class="active">Products</a>
   <a href="about.html">About</a>
   <a href="contact.html">Contact</a>
-  <a href="configurator.html" class="amber">Configure →</a>
+  <a href="products.html" class="amber">Shop →</a>
 </div>
-<script>function toggleMobileMenu(){var m=document.getElementById('mobile-menu');m.classList.toggle('open');}</script>
 
 <!-- ── Hero ─────────────────────────────────────────────── -->
-<div style="padding-top:var(--nav-h);background:var(--black);padding:4rem clamp(1rem,4vw,2rem);">
+<div style="background:var(--black);padding:calc(var(--nav-h) + 3rem) clamp(1rem,4vw,2rem) 1rem;">
   <div class="container">
-    <p class="eyebrow">Build Your Configuration</p>
-    <h1 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(48px,9vw,96px);font-weight:900;text-transform:uppercase;letter-spacing:0.02em;line-height:0.9;color:var(--white);margin-bottom:1rem;">Design Your System.</h1>
-    <p style="font-size:17px;color:var(--subtle);max-width:480px;line-height:1.7;">Every option priced live. Submit your config and I'll confirm the build and send an invoice.</p>
+    <p class="eyebrow" data-edit="cfg.eyebrow">Build Your Configuration</p>
+    <h1 id="cfg-title" style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(48px,9vw,96px);font-weight:900;text-transform:uppercase;letter-spacing:0.02em;line-height:0.9;color:var(--white);margin-bottom:1rem;">Design Your System.</h1>
+    <p style="font-size:17px;color:var(--subtle);max-width:480px;line-height:1.7;" data-edit="cfg.sub">Every option priced live. Submit your config and I'll confirm the build and send an invoice.</p>
+    <div class="cfg-switch" id="cfg-switch" style="display:none;"></div>
   </div>
 </div>
 
@@ -343,34 +354,33 @@
 
     <div id="summary-breakdown" style="margin-bottom:1.5rem;"></div>
 
-    <p style="font-size:12px;color:var(--muted);margin-bottom:1.25rem;">No payment now. Submit your config and I'll confirm the build, then send a Stripe invoice.</p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:1.25rem;" data-edit="cfg.summary.note">No payment now. Submit your config and I'll confirm the build, then send a Stripe invoice.</p>
     <button class="cta-reserve" onclick="reserveConfig()">Request This Build →</button>
   </section>
 
 </div>
 
-<!-- ── Footer ───────────────────────────────────────────── -->
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-col">
       <div class="col-title">IsoWatt</div>
-      <p>Portable LiFePO4 power systems.<br>Built in Bellefonte, PA.</p>
+      <p data-edit="footer.about">Portable power, heat and gear.<br>Built in Bellefonte, PA.</p>
     </div>
     <div class="footer-col">
       <div class="col-title">Navigation</div>
       <a href="index.html">Home</a>
-          <a href="about.html">About</a>
+      <a href="products.html">Products</a>
+      <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
-      <a href="configurator.html">Configure</a>
     </div>
     <div class="footer-col">
       <div class="col-title">IsoWatt LLC</div>
-      <p>Bellefonte, PA<br>Build to order · LiFePO4 Power Systems</p>
+      <p data-edit="footer.company">Bellefonte, PA<br>Built to order · Handbuilt</p>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 IsoWatt LLC · Bellefonte, PA</span>
-    <span class="amber">Consumer Grade. Industrial Power.</span>
+    <span data-edit="footer.copyright">© 2026 IsoWatt LLC · Bellefonte, PA</span>
+    <span class="amber" data-edit="footer.slogan">Consumer Grade. Industrial Power.</span>
   </div>
 </footer>
 
@@ -415,6 +425,7 @@
      Reads prices.json and builds everything dynamically.
      Adding/removing a category in Admin → auto-appears here.
      ══════════════════════════════════════════════════════════ -->
+<script src="site.js"></script>
 <script>
 // ── Fallback data (used if prices.json fetch fails) ──────────
 const FALLBACK = {
@@ -434,13 +445,16 @@ const FALLBACK = {
   }
 };
 
-let CFG = null; // set from prices.json
+let CAT = null;  // full catalog from prices.json
+let CUR = null;  // id of the product being configured
+let CFG = null;  // that product's configurator { baseModels, addons }
 
 // ── Helpers ──────────────────────────────────────────────────
-function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function esc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-function getBaseModels() { return CFG?.configurator?.baseModels || FALLBACK.baseModels; }
-function getAddons()     { return CFG?.configurator?.addons     || FALLBACK.addons; }
+function getBaseModels() { return CFG?.baseModels || FALLBACK.baseModels; }
+function getAddons()     { return CFG?.addons     || FALLBACK.addons; }
+function curProductName() { return (CAT && CUR && CAT.products[CUR]?.name) || 'IsoWatt'; }
 
 function getBaseModel(id) {
   const m = getBaseModels()[id];
@@ -897,11 +911,30 @@ function updateConfig() {
 
 // ── Fetch prices.json and boot ───────────────────────────────
 (async () => {
-  try {
-    const res = await fetch('./prices.json?v=' + Date.now());
-    if (res.ok) CFG = await res.json();
-  } catch (_) { /* use FALLBACK */ }
+  CAT = await IW.loadCatalog();
+  // Products that can be configured (hidden ones excluded)
+  const configurable = IW.listProducts(CAT).filter(p => p.configurator && p.configurator.baseModels && Object.keys(p.configurator.baseModels).length);
+  const wanted = IW.param('p');
+  const prod = configurable.find(p => p.id === wanted) || configurable[0];
+  if (prod) {
+    CUR = prod.id; CFG = prod.configurator;
+    document.getElementById('cfg-title').innerHTML = IW.brandName(prod.name) + '<span style="color:var(--amber)">.</span>';
+    document.title = 'Configure ' + prod.name + ' — IsoWatt';
+  }
+  if (!prod) {
+    document.getElementById('cfg-loading').innerHTML = 'No configurable products right now. <a href="products.html" style="color:var(--amber)">Browse products →</a>';
+    return;
+  }
+  if (configurable.length > 1) {
+    const sw = document.getElementById('cfg-switch');
+    sw.innerHTML = configurable.map(p => `<a href="configurator.html?p=${encodeURIComponent(p.id)}" class="${p.id === CUR ? 'on' : ''}">${esc(p.name)}</a>`).join('');
+    sw.style.display = '';
+  }
   buildConfigurator();
+  // Pre-select a model when linked from a product page (?model=...)
+  const m = IW.param('model');
+  const bs = document.getElementById('select-base');
+  if (m && bs && getBaseModels()[m]) { bs.value = m; bs.dispatchEvent(new Event('change')); }
 })();
 </script>
 
@@ -909,19 +942,12 @@ function updateConfig() {
      QUOTE MODAL LOGIC
      ══════════════════════════════════════════════════════════ -->
 <script>
-let _cfgStripe = {};
-(async () => {
-  try {
-    const r = await fetch('./prices.json?v=' + Date.now());
-    if (r.ok) { const p = await r.json(); _cfgStripe = p.stripe || {}; }
-  } catch(_) {}
-})();
 
 function collectSpec() {
   const baseId  = document.getElementById('select-base').value;
   const base    = getBaseModel(baseId);
   const addons  = getAddons();
-  const spec    = { baseModel: base.name, capacity: base.capacity, leadTime: base.leadTime, options: {}, total: '$0' };
+  const spec    = { product: curProductName(), baseModel: base.name, capacity: base.capacity, leadTime: base.leadTime, options: {}, total: '$0' };
 
   document.querySelectorAll('select[data-group]:not([data-is-subcat]):not([data-is-opt-subcat])').forEach(sel => {
     const gk    = sel.dataset.group;
@@ -986,54 +1012,9 @@ function collectSpec() {
   return spec;
 }
 
-function collectCogs() {
-  const baseId = document.getElementById('select-base').value;
-  const base   = getBaseModels()[baseId];
-  const addons = getAddons();
-  let cogs = base?.cogs || 0;
-
-  document.querySelectorAll('select[data-group]:not([data-is-subcat]):not([data-is-opt-subcat])').forEach(sel => {
-    const gk     = sel.dataset.group;
-    const optKey = sel.value;
-    const group  = addons[gk];
-    const opt    = group?.[optKey];
-    if (opt && typeof opt === 'object') cogs += opt.cogs || 0;
-    const subDiv = document.getElementById('sub-' + gk);
-    if (subDiv && subDiv.style.display !== 'none') {
-      const subKey = subDiv.querySelector('select')?.value;
-      const subOpt = group?._subcategory?.[subKey];
-      if (subOpt) cogs += subOpt.cogs || 0;
-    }
-    const optSubDiv = document.getElementById('sub-opt-' + gk + '-' + optKey);
-    if (optSubDiv && optSubDiv.style.display !== 'none') {
-      const optSubKey = optSubDiv.querySelector('select')?.value;
-      const optSubOpt = group?.[optKey]?._subcategory?.[optSubKey];
-      if (optSubOpt) cogs += optSubOpt.cogs || 0;
-    }
-  });
-
-  document.querySelectorAll('.cfg-multi-opt-row').forEach(row => {
-    const cb = row.querySelector('.cfg-check');
-    if (!cb || !cb.checked) return;
-    const gk    = row.dataset.group;
-    const optKey = row.dataset.opt;
-    const opt   = addons[gk]?.[optKey];
-    if (!opt) return;
-    cogs += (typeof opt === 'object' ? opt.cogs : 0) || 0;
-    const optSubDiv = document.getElementById('sub-opt-' + gk + '-' + optKey);
-    if (optSubDiv && optSubDiv.style.display !== 'none') {
-      const optSubKey = optSubDiv.querySelector('select')?.value;
-      const optSubOpt = (typeof opt === 'object' ? opt._subcategory : null)?.[optSubKey];
-      if (optSubOpt) cogs += optSubOpt.cogs || 0;
-    }
-  });
-
-  return cogs;
-}
-
 function reserveConfig() {
   const spec = collectSpec();
-  let previewHtml = `<strong style="color:var(--white);">${esc(spec.baseModel)}</strong><br>`;
+  let previewHtml = `<span style="color:var(--amber);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;">${esc(spec.product)}</span><br><strong style="color:var(--white);">${esc(spec.baseModel)}</strong><br>`;
   Object.entries(spec.options).forEach(([k, v]) => {
     previewHtml += `${esc(k)}: ${esc(v)}<br>`;
   });
@@ -1055,7 +1036,7 @@ document.getElementById('quote-overlay').addEventListener('click', function(e) {
   if (e.target === this) closeQuoteModal();
 });
 
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
 
 async function submitQuote() {
   const name    = document.getElementById('quote-name').value.trim();
@@ -1077,29 +1058,20 @@ async function submitQuote() {
   document.getElementById('quote-btn-label').textContent = 'Sending…';
   statusEl.style.display = 'none';
 
-  const spec     = collectSpec();
-  const totalCogs = collectCogs();
-  const totalPrice = parseFloat(spec.total.replace(/[$,]/g, '')) || 0;
-  const grossProfit = totalPrice - totalCogs;
-  const marginPct = totalPrice > 0 ? Math.round((grossProfit / totalPrice) * 100) : 0;
+  const spec = collectSpec();
 
-  const specLines = [`Base Model: ${spec.baseModel}`, `Capacity: ${spec.capacity}`, `Lead Time: ${spec.leadTime}`, ''];
+  const specLines = [`Product: ${spec.product}`, `Base Model: ${spec.baseModel}`];
+  if (spec.capacity) specLines.push(`Capacity: ${spec.capacity}`);
+  if (spec.leadTime) specLines.push(`Lead Time: ${spec.leadTime}`);
+  specLines.push('');
   Object.entries(spec.options).forEach(([k, v]) => specLines.push(`${k}: ${v}`));
   specLines.push('', `Quote Total: ${spec.total}`);
   if (notes) specLines.push('', `Notes: ${notes}`);
-  specLines.push('', '--- Internal Financials ---',
-    `Selling Price: ${spec.total}`,
-    `Total COGS: $${totalCogs.toLocaleString()}`,
-    `Gross Profit: $${grossProfit.toLocaleString()}`,
-    `Gross Margin: ${marginPct}%`);
   const specText = specLines.join('\n');
 
-  // Build flat spec object for email template
-  const specFlat = { baseModel: spec.baseModel, total: spec.total, capacity: spec.capacity, leadTime: spec.leadTime };
+  // Flat spec object for the email's spec table (internal costs are NOT sent from the browser)
+  const specFlat = { product: spec.product, baseModel: spec.baseModel, capacity: spec.capacity, leadTime: spec.leadTime, total: spec.total };
   Object.assign(specFlat, spec.options);
-  specFlat['__cogs']        = '$' + totalCogs.toLocaleString();
-  specFlat['__grossProfit'] = '$' + grossProfit.toLocaleString();
-  specFlat['__grossMargin'] = marginPct + '%';
 
   try {
     const res = await fetch('/api/contact', {
@@ -1108,7 +1080,7 @@ async function submitQuote() {
       body: JSON.stringify({
         name, email,
         type:    'Custom Build Inquiry',
-        subject: 'Custom Build Quote — ' + spec.baseModel + ' · ' + spec.total,
+        subject: 'Build Quote — ' + spec.product + ' / ' + spec.baseModel + ' · ' + spec.total,
         message: specText,
         spec:    specFlat
       })
@@ -1128,7 +1100,7 @@ async function submitQuote() {
     document.getElementById('quote-spinner').style.display = 'none';
     document.getElementById('quote-btn-label').textContent = 'Send Quote Request →';
 
-    const subj = encodeURIComponent('Custom Build Quote — ' + spec.baseModel + ' · ' + spec.total);
+    const subj = encodeURIComponent('Build Quote — ' + spec.product + ' / ' + spec.baseModel + ' · ' + spec.total);
     const body = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\n' + specText);
     const mailto = 'mailto:luke@isowatt.shop?subject=' + subj + '&body=' + body;
 

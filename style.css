@@ -284,3 +284,136 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* ════════════════════════════════════════════════════════════
+   PRODUCT CATALOG (shared by home, products, product pages)
+   ════════════════════════════════════════════════════════════ */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 3rem;
+}
+@media (max-width: 800px) { .products-grid { grid-template-columns: 1fr; } }
+
+.product-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s, transform 0.2s;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  overflow: hidden;
+}
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--border);
+  transition: background 0.2s;
+  z-index: 2;
+}
+.product-card:hover { border-color: var(--border-hi); transform: translateY(-3px); }
+.product-card:hover::before { background: var(--amber); }
+.product-card.featured {
+  border-color: var(--amber-dim);
+  background: linear-gradient(160deg, var(--amber-bg) 0%, var(--card) 60%);
+  grid-column: 1 / -1;
+  flex-direction: row;
+}
+.product-card.featured::before { background: var(--amber); }
+.product-card.featured .pc-media { flex: 0 0 46%; aspect-ratio: auto; min-height: 340px; border-bottom: none; border-right: 1px solid var(--border); }
+.product-card.featured .card-name { font-size: 44px; }
+@media (max-width: 800px) {
+  .product-card.featured { flex-direction: column; }
+  .product-card.featured .pc-media { flex: none; min-height: 0; aspect-ratio: 16/10; border-right: none; border-bottom: 1px solid var(--border); }
+}
+.product-card.is-soon .pc-media img { filter: grayscale(0.4) brightness(0.8); }
+
+.pc-media {
+  aspect-ratio: 16/10;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  position: relative;
+}
+.pc-media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s; }
+.product-card:hover .pc-media img { transform: scale(1.03); }
+.pc-media-empty {
+  display: flex; align-items: center; justify-content: center;
+  background-image:
+    linear-gradient(rgba(240,165,0,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240,165,0,0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.pc-media-mark {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 34px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--border-hi);
+}
+.pc-media-mark .iso { color: var(--amber-dim); }
+.pc-body { padding: 1.75rem; display: flex; flex-direction: column; gap: 1.1rem; flex: 1; }
+
+.pc-badge {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  z-index: 3;
+  background: var(--amber);
+  color: var(--black);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 3px;
+}
+.pc-badge-soon { background: var(--black); color: var(--amber); border: 1px solid var(--amber-dim); }
+
+.card-tier {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--subtle);
+}
+.card-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 32px; font-weight: 900; letter-spacing: 0.04em; color: var(--white); line-height: 1;
+}
+.card-name .iso, .pd-name .iso { color: var(--amber); }
+.card-desc { font-size: 14px; color: var(--subtle); line-height: 1.6; flex: 1; }
+.card-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.card-spec { background: var(--surface); border: 1px solid var(--border); border-radius: 5px; padding: 8px 10px; }
+.card-spec .cs-label {
+  font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+  font-family: 'Barlow Condensed', sans-serif; display: block; margin-bottom: 2px;
+}
+.card-spec .cs-val { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 700; color: var(--white); }
+.card-price {
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem;
+  padding-top: 1rem; border-top: 1px solid var(--border);
+}
+.card-price .price, .pd-price .price {
+  font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 900; color: var(--white); line-height: 1;
+}
+.price .price-from { font-size: 0.5em; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--subtle); vertical-align: middle; }
+.price.price-sm { font-size: 20px; color: var(--text); }
+.card-price .price-note { font-size: 12px; color: var(--subtle); text-align: right; line-height: 1.4; }
+.card-cta {
+  display: block; text-align: center; background: transparent;
+  border: 1px solid var(--border-hi); border-radius: 5px; padding: 10px;
+  font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); transition: all 0.15s;
+}
+.product-card.featured .card-cta { background: var(--amber); border-color: var(--amber); color: var(--black); }
+.product-card:hover .card-cta { border-color: var(--amber); color: var(--amber); }
+.product-card.featured:hover .card-cta { background: var(--amber-hi); color: var(--black); }
+
+/* ── nav: keep 5 links tidy ── */
+@media (max-width: 860px) and (min-width: 701px) { .nav-links a { padding: 6px 9px; } }
+
+/* ════════════════════════════════════════════════════════════
+   SITE EDITOR MODE (only active inside admin → Site Editor)
+   ════════════════════════════════════════════════════════════ */
+.iw-editing [data-edit] { outline: 1px dashed rgba(240,165,0,0.35); outline-offset: 3px; cursor: text; border-radius: 2px; }
+.iw-editing [data-edit]:hover { outline-color: rgba(240,165,0,0.8); background: rgba(240,165,0,0.04); }
+.iw-editing [data-edit]:focus { outline: 2px solid var(--amber); background: rgba(240,165,0,0.06); }
+.iw-editing .reveal { opacity: 1; transform: none; }
