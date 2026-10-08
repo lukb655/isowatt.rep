@@ -2,12 +2,12 @@
   "meta": {
     "version": "2.0.0",
     "currency": "USD",
-    "lastUpdated": "2026-10-08T17:57:22.637Z"
+    "lastUpdated": "2026-10-08T18:34:29.422Z"
   },
   "productOrder": [
+    "whiskey-smoker-box",
     "power-station",
-    "heater-box",
-    "whiskey-smoker-box"
+    "heater-box"
   ],
   "products": {
     "power-station": {
@@ -324,8 +324,8 @@
       "featured": true,
       "badge": "COLLABORATION W/ CROOKED WOOD STUDIOS",
       "tier": "Bar · Handbuilt",
-      "tagline": "Edit this tagline in Admin → Products.",
-      "summary": "Edit this summary in Admin → Products.",
+      "tagline": "Wireless Electronic Wood Chip Smoker for Smoking Beverages ",
+      "summary": "A collaboration with Crooked Wood Studios, This custom designed and handmade Cocktail Smoker is built to last and always provide you with a sweet smokey treat, anywhere, anytime. With a 2400mAh rechargeable battery, and press-to-use operation, you can be sure this smoker will always function when you need it, and if anything happens, we'll help fix it for life. ",
       "description": "Edit this description in Admin → Products.",
       "highlights": [],
       "specs": [],
