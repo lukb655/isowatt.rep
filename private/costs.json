@@ -1,0 +1,137 @@
+{
+  "_note": "Private cost data (COGS). Excluded from the public site by .vercelignore. Managed by admin.html.",
+  "products": {
+    "power-station": {
+      "configurator": {
+        "baseModels": {
+          "iso-station": {
+            "cogs": 325
+          },
+          "iso-point": {
+            "cogs": 200
+          },
+          "isopack---50ah-600wh": {
+            "cogs": 245
+          }
+        },
+        "addons": {
+          "inverter": {
+            "none": {
+              "cogs": 0
+            },
+            "_subcategory": {
+              "mr0zd4ah": {
+                "cogs": 20
+              },
+              "mr102d83": {
+                "cogs": 40
+              },
+              "mr102h5e": {
+                "cogs": 60
+              }
+            },
+            "mr12yqft": {
+              "cogs": 21
+            },
+            "mr17spju": {
+              "cogs": 30
+            },
+            "mr17tcrj": {
+              "cogs": 35
+            },
+            "mr17tnmr": {
+              "cogs": 37
+            }
+          },
+          "charger": {
+            "standard": {
+              "cogs": 0
+            },
+            "fast": {
+              "cogs": 45
+            }
+          },
+          "monitor": {
+            "led": {
+              "cogs": 5
+            },
+            "mr10gigt": {
+              "cogs": 10
+            },
+            "mr10hiaq": {
+              "cogs": 15
+            }
+          },
+          "usb-ports": {
+            "mr103l5f": {
+              "cogs": 0,
+              "_subcategory": {
+                "mr103wx6": {
+                  "cogs": 5
+                },
+                "mr1041a3": {
+                  "cogs": 10
+                },
+                "mr12x43h": {
+                  "cogs": 15
+                }
+              }
+            },
+            "mr10im26": {
+              "cogs": 0,
+              "_subcategory": {
+                "mr10ixf7": {
+                  "cogs": 3
+                },
+                "mr12xhcf": {
+                  "cogs": 6
+                },
+                "mr12xkiz": {
+                  "cogs": 9
+                }
+              }
+            },
+            "mr131ew5": {
+              "cogs": 0,
+              "_subcategory": {
+                "mr131o9p": {
+                  "cogs": 3
+                },
+                "mr131sny": {
+                  "cogs": 6
+                },
+                "mr131v0r": {
+                  "cogs": 9
+                }
+              }
+            }
+          },
+          "12v": {
+            "mr10bwj7": {
+              "cogs": 0,
+              "_subcategory": {
+                "mr10co03": {
+                  "cogs": 5
+                },
+                "mr132bs9": {
+                  "cogs": 10
+                }
+              }
+            },
+            "mr10cazi": {
+              "cogs": 0,
+              "_subcategory": {
+                "mr10cvkz": {
+                  "cogs": 10
+                },
+                "mr132jyv": {
+                  "cogs": 15
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

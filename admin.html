@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IsoWatt Admin — Price Manager</title>
+<meta name="robots" content="noindex, nofollow">
+<title>IsoWatt Admin — Store Manager</title>
 <link rel="icon" type="image/png" href="./IW_LOGO_FAV.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap">
@@ -657,6 +658,123 @@ body {
   border-bottom: 1px solid var(--border);
 }
 .opt-subcat-row td:first-child { padding-left: 42px; }
+
+/* ════════ v2 additions: products, site editor, uploads ════════ */
+.btn-pencil {
+  background: none; border: none; color: var(--muted); cursor: pointer;
+  font-size: 12px; padding: 0 4px; font-family: inherit; transition: color .15s; vertical-align: middle;
+}
+.btn-pencil:hover { color: var(--amber); }
+.img-row { display: flex; gap: 6px; align-items: center; }
+.img-row .img-url-field { flex: 1; }
+.btn-upload-sm {
+  margin-top: 4px; padding: 3px 8px; background: transparent; border: 1px solid var(--border);
+  border-radius: 4px; color: var(--subtle); cursor: pointer; font-size: 12px; transition: all .15s;
+}
+.btn-upload-sm:hover { border-color: var(--amber); color: var(--amber); }
+
+.tab-bar { overflow-x: auto; }
+.tab { white-space: nowrap; }
+
+/* product picker (pricing tab) */
+.prod-pick { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.prod-pick label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--subtle); }
+.prod-pick select { min-width: 260px; width: auto; }
+.empty-note { background: var(--card); border: 1px dashed var(--border-hi); border-radius: 8px; padding: 2rem; text-align: center; color: var(--subtle); }
+.empty-note .btn-sm { margin-top: 1rem; }
+
+/* products tab */
+.pm-layout { display: grid; grid-template-columns: 290px 1fr; gap: 1.5rem; align-items: start; }
+@media (max-width: 860px) { .pm-layout { grid-template-columns: 1fr; } }
+.pm-list { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; position: sticky; top: 120px; }
+@media (max-width: 860px) { .pm-list { position: static; } }
+.pm-list-head { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-bottom: 1px solid var(--border); background: var(--surface); }
+.pm-list-head span { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--subtle); }
+.pm-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s; }
+.pm-item:last-child { border-bottom: none; }
+.pm-item:hover { background: rgba(255,255,255,0.02); }
+.pm-item.on { background: var(--amber-bg); box-shadow: inset 2px 0 0 var(--amber); }
+.pm-thumb { width: 44px; height: 34px; border-radius: 4px; background: var(--surface); border: 1px solid var(--border); object-fit: cover; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--muted); overflow: hidden; }
+.pm-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.pm-meta { flex: 1; min-width: 0; }
+.pm-name { color: var(--white); font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pm-move { display: flex; flex-direction: column; }
+.pm-move button { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 10px; line-height: 1.2; padding: 1px 4px; }
+.pm-move button:hover { color: var(--amber); }
+.st-pill { display: inline-block; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 1px 6px; border-radius: 3px; margin-top: 2px; }
+.st-live { background: var(--green-bg); color: var(--green); }
+.st-coming-soon { background: var(--yellow-bg); color: var(--yellow); }
+.st-hidden { background: var(--border); color: var(--subtle); }
+
+.pm-editor { display: grid; gap: 1.25rem; }
+.pm-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; }
+.pm-card-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--white); margin-bottom: 1.1rem; padding-bottom: .7rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.pm-card-title small { font-weight: 500; text-transform: none; letter-spacing: 0; color: var(--muted); font-size: 11px; }
+.pm-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
+.pm-grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 1rem; }
+@media (max-width: 640px) { .pm-grid2, .pm-grid3 { grid-template-columns: 1fr; } }
+textarea.form-ctrl { resize: vertical; min-height: 70px; line-height: 1.55; }
+select.form-ctrl { cursor: pointer; }
+.pm-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; }
+.pm-head h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 30px; font-weight: 900; text-transform: uppercase; letter-spacing: .04em; color: var(--white); line-height: 1; }
+.pm-head .pm-url { font-size: 11px; color: var(--muted); margin-top: 4px; font-family: 'Courier New', monospace; }
+.pm-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.check-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); cursor: pointer; margin-bottom: 1rem; }
+.check-row input { accent-color: var(--amber); width: 15px; height: 15px; }
+.warn-line { font-size: 11px; color: var(--yellow); margin-top: 4px; }
+.ok-line { font-size: 11px; color: var(--green); margin-top: 4px; }
+
+/* photo manager */
+.ph-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 1rem; }
+.ph-item { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; position: relative; }
+.ph-item.cover { border-color: var(--amber); }
+.ph-item img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; background: #000; }
+.ph-cover-tag { position: absolute; top: 6px; left: 6px; background: var(--amber); color: #000; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 1px 6px; border-radius: 3px; }
+.ph-staged-tag { position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,.75); color: var(--amber); font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 3px; border: 1px solid var(--amber-dim); }
+.ph-ctrl { display: flex; justify-content: space-between; padding: 4px 6px; border-top: 1px solid var(--border); }
+.ph-ctrl button { background: none; border: none; color: var(--subtle); cursor: pointer; font-size: 13px; padding: 2px 5px; }
+.ph-ctrl button:hover { color: var(--amber); }
+.ph-ctrl button.rm:hover { color: var(--red); }
+.ph-alt { width: 100%; border: none; border-top: 1px solid var(--border); background: transparent; color: var(--subtle); font-size: 11px; padding: 5px 7px; font-family: inherit; }
+.ph-alt:focus { outline: none; color: var(--white); }
+.ph-drop { border: 1px dashed var(--border-hi); border-radius: 6px; padding: 1.25rem; text-align: center; color: var(--subtle); font-size: 12px; transition: all .15s; }
+.ph-drop.over { border-color: var(--amber); background: var(--amber-bg); color: var(--amber); }
+
+/* row editors (specs / faq) */
+.rows { display: grid; gap: 6px; margin-bottom: 8px; }
+.rowed { display: grid; grid-template-columns: 1fr 1.6fr auto; gap: 6px; align-items: start; }
+.rowed.faq { grid-template-columns: 1fr auto; }
+.rowed .form-ctrl { padding: 7px 10px; }
+.rowed .stack { display: grid; gap: 6px; }
+
+/* site editor */
+.se-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+.se-bar select { width: auto; min-width: 200px; }
+.se-seg { display: inline-flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.se-seg button { background: none; border: none; color: var(--subtle); padding: 7px 12px; cursor: pointer; font-size: 12px; font-family: inherit; }
+.se-seg button.on { background: var(--amber-bg); color: var(--amber); }
+.se-layout { display: grid; grid-template-columns: 1fr 270px; gap: 1rem; align-items: start; }
+@media (max-width: 1000px) { .se-layout { grid-template-columns: 1fr; } }
+.se-frame-wrap { background: #000; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; display: flex; justify-content: center; }
+#se-frame { width: 100%; height: 75vh; border: none; background: var(--black); transition: width .25s; }
+.se-frame-wrap.mobile #se-frame { width: 390px; }
+.se-side { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; max-height: 75vh; overflow: auto; }
+.se-side h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--subtle); margin-bottom: .6rem; }
+.se-tip { font-size: 12px; color: var(--subtle); line-height: 1.55; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+.se-key { display: flex; gap: 6px; align-items: flex-start; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+.se-key .k { flex: 1; min-width: 0; cursor: pointer; }
+.se-key .k b { display: block; color: var(--amber); font-size: 10px; font-family: 'Courier New', monospace; font-weight: 400; }
+.se-key .k span { color: var(--text); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.se-key.edited .k b::after { content: ' • edited'; color: var(--green); }
+.se-key button { background: none; border: 1px solid var(--border); color: var(--subtle); border-radius: 4px; font-size: 10px; padding: 2px 6px; cursor: pointer; }
+.se-key button:hover { color: var(--red); border-color: var(--red); }
+
+/* settings extras */
+.callout { background: var(--yellow-bg); border: 1px solid rgba(224,184,80,.35); color: var(--text); border-radius: 6px; padding: 10px 12px; font-size: 12px; line-height: 1.6; margin-bottom: 1rem; }
+.callout b { color: var(--yellow); }
+.callout ol { margin: 6px 0 0 18px; }
+.callout a { color: var(--amber); }
+.staged-badge { font-size: 11px; color: var(--subtle); }
 </style>
 </head>
 <body>
@@ -665,11 +783,10 @@ body {
 <div id="lock-screen">
   <div class="lock-card">
     <div class="lock-wordmark">IsoWatt</div>
-    <div class="lock-sub">Price Manager · Admin</div>
+    <div class="lock-sub">Store Manager · Admin</div>
     <input id="pw-input" type="password" class="lock-input" placeholder="Admin password" autocomplete="off">
     <div id="pw-err" class="lock-error">Incorrect password.</div>
     <button class="btn-full" onclick="tryLogin()">Unlock →</button>
-    <div class="lock-hint">Default password: <code>isowatt</code> — change in Settings</div>
     <div class="lock-forgot"><button onclick="toggleReset()">Forgot password?</button></div>
 
     <div id="reset-panel">
@@ -688,7 +805,7 @@ body {
   <header class="admin-header">
     <div class="header-left">
       <span class="wordmark">IsoWatt</span>
-      <span class="admin-chip">Price Manager</span>
+      <span class="admin-chip">Store Manager</span>
     </div>
     <div class="header-right">
       <div class="status-pill">
@@ -705,68 +822,123 @@ body {
   </header>
 
   <nav class="tab-bar">
-    <button class="tab on" onclick="showPane('configurator',this)">Configurator</button>
-    <button class="tab" onclick="showPane('settings',this)">Settings</button>
+    <button class="tab on" data-pane="products" onclick="showPane('products',this)">Products</button>
+    <button class="tab" data-pane="pricing" onclick="showPane('pricing',this)">Pricing &amp; Options</button>
+    <button class="tab" data-pane="site" onclick="showPane('site',this)">Site Editor</button>
+    <button class="tab" data-pane="settings" onclick="showPane('settings',this)">Settings</button>
   </nav>
 
   <div class="admin-body">
 
-    <!-- ── CONFIGURATOR ── -->
-    <div class="pane on" id="pane-configurator">
-
-      <div class="section">
-        <div class="section-head">
-          <div>
-            <div class="section-title">Base Models</div>
-            <div class="section-sub">Foundation price for each unit type in the configurator</div>
+    <!-- ── PRODUCTS ── -->
+    <div class="pane on" id="pane-products">
+      <div class="pm-layout">
+        <aside class="pm-list">
+          <div class="pm-list-head">
+            <span>Product line</span>
+            <button class="btn-add-row" onclick="newProduct()">+ New</button>
           </div>
-          <button class="btn-add-row" onclick="addBaseModel()">+ Add Model</button>
-        </div>
-        <div class="margin-bar">
-          <span class="margin-bar-label">Set all margins to:</span>
-          <input type="range" class="margin-slider" id="cfg-slider" min="5" max="80" value="45"
-                 oninput="document.getElementById('cfg-val').textContent=this.value+'%'">
-          <span class="margin-val" id="cfg-val">45%</span>
-          <button class="btn-apply" onclick="bulkMargin('config','cfg-slider')">Apply to All</button>
-        </div>
-        <table class="ptable">
-          <thead>
-            <tr>
-              <th style="width:220px">Model</th>
-              <th style="width:110px">COGS ($)</th>
-              <th style="width:16px"></th>
-              <th style="width:110px">Sell Price ($)</th>
-              <th style="width:80px">Margin</th>
-              <th style="width:90px">Gross Profit</th>
-              <th style="width:36px"></th>
-            </tr>
-          </thead>
-          <tbody id="base-tbody"></tbody>
-        </table>
+          <div id="pm-items"></div>
+        </aside>
+        <section class="pm-editor" id="pm-editor"></section>
       </div>
+    </div>
 
-      <div class="section">
-        <div class="section-head">
-          <div>
-            <div class="section-title">Add-Ons & Options</div>
-            <div class="section-sub">Individual option pricing inside the configurator tool</div>
+    <!-- ── PRICING & OPTIONS (per-product configurator) ── -->
+    <div class="pane" id="pane-pricing">
+      <div class="prod-pick">
+        <label for="pricing-product">Product</label>
+        <select id="pricing-product" class="form-ctrl" onchange="CUR_PRICING=this.value; renderPricing();"></select>
+        <span class="form-hint" id="pricing-hint"></span>
+      </div>
+      <div id="pricing-empty" class="empty-note" style="display:none;"></div>
+      <div id="pricing-tables">
+        <div class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-title">Base Models</div>
+              <div class="section-sub">The starting point customers pick first in this product's configurator</div>
+            </div>
+            <button class="btn-add-row" onclick="addBaseModel()">+ Add Model</button>
           </div>
-          <button class="btn-add-row" onclick="addOption()">+ Add Option</button>
+          <div class="margin-bar">
+            <span class="margin-bar-label">Set all margins to:</span>
+            <input type="range" class="margin-slider" id="cfg-slider" min="5" max="80" value="45"
+                   oninput="document.getElementById('cfg-val').textContent=this.value+'%'">
+            <span class="margin-val" id="cfg-val">45%</span>
+            <button class="btn-apply" onclick="bulkMargin('config','cfg-slider')">Apply to This Product</button>
+          </div>
+          <table class="ptable">
+            <thead>
+              <tr>
+                <th style="width:260px">Model</th>
+                <th style="width:110px">COGS ($)</th>
+                <th style="width:16px"></th>
+                <th style="width:110px">Sell Price ($)</th>
+                <th style="width:80px">Margin</th>
+                <th style="width:90px">Gross Profit</th>
+                <th style="width:36px"></th>
+              </tr>
+            </thead>
+            <tbody id="base-tbody"></tbody>
+          </table>
         </div>
-        <table class="ptable">
-          <thead>
-            <tr>
-              <th style="width:220px">Option</th>
-              <th style="width:110px">COGS ($)</th>
-              <th style="width:16px"></th>
-              <th style="width:110px">Sell Price ($)</th>
-              <th style="width:80px">Margin</th>
-              <th style="width:90px">Gross Profit</th>
-              <th style="width:36px"></th>
-            </tr>
-          </thead>
-          <tbody id="addon-tbody"></tbody>
-        </table>
+
+        <div class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-title">Add-Ons &amp; Options</div>
+              <div class="section-sub">Option groups shown in the configurator, in this order</div>
+            </div>
+            <button class="btn-add-row" onclick="addOption()">+ Add Option</button>
+          </div>
+          <table class="ptable">
+            <thead>
+              <tr>
+                <th style="width:260px">Option</th>
+                <th style="width:110px">COGS ($)</th>
+                <th style="width:16px"></th>
+                <th style="width:110px">Sell Price ($)</th>
+                <th style="width:80px">Margin</th>
+                <th style="width:90px">Gross Profit</th>
+                <th style="width:36px"></th>
+              </tr>
+            </thead>
+            <tbody id="addon-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SITE EDITOR ── -->
+    <div class="pane" id="pane-site">
+      <div class="se-bar">
+        <select id="se-page" class="form-ctrl" onchange="loadEditorPage()">
+          <option value="index.html">Home</option>
+          <option value="products.html">Products</option>
+          <option value="product.html">Product page</option>
+          <option value="configurator.html">Configurator</option>
+          <option value="about.html">About</option>
+          <option value="contact.html">Contact</option>
+        </select>
+        <select id="se-product" class="form-ctrl" style="display:none;" onchange="loadEditorPage()"></select>
+        <div class="se-seg">
+          <button class="on" onclick="setFrameSize(false,this)">Desktop</button>
+          <button onclick="setFrameSize(true,this)">Phone</button>
+        </div>
+        <button class="btn-ghost" onclick="loadEditorPage()">↻ Reload</button>
+      </div>
+      <div class="se-layout">
+        <div class="se-frame-wrap" id="se-frame-wrap"><iframe id="se-frame" title="Site preview"></iframe></div>
+        <aside class="se-side">
+          <div class="se-tip">
+            <b style="color:var(--amber)">Click any outlined text</b> in the preview and type to change it. Nav and footer text change on every page at once.
+            Product names, photos and prices live in the <a href="#" onclick="showPane('products');return false;" style="color:var(--amber)">Products</a> tab — clicking a product here jumps there.
+            Click <b>Deploy</b> to publish.
+          </div>
+          <h4>Text on this page</h4>
+          <div id="se-keys"></div>
+        </aside>
       </div>
     </div>
 
@@ -775,50 +947,46 @@ body {
       <div class="settings-wrap">
 
         <div class="settings-card">
-          <div class="settings-card-title">GitHub Integration</div>
-          <p style="font-size:12px;color:var(--subtle);margin-bottom:1.25rem;line-height:1.6;">
-            When you click Deploy, prices.json is committed to your repo. Vercel auto-redeploys in ~30–60 seconds and customers see updated prices on next page load.
+          <div class="settings-card-title">GitHub Connection (publishing)</div>
+          <p style="font-size:12px;color:var(--subtle);margin-bottom:1rem;line-height:1.6;">
+            Deploy saves your products, prices, site text and photos to GitHub in one commit. Vercel redeploys in ~30–60 seconds.
           </p>
-          <div class="form-row">
-            <label class="form-lbl">Personal Access Token (PAT)</label>
-            <input type="password" id="gh-pat" class="form-ctrl" placeholder="ghp_xxxxxxxxxxxxxxxx" autocomplete="off">
-            <div class="form-hint">Needs <code>repo</code> write scope. GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic).</div>
+          <div class="callout">
+            <b>Recommended token:</b> a <b>fine-grained</b> token limited to this one repo.
+            <ol>
+              <li><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → Fine-grained tokens → Generate</a></li>
+              <li>Repository access → <b>Only select repositories</b> → isowatt.rep</li>
+              <li>Permissions → Repository → <b>Contents: Read and write</b></li>
+              <li>Pick an expiration (e.g. 1 year) and put a reminder in your calendar.</li>
+            </ol>
           </div>
           <div class="form-row">
-            <label class="form-lbl">Repository</label>
-            <input type="text" id="gh-repo" class="form-ctrl" placeholder="lukb655/isowatt.rep" value="lukb655/isowatt.rep">
+            <label class="form-lbl">Personal Access Token</label>
+            <input type="password" id="gh-pat" class="form-ctrl" placeholder="github_pat_… or ghp_…" autocomplete="off">
+            <div class="form-hint">Stored only in this browser. Never commit it or paste it into a page.</div>
           </div>
-          <div class="form-row">
-            <label class="form-lbl">Branch</label>
-            <input type="text" id="gh-branch" class="form-ctrl" placeholder="main" value="main">
+          <div class="pm-grid2">
+            <div class="form-row">
+              <label class="form-lbl">Repository</label>
+              <input type="text" id="gh-repo" class="form-ctrl" placeholder="lukb655/isowatt.rep" value="lukb655/isowatt.rep">
+            </div>
+            <div class="form-row">
+              <label class="form-lbl">Branch</label>
+              <input type="text" id="gh-branch" class="form-ctrl" placeholder="main" value="main">
+            </div>
           </div>
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
             <button class="btn-sm" onclick="saveGHSettings()">Save &amp; Test</button>
+            <button class="btn-ghost" onclick="forgetToken()">Forget Token</button>
             <span id="gh-result" class="inline-result"></span>
           </div>
         </div>
 
         <div class="settings-card">
-          <div class="settings-card-title">Security Question (Password Reset)</div>
-          <p style="font-size:12px;color:var(--subtle);margin-bottom:1.25rem;line-height:1.6;">
-            Used on the lock screen "Forgot password?" flow. Answer is case-insensitive.
-          </p>
-          <div class="form-row">
-            <label class="form-lbl">Question</label>
-            <input type="text" id="sq-question" class="form-ctrl" placeholder="e.g. What is your dog's name?">
-          </div>
-          <div class="form-row">
-            <label class="form-lbl">Answer</label>
-            <input type="text" id="sq-answer" class="form-ctrl" placeholder="Your answer">
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <button class="btn-sm" onclick="saveSecurityQuestion()">Save Question</button>
-            <span id="sq-result" class="inline-result"></span>
-          </div>
-        </div>
-
-        <div class="settings-card">
           <div class="settings-card-title">Admin Password</div>
+          <p style="font-size:12px;color:var(--subtle);margin-bottom:1rem;line-height:1.6;">
+            This password only hides the screen on this device. The GitHub token is what actually protects publishing.
+          </p>
           <div class="form-row">
             <label class="form-lbl">New Password</label>
             <input type="password" id="new-pw" class="form-ctrl" placeholder="Enter new password" autocomplete="new-password">
@@ -834,11 +1002,27 @@ body {
         </div>
 
         <div class="settings-card">
-          <div class="settings-card-title">Data Management</div>
+          <div class="settings-card-title">Security Question (Password Reset)</div>
+          <div class="form-row">
+            <label class="form-lbl">Question</label>
+            <input type="text" id="sq-question" class="form-ctrl" placeholder="e.g. What is your dog's name?">
+          </div>
+          <div class="form-row">
+            <label class="form-lbl">Answer</label>
+            <input type="text" id="sq-answer" class="form-ctrl" placeholder="Your answer">
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button class="btn-sm" onclick="saveSecurityQuestion()">Save Question</button>
+            <span id="sq-result" class="inline-result"></span>
+          </div>
+        </div>
+
+        <div class="settings-card">
+          <div class="settings-card-title">Data</div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn-ghost" onclick="exportCSV()">Export CSV</button>
-            <button class="btn-ghost" onclick="refreshFromGitHub()">↻ Refresh from GitHub</button>
-            <button class="btn-danger" onclick="resetDefaults()">Reset to Defaults</button>
+            <button class="btn-ghost" onclick="exportCSV()">Export Price List (CSV)</button>
+            <button class="btn-ghost" onclick="downloadBackup()">Download Backup (JSON)</button>
+            <button class="btn-ghost" onclick="refreshFromGitHub()">↻ Reload from GitHub</button>
           </div>
         </div>
 
@@ -849,6 +1033,7 @@ body {
 </div><!-- /admin -->
 
 <div id="toast"></div>
+<input type="file" id="file-pick" accept="image/*" multiple style="display:none;">
 
 <!-- ═══════════ MODEL FILTER POPUP ═══════════ -->
 <div id="mf-popup">
@@ -873,35 +1058,129 @@ body {
 </div>
 
 <script>
-// ───────────────────────────────────────────────────
-// DEFAULTS (used when prices.json not yet on GitHub)
-// ───────────────────────────────────────────────────
-const DEFAULTS = {
-  meta: { version: '1.0.0', lastUpdated: new Date().toISOString(), currency: 'USD' },
-  configurator: {
-    baseModels: {
-      'iso-station': { name: 'IsoStation - 100Ah LiFePO4 (1.2kWh)', capacity: '1.2kWh', leadTime: '2-3 weeks', price: 1200, cogs: 0 },
-      'iso-point':   { name: 'IsoPoint - 25Ah LiFePO4 (0.3kWh)',    capacity: '0.3kWh', leadTime: '1-2 weeks', price: 600,  cogs: 0 }
-    },
-    addons: {
-      inverter:   { _label:'AC Inverter',             none:  {label:'None (DC Only)',               price:0,   cogs:0}, '400w':{label:'400W Inverter',price:150,cogs:0}, '600w':{label:'600W Inverter',price:200,cogs:0}, '1000w':{label:'1000W Inverter',price:300,cogs:0}, '2000w':{label:'2000W Inverter',price:400,cogs:0} },
-      charger:    { _label:'Wall Charger',             standard:{label:'Standard 10A',price:50,cogs:0}, fast:{label:'Fast 20A',price:100,cogs:0}, none:{label:'No Charger',price:0,cogs:0} },
-      usbc:       { _label:'USB-C Ports (96W)',        '1':{label:'1 Port',price:30,cogs:0}, '2':{label:'2 Ports',price:50,cogs:0}, '4':{label:'4 Ports',price:90,cogs:0} },
-      '12v':      { _label:'12V Outputs',              lighter:{label:'Cigarette Lighter',price:20,cogs:0}, anderson:{label:'Anderson SB50',price:40,cogs:0}, both:{label:'Both',price:60,cogs:0} },
-      monitor:    { _label:'Battery Monitor',          bluetooth:{label:'Bluetooth Display',price:60,cogs:0}, led:{label:'LED Indicator Only',price:20,cogs:0}, none:{label:'None',price:0,cogs:0} },
-      light:      { _label:'LED Work Light',           none:{label:'None',price:0,cogs:0}, integrated:{label:'Integrated (Built-in)',price:35,cogs:0}, external:{label:'External Dimmable',price:60,cogs:0} },
-      protection: { _label:'Protection Package',       standard:{label:'Standard (BMS Only)',price:0,cogs:0}, upgraded:{label:'Upgraded (Fuses + Breakers)',price:75,cogs:0} },
-      transport:  { _label:'Carrying & Transport',     none:{label:'None',price:0,cogs:0}, handle:{label:'Heavy-Duty Handle Kit',price:40,cogs:0}, cart:{label:'Wheeled Transport Cart',price:120,cogs:0} }
-    }
-  }
-};
+// ═══════════════════════════════════════════════════════════════════
+// ISOWATT STORE MANAGER
+// Data lives in three files in the GitHub repo:
+//   prices.json         public catalog: products, photos, prices, configurators (NO costs)
+//   private/costs.json  your COGS — kept out of the public site by .vercelignore
+//   site.json           text you edit in the Site Editor
+// Deploy writes all of them (plus any new photos) in ONE commit.
+// ═══════════════════════════════════════════════════════════════════
 
-// ───────────────────────────────────────────────────
-// STATE
-// ───────────────────────────────────────────────────
-let P = null;       // live prices object
+// ── STATE ──────────────────────────────────────────────────────────
+let P = null;            // catalog, with cogs merged back in while editing
+let SITE = { texts: {} };
+let STAGED = {};         // new photos waiting for Deploy: path -> { b64, dataUrl }
+let CUR_EDIT = null;     // product open in Products tab
+let CUR_PRICING = null;  // product open in Pricing & Options tab
+let READONLY = false;    // true when loaded without a working token
+let LOADED_SHA = null;   // branch head when we loaded (to detect edits from elsewhere)
 let dirty = false;
 
+const PRODUCT_DEFAULTS = {
+  name: '', status: 'hidden', featured: false, badge: '', tier: '', tagline: '', summary: '',
+  description: '', highlights: [], specs: [], included: [], faq: [], images: [],
+  price: null, priceLabel: '', priceNote: '', leadTime: '',
+  purchase: { mode: 'quote', stripeLink: '', ctaLabel: '' },
+  configurator: null
+};
+const STATUS_LABEL = { live: 'Live', 'coming-soon': 'Coming soon', hidden: 'Hidden' };
+const RAW_RE = /^https:\/\/raw\.githubusercontent\.com\/lukb655\/isowatt\.rep\/(?:refs\/heads\/)?main\//;
+
+// ── SMALL HELPERS ──────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const ls = k => { try { return localStorage.getItem(k); } catch (_) { return null; } };
+function esc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function slugify(s) { return String(s).trim().toLowerCase().replace(/['’]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'') || 'item'; }
+function deepClone(o) { return JSON.parse(JSON.stringify(o)); }
+function CF() { return (P && P.products[CUR_PRICING] && P.products[CUR_PRICING].configurator) || null; }
+function curP() { return P && P.products[CUR_EDIT]; }
+function imgSrc(path) { return (STAGED[path] && STAGED[path].dataUrl) || path; }
+function plainText(html) { const d = document.createElement('div'); d.innerHTML = html; return d.textContent.trim(); }
+function utf8ToB64(str) {
+  const bytes = new TextEncoder().encode(str); let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+function b64ToUtf8(b64) { return new TextDecoder().decode(Uint8Array.from(atob(b64), c => c.charCodeAt(0))); }
+
+// ── DATA SHAPE: migrate / split costs / merge costs ────────────────
+function fixRawUrls(o) {
+  if (Array.isArray(o)) return o.forEach(fixRawUrls);
+  if (o && typeof o === 'object') Object.keys(o).forEach(k => {
+    if ((k === 'image' || k === 'src') && typeof o[k] === 'string') o[k] = o[k].replace(RAW_RE, '');
+    else fixRawUrls(o[k]);
+  });
+}
+function migrate(d) {
+  d = d ? deepClone(d) : {};
+  if (!d.products && d.configurator) {   // old single-product prices.json
+    d = { meta: d.meta, productOrder: ['power-station'], products: { 'power-station': Object.assign(deepClone(PRODUCT_DEFAULTS), {
+      name: 'IsoStation Power Systems', status: 'live', featured: true,
+      purchase: { mode: 'configure', stripeLink: '', ctaLabel: '' }, configurator: d.configurator }) } };
+  }
+  d.meta = Object.assign({ version: '2.0.0', currency: 'USD' }, d.meta || {});
+  d.products = d.products || {};
+  const order = (d.productOrder || []).filter(id => d.products[id]);
+  Object.keys(d.products).forEach(id => { if (!order.includes(id)) order.push(id); });
+  d.productOrder = order;
+  Object.keys(d.products).forEach(id => {
+    const p = d.products[id];
+    Object.keys(PRODUCT_DEFAULTS).forEach(k => { if (p[k] === undefined) p[k] = deepClone(PRODUCT_DEFAULTS[k]); });
+    p.purchase = Object.assign({ mode: 'quote', stripeLink: '', ctaLabel: '' }, p.purchase || {});
+  });
+  fixRawUrls(d);
+  return d;
+}
+// Pull every `cogs` key out into a parallel tree: [publicCopy, costTree]
+function splitCosts(obj) {
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return [obj, undefined];
+  const pub = {}; let cost;
+  for (const [k, v] of Object.entries(obj)) {
+    if (k === 'cogs') { if (v) (cost = cost || {}).cogs = v; continue; }
+    const [p, c] = splitCosts(v);
+    pub[k] = p;
+    if (c !== undefined) (cost = cost || {})[k] = c;
+  }
+  return [pub, cost];
+}
+function mergeCosts(target, src) {
+  if (!target || !src || typeof src !== 'object') return;
+  Object.keys(src).forEach(k => {
+    if (k === 'cogs') target.cogs = src.cogs;
+    else if (target[k] && typeof target[k] === 'object') mergeCosts(target[k], src[k]);
+  });
+}
+
+// ── GITHUB API ─────────────────────────────────────────────────────
+function gh() { return { pat: ls('iw_pat'), repo: ls('iw_repo') || 'lukb655/isowatt.rep', branch: ls('iw_branch') || 'main' }; }
+async function ghFetch(path, opts = {}, cfg = gh()) {
+  const headers = { Authorization: 'Bearer ' + cfg.pat, Accept: 'application/vnd.github+json' };
+  if (opts.body) headers['Content-Type'] = 'application/json';
+  return fetch('https://api.github.com/repos/' + cfg.repo + path, Object.assign({}, opts, { headers }));
+}
+function ghError(res, body) {
+  const m = body && body.message ? ' — ' + body.message : '';
+  if (res.status === 401) return 'GitHub rejected the token (401): it has expired or was revoked. Make a new one in Settings.';
+  if (res.status === 403) return res.headers.get('x-ratelimit-remaining') === '0'
+    ? 'GitHub rate limit hit — wait a few minutes and try again.'
+    : 'Token is missing permission (403). It needs Contents: Read and write on this repo' + m;
+  if (res.status === 404) return 'Repo/branch not found (404) — check the name, and that the token was given access to this repo.';
+  if (res.status === 409 || res.status === 422) return 'GitHub refused the update (' + res.status + ')' + m + '. Reload and try again.';
+  return 'GitHub error ' + res.status + m;
+}
+async function ghCheck(res) { if (!res.ok) throw new Error(ghError(res, await res.json().catch(() => ({})))); return res.json(); }
+async function ghReadJson(path) {
+  const res = await ghFetch('/contents/' + path + '?ref=' + encodeURIComponent(gh().branch));
+  if (res.status === 404) return null;
+  const d = await ghCheck(res);
+  return JSON.parse(b64ToUtf8(d.content.replace(/\n/g, '')));
+}
+async function fetchPublic(path) {
+  try { const r = await fetch('./' + path + '?v=' + Date.now()); return r.ok ? await r.json() : null; } catch (_) { return null; }
+}
+
+// ── AUTH ───────────────────────────────────────────────────────────
 // ───────────────────────────────────────────────────
 // AUTH
 // ───────────────────────────────────────────────────
@@ -973,10 +1252,10 @@ function attemptReset() {
     document.getElementById('reset-panel').style.display = 'none';
     document.querySelector('#reset-panel .btn-full').textContent = 'Reset Password →';
     errEl.textContent = 'Incorrect answer.';
-    const hint = document.querySelector('.lock-hint');
-    hint.style.color = 'var(--green)';
-    hint.textContent = '✓ Password updated — log in with your new password.';
-    setTimeout(() => { hint.style.color = ''; hint.innerHTML = 'Default password: <code>isowatt</code> — change in Settings'; }, 4000);
+    const pe = document.getElementById('pw-err');
+    pe.style.display = 'block'; pe.style.color = 'var(--green)';
+    pe.textContent = '✓ Password updated — log in with your new password.';
+    setTimeout(() => { pe.style.display = 'none'; pe.style.color = ''; pe.textContent = 'Incorrect password.'; }, 4000);
   }
 }
 
@@ -1004,71 +1283,707 @@ function changePw() {
   document.getElementById('confirm-pw').value = '';
 }
 
-// ───────────────────────────────────────────────────
-// INIT
-// ───────────────────────────────────────────────────
+
+
+// ── LOAD ───────────────────────────────────────────────────────────
 async function init() {
-  // Restore saved GitHub settings
-  document.getElementById('gh-pat').value    = localStorage.getItem('iw_pat')    || '';
-  document.getElementById('gh-repo').value   = localStorage.getItem('iw_repo')   || 'lukb655/isowatt.rep';
-  document.getElementById('gh-branch').value = localStorage.getItem('iw_branch') || 'main';
-
-  // Restore security question settings
-  document.getElementById('sq-question').value = localStorage.getItem('iw_sq') || 'What city was IsoWatt founded in?';
-  document.getElementById('sq-answer').value   = localStorage.getItem('iw_sa') || 'bellefonte';
-
-  await refreshFromGitHub();
+  $('gh-pat').value    = ls('iw_pat')    || '';
+  $('gh-repo').value   = ls('iw_repo')   || 'lukb655/isowatt.rep';
+  $('gh-branch').value = ls('iw_branch') || 'main';
+  $('sq-question').value = ls('iw_sq') || 'What city was IsoWatt founded in?';
+  $('sq-answer').value   = ls('iw_sa') || '';
+  await refreshFromGitHub(true);
 }
 
-async function refreshFromGitHub() {
-  const pat    = localStorage.getItem('iw_pat');
-  const repo   = localStorage.getItem('iw_repo')   || 'lukb655/isowatt.rep';
-  const branch = localStorage.getItem('iw_branch') || 'main';
-
+async function refreshFromGitHub(first) {
+  if (!first && dirty && !confirm('Discard unsaved changes and reload from GitHub?')) return;
   setStatus('pending', 'Loading…');
+  let prices = null, costs = null, site = null, problem = null;
+  const { pat, branch } = gh();
+  if (pat) {
+    try {
+      const ref = await ghCheck(await ghFetch('/git/ref/heads/' + encodeURIComponent(branch)));
+      LOADED_SHA = ref.object.sha;
+      [prices, costs, site] = await Promise.all([ghReadJson('prices.json'), ghReadJson('private/costs.json'), ghReadJson('site.json')]);
+      READONLY = false;
+    } catch (e) { problem = e.message; }
+  } else problem = 'No GitHub token yet — add one in Settings to edit and deploy.';
 
-  if (!pat) {
-    P = deepClone(DEFAULTS);
-    render();
-    setStatus('warn', 'No token — enter in Settings');
-    showToast('Add your GitHub token in Settings to enable live sync.', 'info');
-    return;
+  if (problem) {   // fall back to what the live site serves, read-only
+    READONLY = true; LOADED_SHA = null;
+    [prices, site] = await Promise.all([fetchPublic('prices.json'), fetchPublic('site.json')]);
+    costs = null;
   }
+  P = migrate(prices);
+  // Older prices.json had cogs inline; newer keeps them in private/costs.json
+  if (costs && costs.products) mergeCosts(P.products, costs.products);
+  SITE = site && typeof site === 'object' ? site : { texts: {} };
+  SITE.texts = SITE.texts || {};
+  STAGED = {};
+  if (!P.products[CUR_EDIT]) CUR_EDIT = P.productOrder[0] || null;
+  clearDirty();
+  renderAll();
+  if (problem) { setStatus('error', 'Read-only'); showToast(problem, 'error'); }
+  else {
+    setStatus('ok', 'Synced ' + new Date().toLocaleTimeString());
+    tokenExpiryWarning();
+  }
+}
+
+function renderAll() {
+  renderProducts();
+  renderPricing();
+  if ($('pane-site').classList.contains('on')) renderSeKeys();
+}
+
+// ── DIRTY ──────────────────────────────────────────────────────────
+function markDirty() { dirty = true; $('unsaved-badge').style.display = 'inline-block'; }
+function clearDirty() {
+  dirty = false;
+  $('unsaved-badge').style.display = 'none';
+  document.querySelectorAll('.num-field.dirty').forEach(el => el.classList.remove('dirty'));
+}
+window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+// ═══════════════════════════════════════════════════════════════════
+// PRODUCTS TAB
+// ═══════════════════════════════════════════════════════════════════
+function renderProducts() { renderProductList(); renderProductEditor(); }
+
+function renderProductList() {
+  const wrap = $('pm-items');
+  if (!P.productOrder.length) { wrap.innerHTML = '<div style="padding:1rem;color:var(--muted);font-size:12px;">No products yet.</div>'; return; }
+  wrap.innerHTML = P.productOrder.map((id, i) => {
+    const p = P.products[id];
+    const img = p.images && p.images[0];
+    return `<div class="pm-item ${id === CUR_EDIT ? 'on' : ''}" onclick="selectProduct('${id}')">
+      <div class="pm-thumb">${img ? `<img src="${esc(imgSrc(img.src))}" alt="">` : 'no photo'}</div>
+      <div class="pm-meta">
+        <div class="pm-name">${p.featured ? '★ ' : ''}${esc(p.name || id)}</div>
+        <span class="st-pill st-${esc(p.status)}">${STATUS_LABEL[p.status] || p.status}</span>
+        ${p.configurator ? '<span class="st-pill st-hidden">Configurator</span>' : ''}
+      </div>
+      <div class="pm-move" onclick="event.stopPropagation()">
+        <button title="Move up" onclick="moveProduct('${id}',-1)" ${i === 0 ? 'disabled' : ''}>▲</button>
+        <button title="Move down" onclick="moveProduct('${id}',1)" ${i === P.productOrder.length - 1 ? 'disabled' : ''}>▼</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selectProduct(id) { CUR_EDIT = id; renderProducts(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+function moveProduct(id, d) {
+  const o = P.productOrder, i = o.indexOf(id), j = i + d;
+  if (j < 0 || j >= o.length) return;
+  [o[i], o[j]] = [o[j], o[i]];
+  markDirty(); renderProductList();
+}
+
+function newProduct() {
+  const name = prompt('Product name (e.g. "Heater Box"):');
+  if (!name || !name.trim()) return;
+  let id = slugify(name);
+  while (P.products[id]) id += '-2';
+  P.products[id] = Object.assign(deepClone(PRODUCT_DEFAULTS), { name: name.trim() });
+  P.productOrder.push(id);
+  CUR_EDIT = id;
+  markDirty(); renderProducts();
+  showToast('Created as Hidden — fill it in, set Status to Live, then Deploy.', 'success');
+}
+
+function duplicateProduct() {
+  const src = curP(); if (!src) return;
+  let id = CUR_EDIT + '-copy';
+  while (P.products[id]) id += '-2';
+  const copy = deepClone(src);
+  copy.name = src.name + ' (copy)'; copy.status = 'hidden'; copy.featured = false;
+  P.products[id] = copy;
+  P.productOrder.splice(P.productOrder.indexOf(CUR_EDIT) + 1, 0, id);
+  CUR_EDIT = id; markDirty(); renderProducts();
+  showToast('Duplicated (hidden).', 'success');
+}
+
+function deleteProduct() {
+  const p = curP(); if (!p) return;
+  if (!confirm(`Delete "${p.name}"? Its page will disappear from the site after you Deploy.\n\nTip: set Status to Hidden instead if you might bring it back.`)) return;
+  delete P.products[CUR_EDIT];
+  P.productOrder = P.productOrder.filter(x => x !== CUR_EDIT);
+  if (CUR_PRICING === CUR_EDIT) CUR_PRICING = null;
+  CUR_EDIT = P.productOrder[0] || null;
+  markDirty(); renderAll();
+}
+
+function renameProductId() {
+  const p = curP(); if (!p) return;
+  const nid = slugify(prompt('Page address (the part after ?p=). Changing it breaks old links to this product.', CUR_EDIT) || '');
+  if (!nid || nid === CUR_EDIT) return;
+  if (P.products[nid]) { showToast('That address is already used.', 'error'); return; }
+  P.products[nid] = p; delete P.products[CUR_EDIT];
+  P.productOrder = P.productOrder.map(x => x === CUR_EDIT ? nid : x);
+  if (CUR_PRICING === CUR_EDIT) CUR_PRICING = nid;
+  CUR_EDIT = nid; markDirty(); renderAll();
+}
+
+// Generic field binding: <input data-f="purchase.stripeLink" data-t="text|num|lines|bool">
+function getPath(o, path) { return path.split('.').reduce((a, k) => (a == null ? a : a[k]), o); }
+function setPath(o, path, v) {
+  const ks = path.split('.'); const last = ks.pop();
+  const t = ks.reduce((a, k) => (a[k] = a[k] && typeof a[k] === 'object' ? a[k] : {}), o);
+  t[last] = v;
+}
+function fieldVal(el) {
+  const t = el.dataset.t || 'text';
+  if (t === 'bool') return el.checked;
+  if (t === 'num') return el.value === '' ? null : (parseFloat(el.value) || 0);
+  if (t === 'lines') return el.value.split('\n').map(s => s.trim()).filter(Boolean);
+  return el.value;
+}
+function onEditorInput(e) {
+  const el = e.target.closest('[data-f]');
+  if (!el || !curP()) return;
+  const path = el.dataset.f;
+  setPath(curP(), path, fieldVal(el));
+  markDirty();
+  if (['name', 'status', 'featured'].includes(path)) renderProductList();
+  if (['purchase.mode', 'purchase.stripeLink', 'price', 'cogs', 'status'].includes(path)) refreshSellingHints();
+  if (path === 'purchase.mode' && e.type === 'change') renderProductEditor();
+  if (path === 'name') { const h = document.querySelector('.pm-head h2'); if (h) h.textContent = curP().name || 'Untitled'; }
+}
+
+function input(label, path, { t = 'text', ph = '', hint = '', type = 'text', rows = 0, val } = {}) {
+  const p = curP();
+  let v = val !== undefined ? val : getPath(p, path);
+  if (t === 'lines') v = (v || []).join('\n');
+  if (v == null) v = '';
+  const ctrl = rows
+    ? `<textarea class="form-ctrl" rows="${rows}" data-f="${path}" data-t="${t}" placeholder="${esc(ph)}">${esc(v)}</textarea>`
+    : `<input class="form-ctrl" type="${type}" data-f="${path}" data-t="${t}" value="${esc(v)}" placeholder="${esc(ph)}" ${type === 'number' ? 'min="0" step="1"' : ''}>`;
+  return `<div class="form-row"><label class="form-lbl">${label}</label>${ctrl}${hint ? `<div class="form-hint">${hint}</div>` : ''}</div>`;
+}
+function select(label, path, opts, hint = '') {
+  const v = getPath(curP(), path);
+  return `<div class="form-row"><label class="form-lbl">${label}</label>
+    <select class="form-ctrl" data-f="${path}">${opts.map(([val, txt]) => `<option value="${val}" ${v === val ? 'selected' : ''}>${txt}</option>`).join('')}</select>
+    ${hint ? `<div class="form-hint">${hint}</div>` : ''}</div>`;
+}
+
+function renderProductEditor() {
+  const ed = $('pm-editor');
+  const p = curP();
+  if (!p) { ed.innerHTML = '<div class="empty-note">No product selected.<br><button class="btn-sm" onclick="newProduct()">+ New Product</button></div>'; return; }
+  const cf = p.configurator;
+  const nModels = cf ? Object.keys(cf.baseModels || {}).length : 0;
+  const nGroups = cf ? Object.keys(cf.addons || {}).length : 0;
+
+  ed.innerHTML = `
+    <div class="pm-head">
+      <div>
+        <h2>${esc(p.name || 'Untitled')}</h2>
+        <div class="pm-url">product.html?p=${esc(CUR_EDIT)} <button class="btn-pencil" title="Change page address" onclick="renameProductId()">✎</button></div>
+      </div>
+      <div class="pm-actions">
+        <a class="btn-ghost" href="product.html?p=${encodeURIComponent(CUR_EDIT)}" target="_blank" rel="noopener" style="text-decoration:none;">View live ↗</a>
+        <button class="btn-ghost" onclick="duplicateProduct()">Duplicate</button>
+        <button class="btn-danger" onclick="deleteProduct()">Delete</button>
+      </div>
+    </div>
+
+    <div class="pm-card">
+      <div class="pm-card-title">Basics</div>
+      <div class="pm-grid2">
+        ${input('Product name', 'name', { ph: 'Heater Box' })}
+        ${select('Status', 'status', [['live', 'Live — on the site'], ['coming-soon', 'Coming soon — shown, no ordering'], ['hidden', 'Hidden — not shown']])}
+      </div>
+      <label class="check-row"><input type="checkbox" data-f="featured" data-t="bool" ${p.featured ? 'checked' : ''}> Feature this product (big card at the top of the home page)</label>
+      <div class="pm-grid2">
+        ${input('Category line', 'tier', { ph: 'LiFePO4 · Custom Build', hint: 'Small caps text above the name.' })}
+        ${input('Badge', 'badge', { ph: 'New, Best Seller…', hint: 'Optional corner tag.' })}
+      </div>
+      ${input('Tagline', 'tagline', { ph: 'One sentence that sells it.', hint: 'Shown under the name on the product page.' })}
+      ${input('Card summary', 'summary', { rows: 2, ph: 'Two sentences for the product card on the home/products pages.' })}
+    </div>
+
+    <div class="pm-card" id="sell-card">
+      <div class="pm-card-title">Selling &amp; Checkout</div>
+      ${select('How customers buy', 'purchase.mode', [
+        ['configure', 'Configure online → quote request'],
+        ['stripe', 'Buy Now → Stripe Payment Link'],
+        ['quote', 'Request a quote (contact form)']
+      ])}
+      <div id="stripe-wrap" style="${p.purchase.mode === 'stripe' ? '' : 'display:none;'}">
+        ${input('Stripe Payment Link', 'purchase.stripeLink', { type: 'url', ph: 'https://buy.stripe.com/…', hint: 'Stripe Dashboard → Payment Links → Create. Copy the link here.' })}
+      </div>
+      <div id="sell-hint"></div>
+      <div class="pm-grid3">
+        ${input('Price ($)', 'price', { t: 'num', type: 'number', ph: 'blank = no price shown' })}
+        ${input('Price label', 'priceLabel', { ph: 'From' })}
+        ${input('Lead time', 'leadTime', { ph: '2–3 weeks' })}
+      </div>
+      <div class="pm-grid2">
+        ${input('Price note', 'priceNote', { ph: 'Ships in a hazmat-rated box' })}
+        ${input('Button text (optional)', 'purchase.ctaLabel', { ph: 'Buy Now / Configure / Request a Quote' })}
+      </div>
+      ${!cf ? `<div class="pm-grid3">${input('Your cost (COGS $)', 'cogs', { t: 'num', type: 'number', ph: '0', hint: 'Private — never published.' })}<div class="form-row"><label class="form-lbl">Margin</label><div id="fixed-margin" style="padding-top:8px;"></div></div></div>` : ''}
+    </div>
+
+    <div class="pm-card">
+      <div class="pm-card-title">Configurator <small>${cf ? `${nModels} model${nModels === 1 ? '' : 's'} · ${nGroups} option group${nGroups === 1 ? '' : 's'}` : 'none'}</small></div>
+      ${cf ? `<p style="font-size:12px;color:var(--subtle);margin-bottom:1rem;">Models, options, prices and option photos for this product are edited in the Pricing &amp; Options tab.</p>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="btn-sm" onclick="openPricing('${CUR_EDIT}')">Edit Pricing &amp; Options →</button>
+                <button class="btn-danger" onclick="removeConfigurator()">Remove Configurator</button>
+              </div>`
+           : `<p style="font-size:12px;color:var(--subtle);margin-bottom:1rem;">Add a configurator if customers should pick models and options with live pricing (like the power stations). Skip it for fixed-price products.</p>
+              <button class="btn-ghost" onclick="addConfigurator()">+ Add a Configurator</button>`}
+    </div>
+
+    <div class="pm-card">
+      <div class="pm-card-title">Photos <small>First photo is the cover. Large photos are resized automatically.</small></div>
+      <div class="ph-grid" id="ph-grid"></div>
+      <div class="ph-drop" id="ph-drop">Drop photos here, or
+        <button class="btn-sm" style="margin:0 6px;" onclick="pickPhotos()">Upload Photos</button>
+        <button class="btn-ghost" onclick="addPhotoUrl()">Add by URL</button>
+      </div>
+    </div>
+
+    <div class="pm-card">
+      <div class="pm-card-title">Description &amp; Details</div>
+      ${input('Description', 'description', { rows: 7, hint: 'Leave a blank line between paragraphs. Start lines with "- " for a bullet list.' })}
+      <div class="pm-grid2">
+        ${input('Highlights (one per line)', 'highlights', { t: 'lines', rows: 5, ph: 'LiFePO4 — 2,000+ cycles' })}
+        ${input("What's included (one per line)", 'included', { t: 'lines', rows: 5, ph: 'Wall charger' })}
+      </div>
+    </div>
+
+    <div class="pm-card">
+      <div class="pm-card-title">Specifications <small>The first two also show as chips by the price.</small></div>
+      <div class="rows" id="spec-rows"></div>
+      <button class="btn-add-row" onclick="addSpec()">+ Add Spec</button>
+    </div>
+
+    <div class="pm-card">
+      <div class="pm-card-title">FAQ</div>
+      <div class="rows" id="faq-rows"></div>
+      <button class="btn-add-row" onclick="addFaq()">+ Add Question</button>
+    </div>`;
+
+  renderPhotos(); renderSpecs(); renderFaq(); refreshSellingHints(); wireDrop();
+}
+
+function refreshSellingHints() {
+  const p = curP(); const el = $('sell-hint'); if (!p || !el) return;
+  const sw = $('stripe-wrap'); if (sw) sw.style.display = p.purchase.mode === 'stripe' ? '' : 'none';
+  const link = (p.purchase.stripeLink || '').trim();
+  let h = '';
+  if (p.purchase.mode === 'stripe') {
+    if (!link) h = '<div class="warn-line">⚠ No Stripe link yet — the button will fall back to "Request a Quote" until you add one.</div>';
+    else if (!/^https:\/\/(buy|checkout)\.stripe\.com\//.test(link)) h = '<div class="warn-line">⚠ That doesn\'t look like a Stripe Payment Link (they start with https://buy.stripe.com/).</div>';
+    else h = `<div class="ok-line">✓ Looks good. <a href="${esc(link)}" target="_blank" rel="noopener" style="color:var(--amber)">Test the checkout ↗</a></div>`;
+  }
+  if (p.purchase.mode === 'configure' && !p.configurator) h = '<div class="warn-line">⚠ This product has no configurator yet — add one below, or customers get a quote form instead.</div>';
+  if (p.status === 'coming-soon') h += '<div class="form-hint" style="margin-top:4px;">While "Coming soon", the button says "Get Notified" and opens the contact form.</div>';
+  el.innerHTML = h;
+  const fm = $('fixed-margin');
+  if (fm) { const { pct, cls } = calcMargin(p.price || 0, p.cogs || 0); fm.innerHTML = `<span class="badge ${cls}">${pct}</span> <span class="gross-text" style="margin-left:6px;">${fmtGross(p.price || 0, p.cogs || 0)}</span>`; }
+}
+
+function addConfigurator() {
+  const p = curP(); if (!p) return;
+  const mid = slugify(p.name) || 'base';
+  p.configurator = { baseModels: { [mid]: { name: p.name, capacity: '', leadTime: p.leadTime || '', price: p.price || 0, cogs: p.cogs || 0 } }, addons: {} };
+  delete p.cogs;
+  if (p.purchase.mode !== 'stripe') p.purchase.mode = 'configure';
+  markDirty(); renderProducts();
+  showToast('Configurator added with one base model. Add options in Pricing & Options.', 'success');
+}
+function removeConfigurator() {
+  const p = curP(); if (!p) return;
+  if (!confirm('Remove this product\'s configurator, including all its models, options and prices?')) return;
+  p.configurator = null;
+  if (p.purchase.mode === 'configure') p.purchase.mode = 'quote';
+  markDirty(); renderAll();
+}
+function openPricing(id) { CUR_PRICING = id; renderPricing(); showPane('pricing'); }
+
+// ── specs / faq row editors ──
+function renderSpecs() {
+  const p = curP(); const w = $('spec-rows'); if (!w) return;
+  w.innerHTML = (p.specs || []).map((s, i) => `
+    <div class="rowed">
+      <input class="form-ctrl" value="${esc(s.label)}" placeholder="Label (e.g. Capacity)" oninput="curP().specs[${i}].label=this.value;markDirty()">
+      <input class="form-ctrl" value="${esc(s.value)}" placeholder="Value (e.g. 1.2 kWh)" oninput="curP().specs[${i}].value=this.value;markDirty()">
+      <div style="display:flex;"><button class="btn-pencil" title="Move up" onclick="moveRow('specs',${i},-1)">↑</button><button class="btn-rm" onclick="removeRow('specs',${i})">✕</button></div>
+    </div>`).join('') || '<div class="form-hint">No specs yet.</div>';
+}
+function renderFaq() {
+  const p = curP(); const w = $('faq-rows'); if (!w) return;
+  w.innerHTML = (p.faq || []).map((f, i) => `
+    <div class="rowed faq">
+      <div class="stack">
+        <input class="form-ctrl" value="${esc(f.q)}" placeholder="Question" oninput="curP().faq[${i}].q=this.value;markDirty()">
+        <textarea class="form-ctrl" rows="2" placeholder="Answer" oninput="curP().faq[${i}].a=this.value;markDirty()">${esc(f.a)}</textarea>
+      </div>
+      <div style="display:flex;"><button class="btn-pencil" title="Move up" onclick="moveRow('faq',${i},-1)">↑</button><button class="btn-rm" onclick="removeRow('faq',${i})">✕</button></div>
+    </div>`).join('') || '<div class="form-hint">No questions yet.</div>';
+}
+function addSpec() { const p = curP(); (p.specs = p.specs || []).push({ label: '', value: '' }); markDirty(); renderSpecs(); }
+function addFaq()  { const p = curP(); (p.faq = p.faq || []).push({ q: '', a: '' }); markDirty(); renderFaq(); }
+function removeRow(k, i) { curP()[k].splice(i, 1); markDirty(); k === 'specs' ? renderSpecs() : renderFaq(); }
+function moveRow(k, i, d) {
+  const a = curP()[k], j = i + d; if (j < 0 || j >= a.length) return;
+  [a[i], a[j]] = [a[j], a[i]]; markDirty(); k === 'specs' ? renderSpecs() : renderFaq();
+}
+
+// ── photos ──
+function renderPhotos() {
+  const p = curP(); const g = $('ph-grid'); if (!g) return;
+  const imgs = p.images || [];
+  g.innerHTML = imgs.map((im, i) => `
+    <div class="ph-item ${i === 0 ? 'cover' : ''}">
+      ${i === 0 ? '<span class="ph-cover-tag">Cover</span>' : ''}
+      ${STAGED[im.src] ? '<span class="ph-staged-tag">Not deployed</span>' : ''}
+      <img src="${esc(imgSrc(im.src))}" alt="" onerror="this.style.opacity=.25">
+      <input class="ph-alt" value="${esc(im.alt || '')}" placeholder="Describe photo (for SEO)" oninput="curP().images[${i}].alt=this.value;markDirty()">
+      <div class="ph-ctrl">
+        <span>
+          <button title="Move left" onclick="movePhoto(${i},-1)">←</button>
+          <button title="Move right" onclick="movePhoto(${i},1)">→</button>
+          ${i ? `<button title="Make cover" onclick="movePhoto(${i},-${i})">★</button>` : ''}
+        </span>
+        <button class="rm" title="Remove" onclick="removePhoto(${i})">✕</button>
+      </div>
+    </div>`).join('');
+  g.style.display = imgs.length ? '' : 'none';
+}
+function movePhoto(i, d) {
+  const a = curP().images, j = i + d; if (j < 0 || j >= a.length) return;
+  const [it] = a.splice(i, 1); a.splice(j, 0, it);
+  markDirty(); renderPhotos(); renderProductList();
+}
+function removePhoto(i) {
+  if (!confirm('Remove this photo from the product?')) return;
+  curP().images.splice(i, 1); markDirty(); renderPhotos(); renderProductList();
+}
+function addPhotoUrl() {
+  const u = prompt('Image URL or repo path (e.g. Images/heater-1.jpg):');
+  if (!u || !u.trim()) return;
+  curP().images.push({ src: u.trim().replace(RAW_RE, ''), alt: curP().name });
+  markDirty(); renderPhotos(); renderProductList();
+}
+function pickFiles(multiple, cb) {
+  const fp = $('file-pick');
+  fp.multiple = multiple; fp.value = '';
+  fp.onchange = () => cb(Array.from(fp.files || []));
+  fp.click();
+}
+function pickPhotos() { pickFiles(true, addPhotoFiles); }
+async function addPhotoFiles(files) {
+  const id = CUR_EDIT; let n = 0;
+  for (const f of files) {
+    if (!/^image\//.test(f.type) && !/\.(jpe?g|png|webp|gif)$/i.test(f.name)) continue;
+    try {
+      const path = await processImage(f, 'products/' + id);
+      P.products[id].images.push({ src: path, alt: P.products[id].name });
+      n++;
+    } catch (e) { showToast(e.message, 'error'); }
+  }
+  if (n) { markDirty(); if (CUR_EDIT === id) renderPhotos(); renderProductList(); showToast(`${n} photo${n > 1 ? 's' : ''} added — Deploy to publish.`, 'success'); }
+}
+function wireDrop() {
+  const d = $('ph-drop'); if (!d) return;
+  ['dragenter', 'dragover'].forEach(ev => d.addEventListener(ev, e => { e.preventDefault(); d.classList.add('over'); }));
+  ['dragleave', 'drop'].forEach(ev => d.addEventListener(ev, e => { e.preventDefault(); d.classList.remove('over'); }));
+  d.addEventListener('drop', e => addPhotoFiles(Array.from(e.dataTransfer.files || [])));
+}
+// Upload into a single field (used by Pricing table image boxes)
+function uploadInto(btn, setter) {
+  pickFiles(false, async files => {
+    if (!files[0]) return;
+    try {
+      const path = await processImage(files[0], 'options/' + (CUR_PRICING || 'misc'));
+      setter(path);
+      const field = btn.parentElement.querySelector('.img-url-field');
+      if (field) field.value = path;
+      markDirty(); showToast('Image added — Deploy to publish.', 'success');
+    } catch (e) { showToast(e.message, 'error'); }
+  });
+}
+// Resize to max 1800px, JPEG 85% (small PNGs are kept as PNG). Staged until Deploy.
+function processImage(file, folder) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const max = 1800, scale = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+      const keepPng = file.type === 'image/png' && file.size < 700 * 1024 && scale === 1;
+      const finish = dataUrl => {
+        const base = slugify(file.name.replace(/\.[^.]+$/, '')).slice(0, 40);
+        const path = `Images/${folder}/${Date.now().toString(36)}-${base}.${keepPng ? 'png' : 'jpg'}`;
+        STAGED[path] = { b64: dataUrl.split(',')[1], dataUrl };
+        resolve(path);
+      };
+      if (keepPng) { const r = new FileReader(); r.onload = () => finish(r.result); r.onerror = () => reject(new Error('Could not read ' + file.name)); r.readAsDataURL(file); return; }
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.naturalWidth * scale); c.height = Math.round(img.naturalHeight * scale);
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#111111'; ctx.fillRect(0, 0, c.width, c.height);   // transparent PNGs → site background
+      ctx.drawImage(img, 0, 0, c.width, c.height);
+      finish(c.toDataURL('image/jpeg', 0.85));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error(`Couldn't open "${file.name}". If it's an iPhone HEIC photo, export it as JPEG first.`)); };
+    img.src = url;
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PRICING & OPTIONS TAB (header — the tables come from the code below)
+// ═══════════════════════════════════════════════════════════════════
+function renderPricingHeader() {
+  const sel = $('pricing-product');
+  const withCfg = P.productOrder.filter(id => P.products[id].configurator);
+  if (!withCfg.includes(CUR_PRICING)) CUR_PRICING = withCfg[0] || null;
+  sel.innerHTML = withCfg.map(id => `<option value="${id}" ${id === CUR_PRICING ? 'selected' : ''}>${esc(P.products[id].name)}</option>`).join('');
+  sel.style.display = withCfg.length ? '' : 'none';
+  const empty = $('pricing-empty'), tables = $('pricing-tables');
+  if (!withCfg.length) {
+    empty.innerHTML = 'No product has a configurator yet.<br><span style="font-size:12px;">Open a product in the Products tab and click “Add a Configurator”.</span>';
+    empty.style.display = ''; tables.style.display = 'none';
+  } else { empty.style.display = 'none'; tables.style.display = ''; }
+  $('pricing-hint').textContent = withCfg.length ? 'Only products with a configurator are listed.' : '';
+}
+
+// rename helpers used by the tables
+function renameBase(id) {
+  const m = CF().baseModels[id];
+  const name = prompt('Model name:', m.name); if (name === null) return;
+  const capacity = prompt('Capacity / size (shown in summary):', m.capacity || ''); if (capacity === null) return;
+  const lead = prompt('Lead time:', m.leadTime || ''); if (lead === null) return;
+  Object.assign(m, { name: name.trim() || m.name, capacity: capacity.trim(), leadTime: lead.trim() });
+  markDirty(); renderBaseModels();
+}
+function renameOpt(g, k) { const o = CF().addons[g][k]; const v = prompt('Option label:', o.label); if (v && v.trim()) { o.label = v.trim(); markDirty(); renderAddons(); } }
+function renameSub(g, k) { const o = CF().addons[g]._subcategory[k]; const v = prompt('Label:', o.label); if (v && v.trim()) { o.label = v.trim(); markDirty(); renderAddons(); } }
+function renameOptSub(g, k, s) { const o = CF().addons[g][k]._subcategory[s]; const v = prompt('Label:', o.label); if (v && v.trim()) { o.label = v.trim(); markDirty(); renderAddons(); } }
+function renameGroup(g) { const grp = CF().addons[g]; const v = prompt('Category name shown to customers:', grp._label || g); if (v && v.trim()) { grp._label = v.trim(); markDirty(); renderAddons(); } }
+function moveGroup(g, d) {
+  const entries = Object.entries(CF().addons); const i = entries.findIndex(([k]) => k === g), j = i + d;
+  if (j < 0 || j >= entries.length) return;
+  [entries[i], entries[j]] = [entries[j], entries[i]];
+  CF().addons = Object.fromEntries(entries);
+  markDirty(); renderAddons();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SITE EDITOR TAB
+// ═══════════════════════════════════════════════════════════════════
+let seKeys = [];
+function frameWin() { const f = $('se-frame'); return f && f.contentWindow; }
+function loadEditorPage() {
+  const page = $('se-page').value;
+  const ps = $('se-product');
+  if (page === 'product.html' || page === 'configurator.html') {
+    const ids = P.productOrder.filter(id => page === 'product.html' || P.products[id].configurator);
+    const keep = ps.value;
+    ps.innerHTML = ids.map(id => `<option value="${id}">${esc(P.products[id].name)}</option>`).join('');
+    if (ids.includes(keep)) ps.value = keep;
+    ps.style.display = ids.length ? '' : 'none';
+  } else ps.style.display = 'none';
+  const q = (page === 'product.html' || page === 'configurator.html') && ps.value ? '&p=' + encodeURIComponent(ps.value) : '';
+  seKeys = []; renderSeKeys();
+  $('se-frame').src = page + '?edit=1' + q + '&t=' + Date.now();
+}
+function setFrameSize(mobile, btn) {
+  $('se-frame-wrap').classList.toggle('mobile', mobile);
+  btn.parentElement.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
+}
+function renderSeKeys() {
+  const w = $('se-keys'); if (!w) return;
+  if (!seKeys.length) { w.innerHTML = '<div class="form-hint">Loading page…</div>'; return; }
+  w.innerHTML = seKeys.map(k => {
+    const edited = Object.prototype.hasOwnProperty.call(SITE.texts, k.key);
+    const txt = edited ? plainText(SITE.texts[k.key]) : k.text;
+    return `<div class="se-key ${edited ? 'edited' : ''}">
+      <div class="k" onclick="seScrollTo('${esc(k.key)}')"><b>${esc(k.key)}</b><span>${esc(txt) || '<em>(empty)</em>'}</span></div>
+      ${edited ? `<button title="Undo — back to original text" onclick="seReset('${esc(k.key)}')">Reset</button>` : ''}
+    </div>`;
+  }).join('');
+}
+function seScrollTo(key) { const w = frameWin(); if (w) w.postMessage({ iw: true, type: 'scrollTo', key }, location.origin); }
+function seReset(key) {
+  delete SITE.texts[key];
+  const w = frameWin(); if (w) w.postMessage({ iw: true, type: 'reset', key }, location.origin);
+  markDirty(); renderSeKeys();
+}
+window.addEventListener('message', e => {
+  if (e.origin !== location.origin || !e.data || !e.data.iw) return;
+  const d = e.data;
+  if (d.type === 'ready' || d.type === 'keys') {
+    if (d.keys) { const seen = new Set(); seKeys = d.keys.filter(k => !seen.has(k.key) && seen.add(k.key)); }
+    const w = frameWin(); if (w) w.postMessage({ iw: true, type: 'texts', texts: SITE.texts }, location.origin);
+    renderSeKeys();
+  }
+  if (d.type === 'text') {
+    SITE.texts[d.key] = d.html.replace(/<br>$/, '');
+    markDirty();
+    const row = Array.from(document.querySelectorAll('.se-key b')).find(b => b.textContent === d.key);
+    if (!row || !row.closest('.se-key').classList.contains('edited')) renderSeKeys();
+    else row.nextElementSibling.textContent = plainText(SITE.texts[d.key]);
+  }
+  if (d.type === 'product' && d.id && P.products[d.id]) { CUR_EDIT = d.id; showPane('products'); renderProducts(); showToast('Opened ' + P.products[d.id].name, 'info'); }
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// DEPLOY — one commit with prices.json, private/costs.json, site.json + photos
+// ═══════════════════════════════════════════════════════════════════
+async function deploy() {
+  const cfg = gh();
+  if (!cfg.pat || READONLY) {
+    showToast(cfg.pat ? 'Fix the GitHub connection in Settings first (see the error there).' : 'Add your GitHub token in Settings first.', 'error');
+    showPane('settings'); return;
+  }
+  // Friendly checks before publishing
+  const issues = [];
+  P.productOrder.forEach(id => {
+    const p = P.products[id];
+    if (p.status !== 'live') return;
+    if (p.purchase.mode === 'stripe' && !p.purchase.stripeLink) issues.push(`• ${p.name}: "Buy Now" has no Stripe link`);
+    if (p.purchase.mode === 'configure' && !p.configurator) issues.push(`• ${p.name}: set to Configure but has no configurator`);
+    if (!(p.images || []).length) issues.push(`• ${p.name}: no photos`);
+  });
+  if (issues.length && !confirm('Heads up before publishing:\n\n' + issues.join('\n') + '\n\nDeploy anyway?')) return;
+
+  const btn = $('deploy-btn');
+  btn.disabled = true; $('deploy-spinner').style.display = 'block'; $('deploy-label').textContent = 'Deploying…';
+  setStatus('active', 'Deploying…');
 
   try {
-    const res = await fetch(
-      `https://api.github.com/repos/${repo}/contents/prices.json?ref=${branch}`,
-      { headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json' } }
-    );
-    if (res.status === 404) {
-      P = deepClone(DEFAULTS);
-      render();
-      setStatus('warn', 'prices.json not found — will create on deploy');
-      showToast('prices.json not in repo yet. Click Deploy to create it.', 'info');
-      return;
+    const ref = await ghCheck(await ghFetch('/git/ref/heads/' + encodeURIComponent(cfg.branch)));
+    const headSha = ref.object.sha;
+    if (LOADED_SHA && headSha !== LOADED_SHA &&
+        !confirm('The site was changed on GitHub after you opened this page (another device, or a direct edit).\n\nDeploying replaces products, prices and site text with what you see here. Continue?')) {
+      throw new Error('Cancelled — click "Reload from GitHub" in Settings to pick up the newer version.');
     }
-    if (!res.ok) throw new Error(`GitHub ${res.status}`);
-    const data = await res.json();
-    P = JSON.parse(atob(data.content.replace(/\n/g, '')));
-    render();
-    setStatus('ok', `Synced ${new Date().toLocaleTimeString()}`);
+    const head = await ghCheck(await ghFetch('/git/commits/' + headSha));
+
+    P.meta.lastUpdated = new Date().toISOString();
+    P.meta.version = '2.0.0';
+    const [pub, cost] = splitCosts(P);
+    const allJson = JSON.stringify(pub);
+    const files = [
+      { path: 'prices.json',        b64: utf8ToB64(JSON.stringify(pub, null, 2) + '\n') },
+      { path: 'private/costs.json', b64: utf8ToB64(JSON.stringify({ _note: 'Private cost data (COGS). Excluded from the public site by .vercelignore. Managed by admin.html.', products: (cost && cost.products) || {} }, null, 2) + '\n') },
+      { path: 'site.json',          b64: utf8ToB64(JSON.stringify(SITE, null, 2) + '\n') }
+    ];
+    // only photos still used somewhere
+    Object.entries(STAGED).forEach(([path, s]) => { if (allJson.includes(path)) files.push({ path, b64: s.b64 }); });
+
+    const tree = [];
+    for (const f of files) {
+      const blob = await ghCheck(await ghFetch('/git/blobs', { method: 'POST', body: JSON.stringify({ content: f.b64, encoding: 'base64' }) }));
+      tree.push({ path: f.path, mode: '100644', type: 'blob', sha: blob.sha });
+    }
+    const newTree = await ghCheck(await ghFetch('/git/trees', { method: 'POST', body: JSON.stringify({ base_tree: head.tree.sha, tree }) }));
+    const nPhotos = files.length - 3;
+    const msg = `store: update products & site — ${new Date().toLocaleDateString('en-US')}` + (nPhotos ? ` (+${nPhotos} photo${nPhotos > 1 ? 's' : ''})` : '');
+    const commit = await ghCheck(await ghFetch('/git/commits', { method: 'POST', body: JSON.stringify({ message: msg, tree: newTree.sha, parents: [headSha] }) }));
+    await ghCheck(await ghFetch('/git/refs/heads/' + encodeURIComponent(cfg.branch), { method: 'PATCH', body: JSON.stringify({ sha: commit.sha }) }));
+
+    LOADED_SHA = commit.sha;
+    // keep staged previews until Vercel finishes, but mark them as published
+    clearDirty();
+    setStatus('ok', 'Deployed ' + new Date().toLocaleTimeString());
+    showToast('✓ Published. Vercel is rebuilding — live in about a minute.', 'success');
+    setTimeout(() => { STAGED = {}; renderProducts(); }, 90000);
   } catch (err) {
-    P = deepClone(DEFAULTS);
-    render();
-    setStatus('error', 'GitHub error');
-    showToast('Could not load from GitHub: ' + err.message, 'error');
+    setStatus('error', 'Deploy failed');
+    showToast('Deploy failed: ' + err.message, 'error');
+  } finally {
+    btn.disabled = false; $('deploy-spinner').style.display = 'none'; $('deploy-label').textContent = '↑ Deploy';
   }
 }
+
+// ═══════════════════════════════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════════════════════════════
+async function saveGHSettings() {
+  const pat = $('gh-pat').value.trim(), repo = $('gh-repo').value.trim(), branch = $('gh-branch').value.trim() || 'main';
+  const out = $('gh-result');
+  if (!pat) { out.style.color = 'var(--red)'; out.textContent = 'Token required.'; return; }
+  out.style.color = 'var(--subtle)'; out.textContent = 'Testing…';
+  try {
+    const res = await ghFetch('', {}, { pat, repo, branch });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(ghError(res, body));
+    const exp = res.headers.get('github-authentication-token-expiration');
+    const canWrite = !body.permissions || body.permissions.push;
+    localStorage.setItem('iw_pat', pat); localStorage.setItem('iw_repo', repo); localStorage.setItem('iw_branch', branch);
+    if (exp) localStorage.setItem('iw_pat_exp', exp); else localStorage.removeItem('iw_pat_exp');
+    out.style.color = canWrite ? 'var(--green)' : 'var(--yellow)';
+    out.textContent = (canWrite ? '✓ Connected — can publish.' : '⚠ Connected, but this token is read-only. Give it Contents: Read and write.')
+      + (exp ? ' Expires ' + new Date(exp).toLocaleDateString() + '.' : '');
+    await refreshFromGitHub(true);
+  } catch (err) { out.style.color = 'var(--red)'; out.textContent = '✗ ' + err.message; }
+}
+function forgetToken() {
+  ['iw_pat', 'iw_pat_exp'].forEach(k => localStorage.removeItem(k));
+  $('gh-pat').value = ''; $('gh-result').textContent = 'Token removed from this browser.';
+  READONLY = true; setStatus('error', 'Read-only');
+}
+function tokenExpiryWarning() {
+  const exp = ls('iw_pat_exp'); if (!exp) return;
+  const days = Math.round((new Date(exp) - Date.now()) / 864e5);
+  if (days <= 14) showToast(`Your GitHub token expires in ${days} day${days === 1 ? '' : 's'} — make a new one in Settings.`, 'info');
+}
+
+function exportCSV() {
+  const rows = [['Product', 'Category', 'Name', 'COGS', 'Sell Price', 'Gross Profit', 'Margin %']];
+  const add = (prod, cat, name, cogs, price) => {
+    const g = (price || 0) - (cogs || 0);
+    rows.push([prod, cat, name, cogs || 0, price || 0, g, price > 0 ? (g / price * 100).toFixed(1) : '']);
+  };
+  P.productOrder.forEach(id => {
+    const p = P.products[id], cf = p.configurator;
+    if (!cf) { add(p.name, 'Product', p.name, p.cogs, p.price); return; }
+    Object.values(cf.baseModels || {}).forEach(m => add(p.name, 'Base Model', m.name, m.cogs, m.price));
+    Object.entries(cf.addons || {}).forEach(([gk, group]) => {
+      Object.entries(group).forEach(([ok, opt]) => {
+        if (ok.startsWith('_')) return;
+        add(p.name, group._label || gk, opt.label, opt.cogs, opt.price);
+        if (opt._subcategory) Object.entries(opt._subcategory).forEach(([sk, so]) => { if (!sk.startsWith('_')) add(p.name, `${group._label || gk} › ${opt.label}`, so.label, so.cogs, so.price); });
+      });
+      if (group._subcategory) Object.entries(group._subcategory).forEach(([sk, so]) => { if (!sk.startsWith('_')) add(p.name, `${group._label || gk} (sub)`, so.label, so.cogs, so.price); });
+    });
+  });
+  const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+  download(`isowatt-prices-${new Date().toISOString().slice(0, 10)}.csv`, csv, 'text/csv');
+}
+function downloadBackup() {
+  download(`isowatt-backup-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify({ catalog: P, site: SITE }, null, 2), 'application/json');
+}
+function download(name, text, type) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], { type }));
+  a.download = name; a.click();
+}
+
+// editor input delegation
+document.addEventListener('DOMContentLoaded', () => {
+  const ed = $('pm-editor');
+  ed.addEventListener('input', onEditorInput);
+  ed.addEventListener('change', onEditorInput);
+});
 
 // ───────────────────────────────────────────────────
 // RENDER
 // ───────────────────────────────────────────────────
-function render() { renderBaseModels(); renderAddons(); }
+function renderPricing() { renderPricingHeader(); if (!CF()) return; renderBaseModels(); renderAddons(); }
 
 function renderBaseModels() {
   const tbody = document.getElementById('base-tbody');
   tbody.innerHTML = '';
-  Object.entries(P.configurator.baseModels).forEach(([id, m]) => {
+  Object.entries(CF().baseModels).forEach(([id, m]) => {
     const pseudo = { name: m.name, startingPrice: m.price, cogs: m.cogs || 0, badge: m.capacity, subtitle: m.leadTime, image: m.image || null };
     tbody.appendChild(buildProductRow(id, pseudo, 'base', true));
   });
@@ -1077,12 +1992,15 @@ function renderBaseModels() {
 function renderAddons() {
   const tbody = document.getElementById('addon-tbody');
   tbody.innerHTML = '';
-  Object.entries(P.configurator.addons).forEach(([groupKey, group]) => {
+  Object.entries(CF().addons).forEach(([groupKey, group]) => {
     const hrow = document.createElement('tr');
     hrow.className = 'group-header';
     const hasSubcat = !!group._subcategory;
     hrow.innerHTML = `<td colspan="7">
-      <span class="group-label-text">${group._label || groupKey}</span>
+      <span class="group-label-text">${esc(group._label || groupKey)}</span>
+      <button class="btn-pencil" title="Rename category" onclick="renameGroup('${groupKey}')">✎</button>
+      <button class="btn-pencil" title="Move up" onclick="moveGroup('${groupKey}',-1)">↑</button>
+      <button class="btn-pencil" title="Move down" onclick="moveGroup('${groupKey}',1)">↓</button>
       ${group._multiSelect ? `<span style="font-size:10px;color:var(--amber);border:1px solid var(--amber-dim);border-radius:3px;padding:1px 6px;margin-left:8px;vertical-align:middle;">MULTI-SELECT</span>` : ''}
       <button class="btn-add-subcat" onclick="toggleMultiSelect('${groupKey}')" style="margin-left:6px;" title="Toggle multi-select mode for this group">
         ${group._multiSelect ? '✕ Single-Select' : '☐ Multi-Select'}
@@ -1138,10 +2056,13 @@ function buildProductRow(id, p, scope, removable = (scope === 'pb')) {
   tr.dataset.scope = scope;
   tr.innerHTML = `
     <td>
-      <div class="row-name">${p.name}</div>
-      ${p.badge || p.subtitle ? `<div class="row-meta">${[p.badge, p.subtitle].filter(Boolean).join(' · ')}</div>` : ''}
-      <input type="text" class="img-url-field" placeholder="Image URL (optional)"
-             value="${p.image || ''}" oninput="onModelImgChange(this,'${id}')">
+      <div class="row-name">${esc(p.name)} <button class="btn-pencil" title="Rename / edit details" onclick="renameBase('${id}')">✎</button></div>
+      ${p.badge || p.subtitle ? `<div class="row-meta">${esc([p.badge, p.subtitle].filter(Boolean).join(' · '))}</div>` : ''}
+      <div class="img-row">
+        <input type="text" class="img-url-field" placeholder="Image path or URL (optional)"
+               value="${esc(p.image || '')}" oninput="onModelImgChange(this,'${id}')">
+        <button class="btn-upload-sm" title="Upload image" onclick="uploadInto(this, v => { CF().baseModels['${id}'].image = v; })">⇪</button>
+      </div>
     </td>
     <td>
       <input type="number" class="num-field" value="${cogs}" min="0" step="1"
@@ -1164,9 +2085,9 @@ function buildProductRow(id, p, scope, removable = (scope === 'pb')) {
 function modelRestrictLabel(models) {
   if (!models || models.length === 0) return { text: 'All models', restricted: false };
   const names = models.map(id => {
-    const m = P.configurator.baseModels[id];
+    const m = CF().baseModels[id];
     if (!m) return id;
-    return m.name.split(' - ')[0].replace('IsoStation','IsoStation').replace('IsoPoint','IsoPoint');
+    return m.name.split(' - ')[0];
   });
   return { text: names.join(', ') + ' only', restricted: true };
 }
@@ -1184,13 +2105,16 @@ function buildAddonRow(groupKey, optKey, opt) {
   tr.dataset.opt   = optKey;
   tr.innerHTML = `
     <td>
-      <div class="row-name">${opt.label}</div>
+      <div class="row-name">${esc(opt.label)} <button class="btn-pencil" title="Rename" onclick="renameOpt('${groupKey}','${optKey}')">✎</button></div>
       <button class="btn-model-restrict ${restricted ? 'restricted' : ''}"
               onclick="openMfPopup(event,this,'${groupKey}','${optKey}',false)"
               title="Restrict to specific models">⊙ ${text}</button>
       ${!opt._subcategory ? `<button class="btn-add-subcat" onclick="addOptSubcat('${groupKey}','${optKey}')">↳ + Sub</button>` : ''}
-      <input type="text" class="img-url-field" placeholder="Image URL (optional)"
-             value="${opt.image || ''}" oninput="onAddonImgChange(this,'${groupKey}','${optKey}')">
+      <div class="img-row">
+        <input type="text" class="img-url-field" placeholder="Image path or URL (optional)"
+               value="${esc(opt.image || '')}" oninput="onAddonImgChange(this,'${groupKey}','${optKey}')">
+        <button class="btn-upload-sm" title="Upload image" onclick="uploadInto(this, v => { CF().addons['${groupKey}']['${optKey}'].image = v; })">⇪</button>
+      </div>
     </td>
     <td>
       <input type="number" class="num-field" value="${cogs}" min="0" step="1"
@@ -1234,7 +2158,7 @@ function buildSubcatRow(groupKey, subKey, subOpt, parentGroup) {
   tr.dataset.subcat = subKey;
   tr.innerHTML = `
     <td>
-      <div class="row-name" style="font-size:12px;">↳ ${subOpt.label}</div>
+      <div class="row-name" style="font-size:12px;">↳ ${esc(subOpt.label)} <button class="btn-pencil" title="Rename" onclick="renameSub('${groupKey}','${subKey}')">✎</button></div>
       <button class="btn-model-restrict ${modelRestricted ? 'restricted' : ''}"
               onclick="openMfPopup(event,this,'${groupKey}','${subKey}',true)"
               title="Restrict to specific base models">⊙ ${modelText}</button>
@@ -1275,8 +2199,8 @@ function onFieldChange(input) {
   const cogs   = parseFloat(cogsEl.value) || 0;
   const sell   = parseFloat(sellEl.value) || 0;
 
-  if (field === 'cogs') P.configurator.baseModels[id].cogs = val;
-  else P.configurator.baseModels[id].price = val;
+  if (field === 'cogs') CF().baseModels[id].cogs = val;
+  else CF().baseModels[id].price = val;
 
   updateRowCalc(id + '-' + scope, sell, cogs);
   input.classList.add('dirty');
@@ -1293,8 +2217,8 @@ function onAddonChange(input) {
   const cogs = parseFloat(row.querySelector('[data-field="cogs"]').value) || 0;
   const sell = parseFloat(row.querySelector('[data-field="sell"]').value) || 0;
 
-  if (field === 'cogs') P.configurator.addons[groupKey][optKey].cogs  = val;
-  else                   P.configurator.addons[groupKey][optKey].price = val;
+  if (field === 'cogs') CF().addons[groupKey][optKey].cogs  = val;
+  else                   CF().addons[groupKey][optKey].price = val;
 
   updateRowCalc(groupKey + '-' + optKey, sell, cogs);
   input.classList.add('dirty');
@@ -1311,7 +2235,7 @@ function onSubcatChange(input) {
   const cogs = parseFloat(row.querySelector('[data-field="cogs"]').value) || 0;
   const sell = parseFloat(row.querySelector('[data-field="sell"]').value) || 0;
 
-  const sub = P.configurator.addons[groupKey]._subcategory;
+  const sub = CF().addons[groupKey]._subcategory;
   if (field === 'cogs') sub[subKey].cogs  = val;
   else                   sub[subKey].price = val;
 
@@ -1336,12 +2260,12 @@ function updateRowCalc(uid, sell, cogs) {
 function bulkMargin(scope, sliderId) {
   const pct = parseFloat(document.getElementById(sliderId).value) / 100;
 
-  Object.values(P.configurator.baseModels).forEach(m => {
+  Object.values(CF().baseModels).forEach(m => {
     if (m.cogs > 0) m.price = Math.ceil(m.cogs / (1 - pct));
   });
-  Object.values(P.configurator.addons).forEach(group => {
+  Object.values(CF().addons).forEach(group => {
     Object.entries(group).forEach(([k, opt]) => {
-      if (k === '_label' || k === '_subcategory') return;
+      if (k.startsWith('_')) return;
       if (opt.cogs > 0) opt.price = Math.ceil(opt.cogs / (1 - pct));
       // Option-level subcategory
       if (opt._subcategory) {
@@ -1375,57 +2299,59 @@ function addBaseModel() {
   const capacity = prompt('Capacity (e.g. 2.4kWh):') || '';
   const leadTime = prompt('Lead time (e.g. 3-4 weeks):') || '';
   const price    = parseFloat(prompt('Sell price ($):') || '0') || 0;
-  const id = name.trim().toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
-  P.configurator.baseModels[id] = { name: name.trim(), capacity, leadTime, price, cogs: 0 };
+  let id = slugify(name);
+  while (CF().baseModels[id]) id += '-2';
+  CF().baseModels[id] = { name: name.trim(), capacity, leadTime, price, cogs: 0 };
   renderBaseModels();
   markDirty();
   showToast('Model added — click Deploy to publish.', 'success');
 }
 
 function removeBaseModel(id) {
-  if (Object.keys(P.configurator.baseModels).length <= 1) {
+  if (Object.keys(CF().baseModels).length <= 1) {
     showToast('Cannot remove the last base model.', 'error'); return;
   }
-  const m = P.configurator.baseModels[id];
+  const m = CF().baseModels[id];
   if (!confirm(`Remove "${m.name}"?`)) return;
-  delete P.configurator.baseModels[id];
+  delete CF().baseModels[id];
   renderBaseModels();
   markDirty();
 }
 
 function addOption() {
-  const groupKey = prompt('Category key (existing: inverter, charger, usbc, 12v, monitor, light, protection, transport)\nOr enter a new category name:');
+  const existing = Object.entries(CF().addons).map(([k, g]) => `${k}  (${g._label || k})`).join('\n');
+  const groupKey = prompt('Add to which category? Type an existing key:\n' + (existing || '(none yet)') + '\n\n…or type a NEW category name:');
   if (!groupKey?.trim()) return;
   const label = prompt('Option label (e.g. "1500W Inverter"):');
   if (!label?.trim()) return;
 
   const key = groupKey.trim().toLowerCase().replace(/\s+/g, '-');
-  if (!P.configurator.addons[key]) {
+  if (!CF().addons[key]) {
     const catLabel = prompt('Display name for this category (e.g. "Solar Input"):') || key;
-    P.configurator.addons[key] = { _label: catLabel.trim() };
+    CF().addons[key] = { _label: catLabel.trim() };
   }
   const optKey = Date.now().toString(36);
-  P.configurator.addons[key][optKey] = { label: label.trim(), price: 0, cogs: 0 };
+  CF().addons[key][optKey] = { label: label.trim(), price: 0, cogs: 0 };
   renderAddons();
   markDirty();
 }
 
 function removeOption(groupKey, optKey) {
-  const group = P.configurator.addons[groupKey];
-  const realKeys = Object.keys(group).filter(k => k !== '_label' && k !== '_subcategory');
+  const group = CF().addons[groupKey];
+  const realKeys = Object.keys(group).filter(k => !k.startsWith('_'));
   if (realKeys.length <= 1) {
     if (!confirm(`Remove the entire "${group._label || groupKey}" category?`)) return;
-    delete P.configurator.addons[groupKey];
+    delete CF().addons[groupKey];
   } else {
     if (!confirm(`Remove "${group[optKey].label}"?`)) return;
-    delete P.configurator.addons[groupKey][optKey];
+    delete CF().addons[groupKey][optKey];
   }
   renderAddons();
   markDirty();
 }
 
 function toggleMultiSelect(groupKey) {
-  const group = P.configurator.addons[groupKey];
+  const group = CF().addons[groupKey];
   const enabling = !group._multiSelect;
   if (enabling) group._multiSelect = true;
   else delete group._multiSelect;
@@ -1435,7 +2361,7 @@ function toggleMultiSelect(groupKey) {
 }
 
 function addSubcategory(groupKey) {
-  const group = P.configurator.addons[groupKey];
+  const group = CF().addons[groupKey];
   if (group._subcategory) { showToast('This group already has a subcategory.', 'info'); return; }
   const label = prompt('Subcategory label (e.g. "AC Outlet Count"):');
   if (!label?.trim()) return;
@@ -1453,7 +2379,7 @@ function addSubcategory(groupKey) {
 }
 
 function addSubcatOption(groupKey) {
-  const group = P.configurator.addons[groupKey];
+  const group = CF().addons[groupKey];
   if (!group._subcategory) { showToast('No subcategory for this group.', 'error'); return; }
   const label = prompt('Subcategory option label (e.g. "3 Outlets"):');
   if (!label?.trim()) return;
@@ -1464,11 +2390,11 @@ function addSubcatOption(groupKey) {
 }
 
 function removeSubcatOption(groupKey, subKey) {
-  const sub = P.configurator.addons[groupKey]._subcategory;
+  const sub = CF().addons[groupKey]._subcategory;
   const realKeys = Object.keys(sub).filter(k => !k.startsWith('_'));
   if (realKeys.length <= 1) {
-    if (!confirm(`Remove the entire subcategory for "${P.configurator.addons[groupKey]._label}"?`)) return;
-    delete P.configurator.addons[groupKey]._subcategory;
+    if (!confirm(`Remove the entire subcategory for "${CF().addons[groupKey]._label}"?`)) return;
+    delete CF().addons[groupKey]._subcategory;
   } else {
     if (!confirm(`Remove "${sub[subKey].label}"?`)) return;
     delete sub[subKey];
@@ -1478,189 +2404,15 @@ function removeSubcatOption(groupKey, subKey) {
 }
 
 // ───────────────────────────────────────────────────
-// DIRTY / DEPLOY
-// ───────────────────────────────────────────────────
-function markDirty() {
-  dirty = true;
-  document.getElementById('unsaved-badge').style.display = 'inline-block';
-}
-
-function clearDirty() {
-  dirty = false;
-  document.getElementById('unsaved-badge').style.display = 'none';
-  document.querySelectorAll('.num-field.dirty').forEach(el => el.classList.remove('dirty'));
-}
-
-async function deploy() {
-  const pat    = localStorage.getItem('iw_pat');
-  const repo   = localStorage.getItem('iw_repo')   || 'lukb655/isowatt.rep';
-  const branch = localStorage.getItem('iw_branch') || 'main';
-
-  if (!pat) {
-    showToast('Add your GitHub token in Settings first.', 'error');
-    showPane('settings', document.querySelector('.tab:last-child'));
-    return;
-  }
-
-  const btn     = document.getElementById('deploy-btn');
-  const spinner = document.getElementById('deploy-spinner');
-  const lbl     = document.getElementById('deploy-label');
-
-  btn.disabled    = true;
-  spinner.style.display = 'block';
-  lbl.textContent = 'Deploying…';
-  setStatus('active', 'Deploying…');
-
-  try {
-    P.meta.lastUpdated = new Date().toISOString();
-    const json    = JSON.stringify(P, null, 2);
-    const encoded = btoa(unescape(encodeURIComponent(json)));
-
-    // Get current SHA if file exists
-    let sha = null;
-    const getRes = await fetch(
-      `https://api.github.com/repos/${repo}/contents/prices.json?ref=${branch}`,
-      { headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json' } }
-    );
-    if (getRes.ok) sha = (await getRes.json()).sha;
-
-    const body = {
-      message: `pricing: update prices.json — ${new Date().toLocaleDateString('en-US')}`,
-      content: encoded,
-      branch
-    };
-    if (sha) body.sha = sha;
-
-    const putRes = await fetch(
-      `https://api.github.com/repos/${repo}/contents/prices.json`,
-      {
-        method: 'PUT',
-        headers: {
-          Authorization: `token ${pat}`,
-          Accept: 'application/vnd.github.v3+json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      }
-    );
-
-    if (!putRes.ok) {
-      const e = await putRes.json();
-      throw new Error(e.message || putRes.statusText);
-    }
-
-    clearDirty();
-    setStatus('ok', `Deployed ${new Date().toLocaleTimeString()}`);
-    showToast('✓ Pushed to GitHub. Vercel rebuilding (~30–60s).', 'success');
-
-  } catch (err) {
-    setStatus('error', 'Deploy failed');
-    showToast('Deploy failed: ' + err.message, 'error');
-  } finally {
-    btn.disabled          = false;
-    spinner.style.display = 'none';
-    lbl.textContent       = '↑ Deploy';
-  }
-}
-
-// ───────────────────────────────────────────────────
-// SETTINGS
-// ───────────────────────────────────────────────────
-async function saveGHSettings() {
-  const pat    = document.getElementById('gh-pat').value.trim();
-  const repo   = document.getElementById('gh-repo').value.trim();
-  const branch = document.getElementById('gh-branch').value.trim();
-  const result = document.getElementById('gh-result');
-
-  if (!pat) { result.style.color = 'var(--red)'; result.textContent = 'Token required.'; return; }
-  result.style.color = 'var(--subtle)'; result.textContent = 'Testing…';
-
-  try {
-    const res = await fetch(
-      `https://api.github.com/repos/${repo}/contents/prices.json?ref=${branch}`,
-      { headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json' } }
-    );
-    if (res.status === 401) throw new Error('Invalid token');
-    // 404 = repo ok, file not found — fine for first run
-    if (!res.ok && res.status !== 404) throw new Error(`HTTP ${res.status}`);
-
-    localStorage.setItem('iw_pat',    pat);
-    localStorage.setItem('iw_repo',   repo);
-    localStorage.setItem('iw_branch', branch);
-
-    result.style.color = 'var(--green)';
-    result.textContent = res.status === 404
-      ? '✓ Connected (prices.json will be created on first deploy)'
-      : '✓ Connected & ready';
-
-    await refreshFromGitHub();
-  } catch (err) {
-    result.style.color = 'var(--red)';
-    result.textContent = '✗ ' + err.message;
-  }
-}
-
-// ───────────────────────────────────────────────────
-// EXPORT
-// ───────────────────────────────────────────────────
-function exportCSV() {
-  const rows = [['Category', 'Name', 'COGS', 'Sell Price', 'Gross Profit', 'Margin %']];
-
-  Object.values(P.configurator.baseModels).forEach(m => {
-    const g = (m.price || 0) - (m.cogs || 0);
-    const pct = m.price > 0 ? (g / m.price * 100).toFixed(1) : '';
-    rows.push(['Base Model', m.name, m.cogs || 0, m.price || 0, g, pct]);
-  });
-
-  Object.entries(P.configurator.addons).forEach(([gk, group]) => {
-    Object.entries(group).forEach(([ok, opt]) => {
-      if (ok === '_label' || ok === '_subcategory') return;
-      const g   = (opt.price || 0) - (opt.cogs || 0);
-      const pct = opt.price > 0 ? (g / opt.price * 100).toFixed(1) : '';
-      rows.push([group._label || gk, opt.label, opt.cogs || 0, opt.price || 0, g, pct]);
-      // Option-level subcategory rows
-      if (opt._subcategory) {
-        Object.entries(opt._subcategory).forEach(([sk, so]) => {
-          if (sk.startsWith('_')) return;
-          const sg   = (so.price || 0) - (so.cogs || 0);
-          const spct = so.price > 0 ? (sg / so.price * 100).toFixed(1) : '';
-          rows.push([`${group._label || gk} › ${opt.label} (Sub)`, so.label, so.cogs || 0, so.price || 0, sg, spct]);
-        });
-      }
-    });
-    if (group._subcategory) {
-      Object.entries(group._subcategory).forEach(([sk, subOpt]) => {
-        if (sk.startsWith('_')) return;
-        const g   = (subOpt.price || 0) - (subOpt.cogs || 0);
-        const pct = subOpt.price > 0 ? (g / subOpt.price * 100).toFixed(1) : '';
-        rows.push([`${group._label || gk} (Category Sub)`, subOpt.label, subOpt.cogs || 0, subOpt.price || 0, g, pct]);
-      });
-    }
-  });
-
-  const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
-  const a   = document.createElement('a');
-  a.href    = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-  a.download = `isowatt-prices-${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-}
-
-function resetDefaults() {
-  if (!confirm('Reset all prices and COGS to defaults? This does not deploy — you must click Deploy after.')) return;
-  P = deepClone(DEFAULTS);
-  render();
-  markDirty();
-  showToast('Reset to defaults. Click Deploy to publish.', 'info');
-}
-
-// ───────────────────────────────────────────────────
 // UI HELPERS
 // ───────────────────────────────────────────────────
 function showPane(id, btn) {
   document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.pane === id));
   document.getElementById('pane-' + id).classList.add('on');
-  if (btn) btn.classList.add('on');
+  if (id === 'site' && !document.getElementById('se-frame').getAttribute('src')) loadEditorPage();
+  if (id === 'site') renderSeKeys();
+  if (id === 'pricing') renderPricing();
 }
 
 function setStatus(state, text) {
@@ -1704,14 +2456,14 @@ function openMfPopup(e, btn, groupKey, key1, key2 = null) {
   e.stopPropagation();
   _mfTarget = { groupKey, key1, key2 };
   let opt;
-  if (!key2)          opt = P.configurator.addons[groupKey][key1];
-  else if (key2 === true) opt = P.configurator.addons[groupKey]._subcategory[key1];
-  else                opt = P.configurator.addons[groupKey][key1]._subcategory[key2];
+  if (!key2)          opt = CF().addons[groupKey][key1];
+  else if (key2 === true) opt = CF().addons[groupKey]._subcategory[key1];
+  else                opt = CF().addons[groupKey][key1]._subcategory[key2];
   const selected = opt.models || [];
 
   const checksDiv = document.getElementById('mf-checks');
   checksDiv.innerHTML = '';
-  Object.entries(P.configurator.baseModels).forEach(([id, m]) => {
+  Object.entries(CF().baseModels).forEach(([id, m]) => {
     const shortName = m.name.split(' - ')[0];
     const checked = selected.length === 0 || selected.includes(id) ? 'checked' : '';
     const lbl = document.createElement('label');
@@ -1766,9 +2518,9 @@ function saveMfPopup() {
   const allCount = checks.length;
   const selected = Array.from(checks).filter(c => c.checked).map(c => c.value);
   const models   = selected.length === allCount ? [] : selected;
-  if (!key2)          P.configurator.addons[groupKey][key1].models = models;
-  else if (key2 === true) P.configurator.addons[groupKey]._subcategory[key1].models = models;
-  else                P.configurator.addons[groupKey][key1]._subcategory[key2].models = models;
+  if (!key2)          CF().addons[groupKey][key1].models = models;
+  else if (key2 === true) CF().addons[groupKey]._subcategory[key1].models = models;
+  else                CF().addons[groupKey][key1]._subcategory[key2].models = models;
   closeMfPopup();
   renderAddons();
   markDirty();
@@ -1788,7 +2540,7 @@ let _pofTarget = null;
 function openPofPopup(e, btn, groupKey, subKey) {
   e.stopPropagation();
   _pofTarget = { groupKey, subKey };
-  const group  = P.configurator.addons[groupKey];
+  const group  = CF().addons[groupKey];
   const subOpt = group._subcategory[subKey];
   const selected  = subOpt.parentOptions || [];
   const hideWhen  = group._subcategory._hideWhenParent;
@@ -1844,7 +2596,7 @@ function savePofPopup() {
   const checks   = document.querySelectorAll('#pof-checks input[type=checkbox]');
   const allCount = checks.length;
   const selected = Array.from(checks).filter(c => c.checked).map(c => c.value);
-  P.configurator.addons[groupKey]._subcategory[subKey].parentOptions = selected.length === allCount ? [] : selected;
+  CF().addons[groupKey]._subcategory[subKey].parentOptions = selected.length === allCount ? [] : selected;
   closePofPopup();
   renderAddons();
   markDirty();
@@ -1867,7 +2619,7 @@ function buildOptSubcatRow(groupKey, optKey, subKey, subOpt) {
   tr.dataset.optsubc = subKey;
   tr.innerHTML = `
     <td>
-      <div class="row-name" style="font-size:12px;">↳↳ ${subOpt.label}</div>
+      <div class="row-name" style="font-size:12px;">↳↳ ${esc(subOpt.label)} <button class="btn-pencil" title="Rename" onclick="renameOptSub('${groupKey}','${optKey}','${subKey}')">✎</button></div>
       <button class="btn-model-restrict ${modelRestricted ? 'restricted' : ''}"
               onclick="openMfPopup(event,this,'${groupKey}','${optKey}','${subKey}')"
               title="Restrict to specific base models">⊙ ${modelText}</button>
@@ -1901,7 +2653,7 @@ function onOptSubcatChange(input) {
   const cogs = parseFloat(row.querySelector('[data-field="cogs"]').value) || 0;
   const sell = parseFloat(row.querySelector('[data-field="sell"]').value) || 0;
 
-  const optSub = P.configurator.addons[groupKey][optKey]._subcategory;
+  const optSub = CF().addons[groupKey][optKey]._subcategory;
   if (field === 'cogs') optSub[subKey].cogs  = val;
   else                   optSub[subKey].price = val;
 
@@ -1911,7 +2663,7 @@ function onOptSubcatChange(input) {
 }
 
 function addOptSubcat(groupKey, optKey) {
-  const opt = P.configurator.addons[groupKey][optKey];
+  const opt = CF().addons[groupKey][optKey];
   if (opt._subcategory) { showToast('This option already has a subcategory.', 'info'); return; }
   const label = prompt('Subcategory label (e.g. "Quantity"):');
   if (!label?.trim()) return;
@@ -1925,7 +2677,7 @@ function addOptSubcat(groupKey, optKey) {
 }
 
 function addOptSubcatOption(groupKey, optKey) {
-  const opt = P.configurator.addons[groupKey][optKey];
+  const opt = CF().addons[groupKey][optKey];
   if (!opt._subcategory) { showToast('No subcategory for this option.', 'error'); return; }
   const label = prompt('Option label (e.g. "×2"):');
   if (!label?.trim()) return;
@@ -1936,11 +2688,11 @@ function addOptSubcatOption(groupKey, optKey) {
 }
 
 function removeOptSubcatOption(groupKey, optKey, subKey) {
-  const optSub   = P.configurator.addons[groupKey][optKey]._subcategory;
+  const optSub   = CF().addons[groupKey][optKey]._subcategory;
   const realKeys = Object.keys(optSub).filter(k => !k.startsWith('_'));
   if (realKeys.length <= 1) {
-    if (!confirm(`Remove the entire subcategory for "${P.configurator.addons[groupKey][optKey].label}"?`)) return;
-    delete P.configurator.addons[groupKey][optKey]._subcategory;
+    if (!confirm(`Remove the entire subcategory for "${CF().addons[groupKey][optKey].label}"?`)) return;
+    delete CF().addons[groupKey][optKey]._subcategory;
   } else {
     if (!confirm(`Remove "${optSub[subKey].label}"?`)) return;
     delete optSub[subKey];
@@ -1951,12 +2703,12 @@ function removeOptSubcatOption(groupKey, optKey, subKey) {
 
 // ── IMAGE URL HANDLERS ──
 function onModelImgChange(input, id) {
-  P.configurator.baseModels[id].image = input.value.trim() || null;
+  CF().baseModels[id].image = input.value.trim() || null;
   markDirty();
 }
 
 function onAddonImgChange(input, groupKey, optKey) {
-  P.configurator.addons[groupKey][optKey].image = input.value.trim() || null;
+  CF().addons[groupKey][optKey].image = input.value.trim() || null;
   markDirty();
 }
 

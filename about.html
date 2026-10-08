@@ -20,14 +20,14 @@
 <nav class="nav">
   <a href="index.html" class="wordmark">
     <span class="iso">Iso</span><span class="watt">Watt</span>
-    <span class="sub">Consumer Grade · Industrial Power.</span>
+    <span class="sub" data-edit="nav.tagline">Consumer Grade · Industrial Power.</span>
   </a>
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li>
     <li><a href="products.html">Products</a></li>
     <li><a href="about.html" class="active">About</a></li>
     <li><a href="contact.html">Contact</a></li>
-    <li><a href="configurator.html" class="nav-cta">Configure →</a></li>
+    <li><a href="products.html" class="nav-cta" data-edit="nav.cta">Shop →</a></li>
   </ul>
   <button class="nav-burger" id="nav-burger" onclick="toggleMobileMenu()" aria-label="Open menu">
     <span></span><span></span><span></span>
@@ -38,37 +38,36 @@
   <a href="products.html">Products</a>
   <a href="about.html" class="active">About</a>
   <a href="contact.html">Contact</a>
-  <a href="configurator.html" class="amber">Configure →</a>
+  <a href="products.html" class="amber">Shop →</a>
 </div>
-<script>function toggleMobileMenu(){var m=document.getElementById('mobile-menu');m.classList.toggle('open');}</script>
 
-<div style="padding-top:var(--nav-h)" class="page-hero">
+<div style="padding-top:calc(var(--nav-h) + 4rem)" class="page-hero">
 <div class="container">
-<h1>Built Simply. On Purpose.</h1>
-<p>IsoWatt makes portable LiFePO4 power systems engineered for real-world use. No compromises. No mass production. Every unit assembled by hand in Bellefonte, PA.</p>
+<h1 data-edit="about.title">Built Simply. On Purpose.</h1>
+<p data-edit="about.intro">IsoWatt makes portable LiFePO4 power systems engineered for real-world use. No compromises. No mass production. Every unit assembled by hand in Bellefonte, PA.</p>
 </div>
 </div>
 
 <div class="content-block">
-<h2>My Story</h2>
-<p>IsoWatt started as a personal need for reliable, portable power for work and play in remote locations. Existing options were either underpowered, overpriced, or came with compromises that didn't fit the job. So we built our own.</p>
-<p>What began as a one-off project evolved into a business. We realized other people needed what we had built — systems that just work, built with quality components, and backed by someone who actually understands the product.</p>
+<h2 data-edit="about.h1">My Story</h2>
+<p data-edit="about.p1">IsoWatt started as a personal need for reliable, portable power for work and play in remote locations. Existing options were either underpowered, overpriced, or came with compromises that didn't fit the job. So we built our own.</p>
+<p data-edit="about.p2">What began as a one-off project evolved into a business. We realized other people needed what we had built — systems that just work, built with quality components, and backed by someone who actually understands the product.</p>
 
-<h2>Why LiFePO4?</h2>
-<p>LiFePO4 chemistry is what industrial power systems use. It's stable, safe, and lasts. 2,000+ charge cycles. No thermal runaway or overnight failures. It costs more upfront, but it's the chemistry we trust with our own equipment.</p>
+<h2 data-edit="about.h2">Why LiFePO4?</h2>
+<p data-edit="about.p3">LiFePO4 chemistry is what industrial power systems use. It's stable, safe, and lasts. 2,000+ charge cycles. No thermal runaway or overnight failures. It costs more upfront, but it's the chemistry we trust with our own equipment.</p>
 
-<h2>Built to Order</h2>
-<p>We don't keep inventory. We don't mass-produce. Every IsoStation and IsoPoint is assembled, wired, and load-tested by hand before it ships. That means longer lead times, but it also means quality control that's personal.</p>
+<h2 data-edit="about.h3">Built to Order</h2>
+<p data-edit="about.p4">We don't keep inventory. We don't mass-produce. Every unit is assembled, wired, and load-tested by hand before it ships. That means longer lead times, but it also means quality control that's personal.</p>
 
-<h2>Local Support</h2>
-<p>You're not talking to a call center, issues get escalated to the owner. We prioritze quality that doesn't stop at customer service. .</p>
+<h2 data-edit="about.h4">Local Support</h2>
+<p data-edit="about.p5">You're not talking to a call center, issues get escalated to the owner. We prioritize quality that doesn't stop at customer service.</p>
 </div>
 
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-col">
       <div class="col-title">IsoWatt</div>
-      <p>Portable LiFePO4 power systems.<br>Built in Bellefonte, PA.</p>
+      <p data-edit="footer.about">Portable power, heat and gear.<br>Built in Bellefonte, PA.</p>
     </div>
     <div class="footer-col">
       <div class="col-title">Navigation</div>
@@ -76,17 +75,17 @@
       <a href="products.html">Products</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
-      <a href="configurator.html">Configure</a>
     </div>
     <div class="footer-col">
       <div class="col-title">IsoWatt LLC</div>
-      <p>Bellefonte, PA<br>Build to order · LiFePO4 Power Systems</p>
+      <p data-edit="footer.company">Bellefonte, PA<br>Built to order · Handbuilt</p>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 IsoWatt LLC · Bellefonte, PA</span>
-    <span class="amber">Consumer Grade. Industrial Power.</span>
+    <span data-edit="footer.copyright">© 2026 IsoWatt LLC · Bellefonte, PA</span>
+    <span class="amber" data-edit="footer.slogan">Consumer Grade. Industrial Power.</span>
   </div>
 </footer>
+<script src="site.js"></script>
 </body>
 </html>

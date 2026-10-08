@@ -1,5 +1,5 @@
 // Vercel Serverless Function — /api/contact  (CommonJS)
-// Receives form POSTs from contact.html and configurator.html, sends email via Resend API.
+// Receives form POSTs from contact.html and configurator.html (any product), sends email via Resend API.
 //
 // SETUP:
 //   1. Create a free account at resend.com
@@ -50,6 +50,18 @@ module.exports = async function handler(req, res) {
     return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
+  // Turn whatever the configurator sent into table rows (works for any product)
+  function specRows(sp) {
+    const named = { product: 'Product', baseModel: 'Base Model', capacity: 'Capacity', leadTime: 'Lead Time' };
+    const rows = [];
+    Object.keys(named).forEach(function(k) { if (sp[k]) rows.push([named[k], sp[k]]); });
+    Object.keys(sp).forEach(function(k) {
+      if (named[k] || k === 'total' || k === 'deposit' || k.indexOf('__') === 0) return;
+      rows.push([k, sp[k]]);
+    });
+    return rows;
+  }
+
   const subjectLine = subject
     ? `[IsoWatt] ${subject}`
     : `[IsoWatt] New ${type || 'inquiry'} from ${name}`;
@@ -59,21 +71,9 @@ module.exports = async function handler(req, res) {
     <div style="margin-bottom:20px;">
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#999;margin-bottom:10px;">Build Specification</div>
       <table style="width:100%;border-collapse:collapse;font-size:13px;">
-        ${[
-          ['Base Model',      spec.baseModel],
-          ['AC Inverter',     spec.inverter],
-          ['Wall Charger',    spec.charger],
-          ['USB-C Ports',     spec.usbc],
-          ['12V Outputs',     spec.outputs12v],
-          ['Battery Monitor', spec.monitor],
-          ['LED Light',       spec.light],
-          ['Protection',      spec.protection],
-          ['Transport',       spec.transport],
-          ['Capacity',        spec.capacity],
-          ['Lead Time',       spec.leadTime],
-        ].map(function(row) {
+        ${specRows(spec).map(function(row) {
           return '<tr style="border-bottom:1px solid #f0f0f0;">' +
-            '<td style="padding:7px 0;color:#777;width:130px;">' + row[0] + '</td>' +
+            '<td style="padding:7px 0;color:#777;width:130px;">' + escHtml(row[0]) + '</td>' +
             '<td style="padding:7px 0;color:#222;font-weight:500;">' + escHtml(String(row[1] || '—')) + '</td>' +
           '</tr>';
         }).join('')}
@@ -81,10 +81,10 @@ module.exports = async function handler(req, res) {
           <td style="padding:10px 0;font-weight:700;color:#c47f00;">Quote Total</td>
           <td style="padding:10px 0;font-weight:800;font-size:16px;color:#c47f00;">${escHtml(String(spec.total || '—'))}</td>
         </tr>
-        <tr>
-          <td style="padding:7px 0;color:#777;">Deposit (50%)</td>
-          <td style="padding:7px 0;color:#222;font-weight:500;">${escHtml(String(spec.deposit || '—'))}</td>
-        </tr>
+        ${spec.deposit ? `<tr>
+          <td style="padding:7px 0;color:#777;">Deposit</td>
+          <td style="padding:7px 0;color:#222;font-weight:500;">${escHtml(String(spec.deposit))}</td>
+        </tr>` : ''}
       </table>
     </div>` : '';
 
@@ -121,9 +121,9 @@ module.exports = async function handler(req, res) {
   <div style="padding:24px;border:1px solid #e5e5e5;border-top:none;border-radius:0 0 8px 8px;">
     <p style="font-size:16px;font-weight:600;margin:0 0 12px;">Hey ${escHtml(name)},</p>
     ${spec
-      ? `<p style="line-height:1.7;color:#555;">Got your custom build request — I'll review the spec and send you a confirmed quote within 24 hours. No payment needed yet.</p>
+      ? `<p style="line-height:1.7;color:#555;">Got your build request — I'll review the spec and send you a confirmed quote within 24 hours. No payment needed yet.</p>
          <div style="background:#f9f9f9;border-left:3px solid #f0a500;padding:14px 16px;border-radius:0 4px 4px 0;margin:16px 0;font-size:13px;line-height:1.8;color:#444;">
-           <strong>${escHtml(String(spec.baseModel || ''))}</strong><br>
+           <strong>${escHtml(String([spec.product, spec.baseModel].filter(Boolean).join(' — ')))}</strong><br>
            Total: <strong>${escHtml(String(spec.total || ''))}</strong> · Lead time: ${escHtml(String(spec.leadTime || ''))}
          </div>
          <p style="line-height:1.7;color:#555;">Once I confirm the build, I'll send a Stripe invoice to lock in your slot.</p>`

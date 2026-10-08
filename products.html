@@ -2,10 +2,110 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="refresh" content="0; url=configurator.html">
-<title>IsoWatt — Redirecting</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="IsoWatt products — portable power, heat and more, handbuilt in Bellefonte, PA.">
+<title>Products — IsoWatt</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/png" href="./IW_LOGO_FAV.png">
+<style>
+.shop-hero {
+  padding: calc(var(--nav-h) + 4rem) 2rem 1rem;
+  background: var(--black);
+  position: relative;
+  overflow: hidden;
+}
+.shop-hero::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(240,165,0,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240,165,0,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 70% 90% at 30% 0%, black 20%, transparent 80%);
+}
+.shop-hero h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(48px, 9vw, 96px); font-weight: 900; text-transform: uppercase;
+  letter-spacing: 0.02em; line-height: 0.9; color: var(--white); margin-bottom: 1rem;
+}
+.shop-hero h1 em { font-style: normal; color: var(--amber); }
+.shop-hero .container { position: relative; z-index: 1; }
+.products-grid { margin-top: 2rem; }
+</style>
 </head>
 <body>
-<script>window.location.replace('configurator.html');</script>
+<nav class="nav">
+  <a href="index.html" class="wordmark">
+    <span class="iso">Iso</span><span class="watt">Watt</span>
+    <span class="sub" data-edit="nav.tagline">Consumer Grade · Industrial Power.</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="products.html" class="active">Products</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="products.html" class="nav-cta" data-edit="nav.cta">Shop →</a></li>
+  </ul>
+  <button class="nav-burger" id="nav-burger" onclick="toggleMobileMenu()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="products.html" class="active">Products</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="products.html" class="amber">Shop →</a>
+</div>
+
+<main>
+<section class="shop-hero">
+  <div class="container">
+    <span class="eyebrow" data-edit="products.eyebrow">The Lineup</span>
+    <h1 data-edit="products.title">Products<em>.</em></h1>
+    <p class="section-body" data-edit="products.body">Everything we build, built to order. Pick a product to see photos, specs and pricing.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:1rem;">
+  <div class="container">
+    <div class="products-grid" id="product-grid"></div>
+  </div>
+</section>
+
+<section class="cta-band" style="background:var(--amber-bg);border-top:1px solid var(--amber-dim);border-bottom:1px solid var(--amber-dim);padding:4rem 2rem;text-align:center;">
+  <div class="container-sm">
+    <h2 class="section-title" data-edit="products.cta.title">Need something <em>custom?</em></h2>
+    <p class="section-body" style="margin:0 auto 2rem;" data-edit="products.cta.body">Every build is made to order. Tell me what you need and I'll quote it.</p>
+    <a href="contact.html" class="btn btn-primary" data-edit="products.cta.btn">Start a Conversation ↗</a>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="col-title">IsoWatt</div>
+      <p data-edit="footer.about">Portable power, heat and gear.<br>Built in Bellefonte, PA.</p>
+    </div>
+    <div class="footer-col">
+      <div class="col-title">Navigation</div>
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="footer-col">
+      <div class="col-title">IsoWatt LLC</div>
+      <p data-edit="footer.company">Bellefonte, PA<br>Built to order · Handbuilt</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-edit="footer.copyright">© 2026 IsoWatt LLC · Bellefonte, PA</span>
+    <span class="amber" data-edit="footer.slogan">Consumer Grade. Industrial Power.</span>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+<script>IW.renderGrid(document.getElementById('product-grid'), { featuredFirst: false });</script>
 </body>
 </html>
