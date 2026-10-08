@@ -2,7 +2,7 @@
   "meta": {
     "version": "2.0.0",
     "currency": "USD",
-    "lastUpdated": "2026-10-08T17:39:15.076Z"
+    "lastUpdated": "2026-10-08T17:40:30.639Z"
   },
   "productOrder": [
     "power-station",
@@ -13,7 +13,7 @@
     "power-station": {
       "name": "IsoStation Power Systems",
       "status": "live",
-      "featured": true,
+      "featured": false,
       "badge": "Flagship",
       "tier": "LiFePO4 · Custom Build",
       "tagline": "Portable LiFePO4 power, configured to order and load-tested by hand.",
@@ -319,10 +319,10 @@
       "configurator": null
     },
     "whiskey-smoker-box": {
-      "name": "Whiskey Smoker Box",
+      "name": "Electronic Cocktail Smoker",
       "status": "coming-soon",
-      "featured": false,
-      "badge": "",
+      "featured": true,
+      "badge": "NEW!",
       "tier": "Bar · Handbuilt",
       "tagline": "Edit this tagline in Admin → Products.",
       "summary": "Edit this summary in Admin → Products.",
