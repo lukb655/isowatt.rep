@@ -2,7 +2,7 @@
   "meta": {
     "version": "2.0.0",
     "currency": "USD",
-    "lastUpdated": "2026-10-08T17:40:30.639Z"
+    "lastUpdated": "2026-10-08T17:44:28.883Z"
   },
   "productOrder": [
     "power-station",
@@ -320,7 +320,7 @@
     },
     "whiskey-smoker-box": {
       "name": "Electronic Cocktail Smoker",
-      "status": "coming-soon",
+      "status": "live",
       "featured": true,
       "badge": "NEW!",
       "tier": "Bar · Handbuilt",
@@ -331,15 +331,20 @@
       "specs": [],
       "included": [],
       "faq": [],
-      "images": [],
+      "images": [
+        {
+          "src": "Images/products/whiskey-smoker-box/muzts6qz-img-6603.jpg",
+          "alt": "Electronic Cocktail Smoker"
+        }
+      ],
       "price": null,
-      "priceLabel": "",
+      "priceLabel": "400",
       "priceNote": "",
       "leadTime": "",
       "purchase": {
         "mode": "quote",
         "stripeLink": "",
-        "ctaLabel": ""
+        "ctaLabel": "Request a Quote"
       },
       "configurator": null
     }
