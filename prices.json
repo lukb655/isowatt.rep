@@ -2,7 +2,7 @@
   "meta": {
     "version": "2.0.0",
     "currency": "USD",
-    "lastUpdated": "2026-10-08T18:34:29.422Z"
+    "lastUpdated": "2026-10-09T01:15:14.134Z"
   },
   "productOrder": [
     "whiskey-smoker-box",
@@ -333,7 +333,15 @@
       "faq": [],
       "images": [
         {
-          "src": "Images/products/whiskey-smoker-box/muzts6qz-img-6603.jpg",
+          "src": "Images/products/whiskey-smoker-box/mv09w4em-img-6611.jpg",
+          "alt": "Electronic Cocktail Smoker"
+        },
+        {
+          "src": "Images/products/whiskey-smoker-box/mv09wp6w-img-6608.jpg",
+          "alt": "Electronic Cocktail Smoker"
+        },
+        {
+          "src": "Images/products/whiskey-smoker-box/mv09wutc-img-6609.jpg",
           "alt": "Electronic Cocktail Smoker"
         }
       ],
