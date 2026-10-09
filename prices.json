@@ -2,7 +2,7 @@
   "meta": {
     "version": "2.0.0",
     "currency": "USD",
-    "lastUpdated": "2026-10-09T13:52:03.147Z"
+    "lastUpdated": "2026-10-09T14:16:10.248Z"
   },
   "productOrder": [
     "whiskey-smoker-box",
@@ -286,7 +286,8 @@
             "_multiSelect": true
           }
         }
-      }
+      },
+      "videos": []
     },
     "heater-box": {
       "name": "IsoHeater Diesel Heaters",
@@ -316,7 +317,8 @@
         "stripeLink": "",
         "ctaLabel": ""
       },
-      "configurator": null
+      "configurator": null,
+      "videos": []
     },
     "whiskey-smoker-box": {
       "name": "Electronic Cocktail Smoker",
@@ -346,7 +348,13 @@
         "stripeLink": "",
         "ctaLabel": "Request a Quote"
       },
-      "configurator": null
+      "configurator": null,
+      "videos": [
+        {
+          "src": "https://youtube.com/shorts/NLx7n4YU0uc?is=uxsEaSsF7ed7DTT9",
+          "title": ""
+        }
+      ]
     }
   }
 }
