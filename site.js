@@ -34,6 +34,24 @@
     }).join('');
   };
 
+  // Turn a video link/path into something the page can play.
+  //   YouTube (watch, youtu.be, shorts, embed) -> privacy-friendly embed
+  //   Vimeo                                    -> embed
+  //   anything else (e.g. Images/products/x/clip.mp4) -> plain <video> file
+  IW.parseVideo = src => {
+    const s = String(src || '').trim();
+    if (!s) return null;
+    let m = s.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{11})/i);
+    if (m) return {
+      kind: 'youtube', id: m[1],
+      embed: 'https://www.youtube-nocookie.com/embed/' + m[1] + '?rel=0&modestbranding=1&playsinline=1',
+      thumb: 'https://i.ytimg.com/vi/' + m[1] + '/hqdefault.jpg'
+    };
+    m = s.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+    if (m) return { kind: 'vimeo', id: m[1], embed: 'https://player.vimeo.com/video/' + m[1] + '?dnt=1', thumb: '' };
+    return { kind: 'file', src: s, thumb: '' };
+  };
+
   /* ── data loading ────────────────────────────────────────────── */
   const bust = () => '?v=' + Date.now();
   let _catalog, _site;

@@ -739,6 +739,19 @@ select.form-ctrl { cursor: pointer; }
 .ph-alt:focus { outline: none; color: var(--white); }
 .ph-drop { border: 1px dashed var(--border-hi); border-radius: 6px; padding: 1.25rem; text-align: center; color: var(--subtle); font-size: 12px; transition: all .15s; }
 .ph-drop.over { border-color: var(--amber); background: var(--amber-bg); color: var(--amber); }
+/* video manager */
+.vd-list { display: grid; gap: 8px; margin-bottom: 1rem; }
+.vd-item { display: grid; grid-template-columns: 112px 1fr auto; gap: 10px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 6px; }
+.vd-thumb { position: relative; width: 112px; aspect-ratio: 16/9; background: #000; border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; color: var(--amber); font-size: 18px; }
+.vd-thumb img, .vd-thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vd-meta { display: grid; gap: 4px; min-width: 0; }
+.vd-src { font-size: 11px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vd-kind { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--amber); }
+.vd-item .ph-alt { border: 1px solid var(--border); border-radius: 4px; }
+.vd-ctrl { display: flex; gap: 2px; }
+.vd-ctrl button { background: none; border: none; color: var(--subtle); cursor: pointer; font-size: 13px; padding: 2px 5px; }
+.vd-ctrl button:hover { color: var(--amber); }
+.vd-ctrl button.rm:hover { color: var(--red); }
 
 /* row editors (specs / faq) */
 .rows { display: grid; gap: 6px; margin-bottom: 8px; }
@@ -1079,11 +1092,12 @@ let dirty = false;
 
 const PRODUCT_DEFAULTS = {
   name: '', status: 'hidden', featured: false, badge: '', tier: '', tagline: '', summary: '',
-  description: '', highlights: [], specs: [], included: [], faq: [], images: [],
+  description: '', highlights: [], specs: [], included: [], faq: [], images: [], videos: [],
   price: null, priceLabel: '', priceNote: '', leadTime: '',
   purchase: { mode: 'quote', stripeLink: '', ctaLabel: '' },
   configurator: null
 };
+const VIDEO_MAX_MB = 50;  // direct MP4 uploads go into the repo, so keep them small
 const STATUS_LABEL = { live: 'Live', 'coming-soon': 'Coming soon', hidden: 'Hidden' };
 const RAW_RE = /^https:\/\/raw\.githubusercontent\.com\/lukb655\/isowatt\.rep\/(?:refs\/heads\/)?main\//;
 
@@ -1548,6 +1562,16 @@ function renderProductEditor() {
     </div>
 
     <div class="pm-card">
+      <div class="pm-card-title">Videos <small>Shown in the gallery right after the cover photo.</small></div>
+      <div class="vd-list" id="vd-list"></div>
+      <div class="ph-drop">
+        <button class="btn-sm" style="margin:0 6px;" onclick="addVideoUrl()">Add YouTube / Vimeo Link</button>
+        <button class="btn-ghost" onclick="pickVideo()">Upload MP4</button>
+        <div class="form-hint" style="margin-top:8px;">Best: upload to YouTube as <b>Unlisted</b> and paste the link — it streams faster and keeps your repo small. Direct uploads are limited to ${VIDEO_MAX_MB} MB.</div>
+      </div>
+    </div>
+
+    <div class="pm-card">
       <div class="pm-card-title">Description &amp; Details</div>
       ${input('Description', 'description', { rows: 7, hint: 'Leave a blank line between paragraphs. Start lines with "- " for a bullet list.' })}
       <div class="pm-grid2">
@@ -1568,7 +1592,7 @@ function renderProductEditor() {
       <button class="btn-add-row" onclick="addFaq()">+ Add Question</button>
     </div>`;
 
-  renderPhotos(); renderSpecs(); renderFaq(); refreshSellingHints(); wireDrop();
+  renderPhotos(); renderVideos(); renderSpecs(); renderFaq(); refreshSellingHints(); wireDrop();
 }
 
 function refreshSellingHints() {
@@ -1696,6 +1720,90 @@ function wireDrop() {
   ['dragleave', 'drop'].forEach(ev => d.addEventListener(ev, e => { e.preventDefault(); d.classList.remove('over'); }));
   d.addEventListener('drop', e => addPhotoFiles(Array.from(e.dataTransfer.files || [])));
 }
+// ── videos ──
+// Same rules as IW.parseVideo in site.js (admin doesn't load site.js)
+function parseVideo(src) {
+  const s = String(src || '').trim();
+  if (!s) return null;
+  let m = s.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{11})/i);
+  if (m) return { kind: 'youtube', id: m[1], thumb: 'https://i.ytimg.com/vi/' + m[1] + '/hqdefault.jpg' };
+  m = s.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+  if (m) return { kind: 'vimeo', id: m[1], thumb: '' };
+  return { kind: 'file', src: s, thumb: '' };
+}
+function renderVideos() {
+  const p = curP(); const g = $('vd-list'); if (!g) return;
+  const vids = p.videos || (p.videos = []);
+  g.innerHTML = vids.map((v, i) => {
+    const info = parseVideo(v.src) || {};
+    const kind = info.kind === 'youtube' ? 'YouTube' : info.kind === 'vimeo' ? 'Vimeo' : 'MP4 file';
+    const thumb = v.poster || info.thumb
+      ? `<img src="${esc(imgSrc(v.poster || info.thumb))}" alt="">`
+      : info.kind === 'file' ? `<video src="${esc(imgSrc(v.src))}" preload="metadata" muted playsinline></video>` : '▶';
+    return `
+    <div class="vd-item">
+      <div class="vd-thumb">${thumb}</div>
+      <div class="vd-meta">
+        <span class="vd-kind">${kind}${STAGED[v.src] ? ' · not deployed' : ''}</span>
+        <input class="ph-alt" value="${esc(v.title || '')}" placeholder="Video title (e.g. Walkaround, Load test)" oninput="curP().videos[${i}].title=this.value;markDirty()">
+        <span class="vd-src" title="${esc(v.src)}">${esc(v.src)}</span>
+      </div>
+      <div class="vd-ctrl">
+        <button title="Move up" onclick="moveVideo(${i},-1)">↑</button>
+        <button title="Move down" onclick="moveVideo(${i},1)">↓</button>
+        <button class="rm" title="Remove" onclick="removeVideo(${i})">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+  g.style.display = vids.length ? '' : 'none';
+}
+function moveVideo(i, d) {
+  const a = curP().videos, j = i + d; if (j < 0 || j >= a.length) return;
+  [a[i], a[j]] = [a[j], a[i]]; markDirty(); renderVideos();
+}
+function removeVideo(i) {
+  if (!confirm('Remove this video from the product?')) return;
+  curP().videos.splice(i, 1); markDirty(); renderVideos();
+}
+function addVideoUrl() {
+  const u = prompt('Paste a YouTube or Vimeo link (or a repo path to an .mp4):');
+  if (!u || !u.trim()) return;
+  const src = u.trim().replace(RAW_RE, '');
+  const info = parseVideo(src);
+  if (info.kind === 'file' && /^https?:\/\//i.test(src) && !/\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(src)) {
+    if (!confirm("That doesn't look like a YouTube/Vimeo link or a video file. Add it anyway?")) return;
+  }
+  (curP().videos = curP().videos || []).push({ src, title: '' });
+  markDirty(); renderVideos();
+  showToast('Video added — Deploy to publish.', 'success');
+}
+function pickVideo() {
+  const fp = $('file-pick');
+  const prevAccept = fp.accept;
+  fp.accept = 'video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov,.m4v';
+  pickFiles(false, files => { fp.accept = prevAccept; if (files[0]) addVideoFile(files[0]); });
+}
+function addVideoFile(file) {
+  if (!/^video\//.test(file.type) && !/\.(mp4|webm|mov|m4v)$/i.test(file.name)) { showToast('That file is not a video.', 'error'); return; }
+  if (file.size > VIDEO_MAX_MB * 1024 * 1024) {
+    showToast(`That video is ${(file.size / 1048576).toFixed(0)} MB — the limit is ${VIDEO_MAX_MB} MB. Upload it to YouTube (Unlisted) and add the link instead.`, 'error');
+    return;
+  }
+  const id = CUR_EDIT;
+  const r = new FileReader();
+  r.onerror = () => showToast('Could not read ' + file.name, 'error');
+  r.onload = () => {
+    const ext = (file.name.match(/\.(mp4|webm|mov|m4v)$/i) || [, 'mp4'])[1].toLowerCase();
+    const base = slugify(file.name.replace(/\.[^.]+$/, '')).slice(0, 40);
+    const path = `Images/products/${id}/${Date.now().toString(36)}-${base}.${ext}`;
+    STAGED[path] = { b64: String(r.result).split(',')[1], dataUrl: URL.createObjectURL(file) };
+    (P.products[id].videos = P.products[id].videos || []).push({ src: path, title: '' });
+    markDirty(); if (CUR_EDIT === id) renderVideos();
+    showToast('Video added — Deploy to publish.', 'success');
+  };
+  r.readAsDataURL(file);
+}
+
 // Upload into a single field (used by Pricing table image boxes)
 function uploadInto(btn, setter) {
   pickFiles(false, async files => {
@@ -1885,8 +1993,8 @@ async function deploy() {
       tree.push({ path: f.path, mode: '100644', type: 'blob', sha: blob.sha });
     }
     const newTree = await ghCheck(await ghFetch('/git/trees', { method: 'POST', body: JSON.stringify({ base_tree: head.tree.sha, tree }) }));
-    const nPhotos = files.length - 3;
-    const msg = `store: update products & site — ${new Date().toLocaleDateString('en-US')}` + (nPhotos ? ` (+${nPhotos} photo${nPhotos > 1 ? 's' : ''})` : '');
+    const nFiles = files.length - 3;
+    const msg = `store: update products & site — ${new Date().toLocaleDateString('en-US')}` + (nFiles ? ` (+${nFiles} file${nFiles > 1 ? 's' : ''})` : '');
     const commit = await ghCheck(await ghFetch('/git/commits', { method: 'POST', body: JSON.stringify({ message: msg, tree: newTree.sha, parents: [headSha] }) }));
     await ghCheck(await ghFetch('/git/refs/heads/' + encodeURIComponent(cfg.branch), { method: 'PATCH', body: JSON.stringify({ sha: commit.sha }) }));
 

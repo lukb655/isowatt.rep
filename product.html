@@ -46,6 +46,20 @@
 }
 .gal-thumbs button img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .gal-thumbs button.on, .gal-thumbs button:hover { opacity: 1; border-color: var(--amber); }
+/* video slides */
+.gal-main.is-video { cursor: default; background: #000; }
+.gal-main iframe, .gal-main video { width: 100%; height: 100%; border: 0; display: block; background: #000; object-fit: contain; }
+.gal-main.is-video .gal-nav { top: 1rem; transform: none; }   /* keep arrows clear of the player's centre/controls */
+.gal-main.is-video .gal-count { top: 10px; bottom: auto; right: 50%; transform: translateX(50%); }
+.gal-thumbs button { position: relative; }
+.gal-thumbs .vt { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #000; }
+.gal-thumbs .vt video { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.gal-thumbs .play {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  color: var(--white); font-size: 16px; text-shadow: 0 1px 4px rgba(0,0,0,.8); pointer-events: none;
+}
+.gal-thumbs .play::before { content: ''; position: absolute; width: 26px; height: 26px; border-radius: 50%; background: rgba(10,10,10,.65); border: 1px solid var(--amber); }
+.gal-thumbs .play span { position: relative; color: var(--amber); margin-left: 2px; }
 
 /* info column */
 .pd-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 0.9rem; }
@@ -175,6 +189,11 @@
   }
   const p = Object.assign({ id }, raw);
   const imgs = (p.images || []).filter(i => i && i.src);
+  // Gallery slides: cover photo first, then videos, then the rest of the photos
+  const vids = (p.videos || []).filter(v => v && v.src)
+    .map(v => Object.assign({ type: 'video', title: v.title || '', poster: v.poster || '' }, IW.parseVideo(v.src)));
+  const photoSlides = imgs.map(i => ({ type: 'img', src: i.src, alt: i.alt || '' }));
+  const media = photoSlides.slice(0, 1).concat(vids, photoSlides.slice(1));
   const act = IW.primaryAction(p);
   const models = p.configurator && p.configurator.baseModels ? Object.entries(p.configurator.baseModels) : [];
 
@@ -200,14 +219,21 @@
     <div class="crumbs"><a href="products.html">Products</a> &nbsp;/&nbsp; ${E(p.name)}</div>
     <div class="pd-top" data-product-id="${E(p.id)}">
       <div>
-        <div class="gal-main${imgs.length ? '' : ' empty'}" id="gal-main">
-          ${imgs.length ? `<img id="gal-img" src="${E(imgs[0].src)}" alt="${E(imgs[0].alt || p.name)}">` : '<span>Photos coming soon</span>'}
-          ${imgs.length > 1 ? `<button class="gal-nav prev" aria-label="Previous photo" onclick="event.stopPropagation();gal(-1)">‹</button>
-                               <button class="gal-nav next" aria-label="Next photo" onclick="event.stopPropagation();gal(1)">›</button>
-                               <span class="gal-count" id="gal-count">1 / ${imgs.length}</span>` : ''}
+        <div class="gal-main${media.length ? '' : ' empty'}" id="gal-main">
+          ${media.length ? '<div id="gal-stage" style="width:100%;height:100%;"></div>' : '<span>Photos coming soon</span>'}
+          ${media.length > 1 ? `<button class="gal-nav prev" aria-label="Previous" onclick="event.stopPropagation();gal(-1)">‹</button>
+                               <button class="gal-nav next" aria-label="Next" onclick="event.stopPropagation();gal(1)">›</button>
+                               <span class="gal-count" id="gal-count">1 / ${media.length}</span>` : ''}
         </div>
-        ${imgs.length > 1 ? `<div class="gal-thumbs">${imgs.map((im, i) =>
-          `<button class="${i ? '' : 'on'}" onclick="galTo(${i})" aria-label="Photo ${i + 1}"><img src="${E(im.src)}" alt="" loading="lazy"></button>`).join('')}</div>` : ''}
+        ${media.length > 1 ? `<div class="gal-thumbs">${media.map((m, i) => {
+          const label = m.type === 'video' ? 'Video' + (m.title ? ': ' + m.title : '') : 'Photo ' + (i + 1);
+          let inner;
+          if (m.type === 'img') inner = `<img src="${E(m.src)}" alt="" loading="lazy">`;
+          else if (m.poster || m.thumb) inner = `<img src="${E(m.poster || m.thumb)}" alt="" loading="lazy">`;
+          else if (m.kind === 'file') inner = `<span class="vt"><video src="${E(m.src)}#t=0.5" preload="metadata" muted playsinline></video></span>`;
+          else inner = '<span class="vt"></span>';
+          return `<button class="${i ? '' : 'on'}" onclick="galTo(${i})" aria-label="${E(label)}">${inner}${m.type === 'video' ? '<span class="play"><span>▶</span></span>' : ''}</button>`;
+        }).join('')}</div>` : ''}
       </div>
       <div>
         ${badges ? `<div class="pd-badges">${badges}</div>` : ''}
@@ -240,23 +266,36 @@
     </div>`;
 
   // gallery
+  // Swapping the stage's contents also stops any video that was playing.
   let gi = 0;
+  const gm = document.getElementById('gal-main');
+  const stage = document.getElementById('gal-stage');
+  function slideHtml(m) {
+    if (m.type === 'img') return `<img src="${E(m.src)}" alt="${E(m.alt || p.name)}">`;
+    const title = E(m.title || p.name + ' video');
+    if (m.kind === 'file') return `<video src="${E(m.src)}" controls playsinline preload="metadata"${m.poster ? ` poster="${E(m.poster)}"` : ''} aria-label="${title}"></video>`;
+    return `<iframe src="${E(m.embed)}" title="${title}" loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+  }
   window.galTo = i => {
-    if (!imgs.length) return;
-    gi = (i + imgs.length) % imgs.length;
-    const el = document.getElementById('gal-img');
-    el.src = imgs[gi].src; el.alt = imgs[gi].alt || p.name;
+    if (!media.length) return;
+    gi = (i + media.length) % media.length;
+    stage.innerHTML = slideHtml(media[gi]);
+    gm.classList.toggle('is-video', media[gi].type === 'video');
     document.querySelectorAll('.gal-thumbs button').forEach((b, j) => b.classList.toggle('on', j === gi));
-    const c = document.getElementById('gal-count'); if (c) c.textContent = (gi + 1) + ' / ' + imgs.length;
+    const c = document.getElementById('gal-count'); if (c) c.textContent = (gi + 1) + ' / ' + media.length;
   };
   window.gal = d => galTo(gi + d);
-  const gm = document.getElementById('gal-main');
-  if (imgs.length) gm.addEventListener('click', () => {
-    document.getElementById('lb-img').src = imgs[gi].src;
-    document.getElementById('lb').classList.add('on');
-  });
+  if (media.length) {
+    galTo(0);
+    gm.addEventListener('click', () => {
+      if (media[gi].type !== 'img') return;          // videos use their own controls
+      document.getElementById('lb-img').src = media[gi].src;
+      document.getElementById('lb').classList.add('on');
+    });
+  }
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') document.getElementById('lb').classList.remove('on');
+    if (/^(INPUT|TEXTAREA|VIDEO)$/.test((e.target && e.target.tagName) || '')) return;
     if (e.key === 'ArrowLeft') gal(-1);
     if (e.key === 'ArrowRight') gal(1);
   });
