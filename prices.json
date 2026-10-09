@@ -2,7 +2,7 @@
   "meta": {
     "version": "2.0.0",
     "currency": "USD",
-    "lastUpdated": "2026-10-09T01:28:24.073Z"
+    "lastUpdated": "2026-10-09T13:52:03.147Z"
   },
   "productOrder": [
     "whiskey-smoker-box",
@@ -326,34 +326,14 @@
       "tier": "Bar · Handbuilt",
       "tagline": "Wireless Electronic Wood Chip Smoker for Smoking Beverages ",
       "summary": "A collaboration with Crooked Wood Studios, This custom designed and handmade Cocktail Smoker is built to last and always provide you with a sweet smokey treat, anywhere, anytime. With a 2400mAh rechargeable battery, and press-to-use operation, you can be sure this smoker will always function when you need it, and if anything happens, we'll help fix it for life. ",
-      "description": "A battery powered, wireless cocktail smoker to make smoky beverage treats anywhere, anytime.\nSimply place your beverage of choice within the glass groove and cover, then hold down the button while lighting your wood chips, and watch the savory smoke infuse your drink in real time. ",
-      "highlights": [
-        "2600mAh Battery",
-        "Brushless Fan",
-        "Momentary Button Switch",
-        "Replaceable Bowl Piece",
-        "Venturi-Vacuum Design for Longevity",
-        "Highest Quality Burled Wood Available"
-      ],
+      "description": "Edit this description in Admin → Products.",
+      "highlights": [],
       "specs": [],
-      "included": [
-        "1 Wall Charger",
-        "1 Spare Chip Bowl",
-        "1 Spare Backing Plate",
-        "Use & Care Manual"
-      ],
+      "included": [],
       "faq": [],
       "images": [
         {
-          "src": "Images/products/whiskey-smoker-box/mv09w4em-img-6611.jpg",
-          "alt": "Electronic Cocktail Smoker"
-        },
-        {
-          "src": "Images/products/whiskey-smoker-box/mv09wp6w-img-6608.jpg",
-          "alt": "Electronic Cocktail Smoker"
-        },
-        {
-          "src": "Images/products/whiskey-smoker-box/mv09wutc-img-6609.jpg",
+          "src": "Images/products/whiskey-smoker-box/muzts6qz-img-6603.jpg",
           "alt": "Electronic Cocktail Smoker"
         }
       ],
